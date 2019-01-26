@@ -91,7 +91,7 @@ def getHomePath():
     """
     Return the path to the B3 home directory.
     """
-    path = os.path.normpath(os.path.expanduser('~/.b3')).decode(sys.getfilesystemencoding())
+    path = os.path.normpath(os.path.expanduser('~/.b3'))
 
     ## RENAME v1.10.1 -> v1.10.7
     path_1 = os.path.normpath(os.path.expanduser('~/BigBrotherBot')).decode(sys.getfilesystemencoding())
