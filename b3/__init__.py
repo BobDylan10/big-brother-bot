@@ -94,7 +94,7 @@ def getHomePath():
     path = os.path.normpath(os.path.expanduser('~/.b3'))
 
     ## RENAME v1.10.1 -> v1.10.7
-    path_1 = os.path.normpath(os.path.expanduser('~/BigBrotherBot')).decode(sys.getfilesystemencoding())
+    path_1 = os.path.normpath(os.path.expanduser('~/BigBrotherBot'))
     if os.path.isdir(path_1):
         shutil.move(path_1, path)
 
