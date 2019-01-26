@@ -23,7 +23,7 @@
 # ################################################################### #
 
 import time
-import thread
+import _thread
 from mock import patch, call, Mock
 from b3.config import CfgConfigParser
 from b3.plugins.poweradminurt import PoweradminurtPlugin

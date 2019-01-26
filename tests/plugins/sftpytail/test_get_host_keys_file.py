@@ -40,7 +40,7 @@ class Test_get_host_keys_file(Test_Sftpytail_plugin):
         }
 
     def init(self, existing_file_path=None):
-        for path, sentinel in self.sentinels.items():
+        for path, sentinel in list(self.sentinels.items()):
             when(b3).getAbsolutePath(path).thenReturn(sentinel)
             when(os.path).isfile(sentinel).thenReturn(path == existing_file_path)
 

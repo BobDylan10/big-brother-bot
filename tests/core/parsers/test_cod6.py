@@ -71,7 +71,7 @@ class Cod6TestCase(unittest.TestCase):
         self.output_mock = mock()
         # simulate game server actions
         def write(*args, **kwargs):
-            pretty_args = map(repr, args) + ["%s=%s" % (k, v) for k, v in kwargs.iteritems()]
+            pretty_args = list(map(repr, args)) + ["%s=%s" % (k, v) for k, v in kwargs.items()]
             log.info("write(%s)" % ', '.join(pretty_args))
             return self.output_mock.write(*args, **kwargs)
         self.console.write = Mock(wraps=write)

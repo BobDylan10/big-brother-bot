@@ -181,7 +181,7 @@ class Test_maps(MohwTestCase):
 
     def test_each_gamemode_is_valid(self):
         game_modes_found = set()
-        map(game_modes_found.update, GAME_MODES_BY_MAP_ID.values())
+        list(map(game_modes_found.update, list(GAME_MODES_BY_MAP_ID.values())))
         self.assertSetEqual(set(GAME_MODES_NAMES.keys()), game_modes_found)
         for game_mode in game_modes_found:
             self.assertIn(game_mode, GAME_MODES_NAMES)
@@ -461,10 +461,10 @@ class Test_MapListBlock_append(unittest.TestCase):
         self.assertEqual(3, mlb1._num_words)
         try:
             mlb1.append(data2)
-        except MapListBlockError, err:
+        except MapListBlockError as err:
             self.assertIn('cannot append data', str(err),
                           "expecting error message to contain 'cannot append data' but got %r instead" % err)
-        except Exception, err:
+        except Exception as err:
             self.fail("expecting MapListBlockError but got %r instead" % err)
         else:
             self.fail("expecting MapListBlockError")

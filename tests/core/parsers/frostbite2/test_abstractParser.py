@@ -32,6 +32,7 @@ from b3.plugins.admin import AdminPlugin
 from b3.config import XmlConfigParser
 from b3.parsers.frostbite2.protocol import CommandFailedError
 from b3.parsers.frostbite2.abstractParser import AbstractParser
+from functools import reduce
 
 sleep_patcher = None
 def setUpModule():
@@ -63,7 +64,7 @@ class AbstractParser_TestCase(unittest.TestCase):
 
     def tearDown(self):
         if hasattr(self, "parser"):
-            for c in self.parser.clients.values():
+            for c in list(self.parser.clients.values()):
                 if hasattr(c, 'messagequeue'):
                     c.messagequeue.queue.clear()
             del self.parser.clients

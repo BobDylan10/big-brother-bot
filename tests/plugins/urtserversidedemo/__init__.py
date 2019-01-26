@@ -29,7 +29,7 @@ from b3.plugins.urtserversidedemo import UrtserversidedemoPlugin
 
 
 def write(*args, **kwargs):
-    print "WRITE: %s" % args[0]
+    print("WRITE: %s" % args[0])
     return ""
 
 class Iourt41_TestCase_mixin(unittest.TestCase):

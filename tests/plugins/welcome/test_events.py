@@ -58,13 +58,13 @@ class Test_welcome(Welcome_functional_test):
                               'id': '2',
                               'lastVisit': 'Unknown',
                               'level': '100',
-                              'name': u'SuperAdmin^7'}, self.p.get_client_info(self.superadmin))
+                              'name': 'SuperAdmin^7'}, self.p.get_client_info(self.superadmin))
         # WHEN
         self.superadmin.lastVisit = 1364821993
         self.superadmin._connections = 2
         # THEN
         self.assertDictEqual({'connections': '2',
-                              'group': u'Super Admin',
+                              'group': 'Super Admin',
                               'id': '2',
                               'lastVisit': '02:13PM CET 04/01/13',
                               'level': '100',
@@ -73,7 +73,7 @@ class Test_welcome(Welcome_functional_test):
         self.superadmin.says("!mask mod")
         # THEN
         self.assertDictEqual({'connections': '2',
-                              'group': u'Moderator',
+                              'group': 'Moderator',
                               'id': '2',
                               'lastVisit': '02:13PM CET 04/01/13',
                               'level': '20',
@@ -119,7 +119,7 @@ class Test_welcome(Welcome_functional_test):
         # WHEN
         self.p.welcome(self.client)
         # THEN
-        self.assertListEqual([call(u'^7Jack^7 ^7put in group User')], self.say_mock.mock_calls)
+        self.assertListEqual([call('^7Jack^7 ^7put in group User')], self.say_mock.mock_calls)
         self.assertListEqual(["[Authed] Welcome back Jack [@1], last visit Unknown, you're a User, played 2 times"],
                              self.client.message_history)
 
@@ -143,7 +143,7 @@ class Test_welcome(Welcome_functional_test):
         # WHEN
         self.p.welcome(self.client)
         # THEN
-        self.assertListEqual([call(u'^7Jack^7 ^7put in group User'),
+        self.assertListEqual([call('^7Jack^7 ^7put in group User'),
                               call('^7Everyone welcome back Jack^7^7, player number ^3#1^7, to the server, played 2 '
                                    'times')], self.say_mock.mock_calls)
         self.assertListEqual([], self.client.message_history)
@@ -157,6 +157,6 @@ class Test_welcome(Welcome_functional_test):
         # WHEN
         self.p.welcome(self.client)
         # THEN
-        self.assertListEqual([call(u'^7Jack^7 ^7put in group User'), call('^7Jack^7^7 joined: hi everyone :)')],
+        self.assertListEqual([call('^7Jack^7 ^7put in group User'), call('^7Jack^7^7 joined: hi everyone :)')],
                              self.say_mock.mock_calls)
         self.assertListEqual([], self.client.message_history)

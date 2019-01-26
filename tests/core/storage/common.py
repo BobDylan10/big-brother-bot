@@ -244,14 +244,14 @@ class StorageAPITest(object):
         c1.id = 15
         c2 = Mock()
         c2.id = 18
-        Penalty(clientId=c1.id, adminId=0, inactive=1, type='Ban', timeExpire=-1, data=u'pA').save(self.console)
-        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Ban', timeExpire=self.console.time()+10, data=u'pB').save(self.console)
-        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Warning', timeExpire=self.console.time()+10, data=u'pC').save(self.console)
-        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Kick', timeExpire=self.console.time()-10, data=u'pD').save(self.console)
-        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Ban', timeExpire=self.console.time()-10, data=u'pE').save(self.console)
-        Penalty(clientId=c2.id, adminId=0, inactive=0, type='Warning', timeExpire=-1, data=u'pF').save(self.console)
-        Penalty(clientId=c2.id, adminId=0, inactive=0, type='TempBan', timeExpire=-1, data=u'pG').save(self.console)
-        Penalty(clientId=c2.id, adminId=0, inactive=0, type='Ban', timeExpire=-1, data=u'pH').save(self.console)
+        Penalty(clientId=c1.id, adminId=0, inactive=1, type='Ban', timeExpire=-1, data='pA').save(self.console)
+        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Ban', timeExpire=self.console.time()+10, data='pB').save(self.console)
+        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Warning', timeExpire=self.console.time()+10, data='pC').save(self.console)
+        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Kick', timeExpire=self.console.time()-10, data='pD').save(self.console)
+        Penalty(clientId=c1.id, adminId=0, inactive=0, type='Ban', timeExpire=self.console.time()-10, data='pE').save(self.console)
+        Penalty(clientId=c2.id, adminId=0, inactive=0, type='Warning', timeExpire=-1, data='pF').save(self.console)
+        Penalty(clientId=c2.id, adminId=0, inactive=0, type='TempBan', timeExpire=-1, data='pG').save(self.console)
+        Penalty(clientId=c2.id, adminId=0, inactive=0, type='Ban', timeExpire=-1, data='pH').save(self.console)
 
         def getLastPenalties(types, num):
             p_datas = []
@@ -262,9 +262,9 @@ class StorageAPITest(object):
             self.assertGreaterEqual(num, len(p_datas))
             return p_datas
 
-        self.assertListEqual([u'pH', u'pG', u'pF', u'pC', u'pB'], getLastPenalties(types=('Ban', 'TempBan', 'Kick', 'Warning', 'Notice'), num=5))
-        self.assertListEqual([u'pH', u'pG', u'pF', u'pC'], getLastPenalties(types=('Ban', 'TempBan', 'Kick', 'Warning', 'Notice'), num=4))
-        self.assertListEqual([u'pH', u'pG', u'pB'], getLastPenalties(types=('Ban', 'TempBan'), num=5))
+        self.assertListEqual(['pH', 'pG', 'pF', 'pC', 'pB'], getLastPenalties(types=('Ban', 'TempBan', 'Kick', 'Warning', 'Notice'), num=5))
+        self.assertListEqual(['pH', 'pG', 'pF', 'pC'], getLastPenalties(types=('Ban', 'TempBan', 'Kick', 'Warning', 'Notice'), num=4))
+        self.assertListEqual(['pH', 'pG', 'pB'], getLastPenalties(types=('Ban', 'TempBan'), num=5))
 
     def test_setClientPenalty(self):
         id1 = self.storage.setClientPenalty(Penalty(type='Ban', clientId=1, adminId=0))
@@ -280,7 +280,7 @@ class StorageAPITest(object):
         p1 = self.storage.getClientPenalty(Penalty(id=id1, type='foo'))
         self.assertIsInstance(p1, Penalty)
         self.assertIs(type(p1), Penalty)
-        self.assertEquals('', p1.keyword)
+        self.assertEqual('', p1.keyword)
 
     # def test_setClientPenalty_no_db(self):
     #     when(self.storage).query(ANY()).thenRaise(KeyError())
@@ -460,15 +460,15 @@ class StorageAPITest(object):
     def test_getGroup_by_keyword(self):
         g = self.storage.getGroup(Group(keyword='superadmin'))
         self.assertIsInstance(g, Group)
-        self.assertEquals('superadmin', g.keyword)
-        self.assertEquals(100, g.level)
+        self.assertEqual('superadmin', g.keyword)
+        self.assertEqual(100, g.level)
         self.assertRaises(KeyError, self.storage.getGroup, Group(keyword='foo'))
 
     def test_getGroup_by_level(self):
         g = self.storage.getGroup(Group(level='20'))
         self.assertIsInstance(g, Group)
-        self.assertEquals('mod', g.keyword)
-        self.assertEquals(20, g.level)
+        self.assertEqual('mod', g.keyword)
+        self.assertEqual(20, g.level)
         self.assertRaises(KeyError, self.storage.getGroup, Group(level='500'))
 
     def test_getGroup_none(self):

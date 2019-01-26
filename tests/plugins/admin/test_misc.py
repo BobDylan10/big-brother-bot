@@ -67,7 +67,7 @@ class Test_getGroupLevel(Admin_TestCase):
         self.init()
 
     def test_nominal(self):
-        for test_data, expected in {
+        for test_data, expected in list({
             'NONE': 'none',
             '0': 0,
             '1': 1,
@@ -82,7 +82,7 @@ class Test_getGroupLevel(Admin_TestCase):
             '1-20': '1-20',
             '40-20': '40-20',
             'user-admin': '1-40',
-        }.items():
+        }.items()):
             result = self.p.getGroupLevel(test_data)
             if expected != result:
                 self.fail("%r, expecting %r but got %r" % (test_data, expected, result))
