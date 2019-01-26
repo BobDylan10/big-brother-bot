@@ -23,7 +23,7 @@
 # ################################################################### #
 
 
-import ConfigParser
+import configparser
 
 
 class ConfigFileNotFound(Exception):
@@ -98,5 +98,5 @@ class UpdateError(Exception):
         return repr(self.message)
 
 
-NoOptionError = ConfigParser.NoOptionError
-NoSectionError = ConfigParser.NoSectionError
+NoOptionError = configparser.NoOptionError
+NoSectionError = configparser.NoSectionError

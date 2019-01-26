@@ -31,7 +31,7 @@ import re
 import sys
 import shutil
 import string
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import zipfile
 
 from hashlib import md5
@@ -132,13 +132,13 @@ def confirm(client):
     msg = 'No confirmation...'
     try:
         # First test again known guids
-        f = urllib2.urlopen('http://www.bigbrotherbot.net/confirm.php?uid=%s' % client.guid)
+        f = urllib.request.urlopen('http://www.bigbrotherbot.net/confirm.php?uid=%s' % client.guid)
         response = f.read()
         if not response == 'Error' and not response == 'False':
             msg = '%s is confirmed to be %s!' % (client.name, response)
         else:
             # If it fails, try ip (must be static)
-            f = urllib2.urlopen('http://www.bigbrotherbot.net/confirm.php?ip=%s' % client.ip)
+            f = urllib.request.urlopen('http://www.bigbrotherbot.net/confirm.php?ip=%s' % client.ip)
             response = f.read()
             if not response == 'Error' and not response == 'False':
                 msg = '%s is confirmed to be %s!' % (client.name, response)
@@ -269,8 +269,8 @@ def console_exit(message=''):
         if sys.stdout != sys.__stdout__:
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
-        print message
-        raw_input("press any key to continue...")
+        print(message)
+        input("press any key to continue...")
         raise SystemExit()
     else:
         raise SystemExit(message)
@@ -423,14 +423,14 @@ def getStuffSoundingLike(stuff, expected_stuff):
         match = [clean_expected_stuff[clean_stuff]]
     else:
         # stuff could be a substring of one of the expected value
-        matching_subset = filter(lambda x: x.lower().find(clean_stuff) >= 0, clean_expected_stuff.keys())
+        matching_subset = [x for x in list(clean_expected_stuff.keys()) if x.lower().find(clean_stuff) >= 0]
         if len(matching_subset) == 1:
             match = [clean_expected_stuff[matching_subset[0]]]
         elif len(matching_subset) > 1:
             match = [clean_expected_stuff[i] for i in matching_subset]
         else:
             # no luck with subset lookup, fallback on soundex magic
-            for m in clean_expected_stuff.keys():
+            for m in list(clean_expected_stuff.keys()):
                 s = soundex(m)
                 if s == soundex1:
                     match.append(clean_expected_stuff[m])

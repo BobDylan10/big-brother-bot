@@ -102,7 +102,7 @@ class OutputHandler(logging.Logger):
         And raises the exception.
         """
         self.log(logging.ERROR, msg, *args, **kwargs) 
-        raise raiseError, msg % args
+        raise raiseError(msg % args)
 
 
 class STDOutLogger:

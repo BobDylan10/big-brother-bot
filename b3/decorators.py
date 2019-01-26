@@ -75,7 +75,7 @@ class Memoize(object):
             cache = obj.__cache
         except AttributeError:
             cache = obj.__cache = {}
-        key = (self.func, args[1:], frozenset(kw.items()))
+        key = (self.func, args[1:], frozenset(list(kw.items())))
         try:
             res = cache[key]
         except KeyError:
@@ -137,7 +137,7 @@ class GameEventRouter(object):
             for param in decorator_param:
                 if isinstance(param, type(re.compile(''))):
                     self._gameevents_mapping.append((param, func))
-                elif isinstance(param, basestring):
+                elif isinstance(param, str):
                     self._gameevents_mapping.append((re.compile(str(param)), func))
             return func
         return wrapper

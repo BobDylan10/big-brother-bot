@@ -32,7 +32,7 @@ import b3
 import b3.functions
 import b3.exceptions
 import b3.storage
-import ConfigParser
+import configparser
 
 try:
     from xml.etree import cElementTree as ElementTree
@@ -143,7 +143,7 @@ class XmlConfigParser(B3ConfigParserMixin):
         """
         try:
             self._xml = ElementTree.parse(fp)
-        except Exception, e:
+        except Exception as e:
             raise ConfigFileNotValid("%s" % e)
 
         self._loadSettings()
@@ -175,7 +175,7 @@ class XmlConfigParser(B3ConfigParserMixin):
                 else:
                     return data
             except KeyError:
-                raise ConfigParser.NoOptionError(setting, section)
+                raise configparser.NoOptionError(setting, section)
 
     def getint(self, section, setting):
         """
@@ -206,14 +206,14 @@ class XmlConfigParser(B3ConfigParserMixin):
         Return the list of sections of the configuration file.
         :return list
         """
-        return self._settings.keys()
+        return list(self._settings.keys())
 
     def options(self, section):
         """
         Return the list of options in the given section.
         :return list
         """
-        return self._settings[section].keys()
+        return list(self._settings[section].keys())
 
     def has_section(self, section):
         """
@@ -243,7 +243,7 @@ class XmlConfigParser(B3ConfigParserMixin):
         """
         Return all the elements of the given section.
         """
-        return self._settings[section].items()
+        return list(self._settings[section].items())
 
     def load(self, filename):
         """
@@ -270,7 +270,7 @@ class XmlConfigParser(B3ConfigParserMixin):
 
         try:
             self._xml = ElementTree.XML(xmlstring)
-        except Exception, e:
+        except Exception as e:
             raise ConfigFileNotValid("%s" % e)
 
         self._loadSettings()
@@ -285,7 +285,7 @@ class XmlConfigParser(B3ConfigParserMixin):
         pass
 
 
-class CfgConfigParser(B3ConfigParserMixin, ConfigParser.ConfigParser):
+class CfgConfigParser(B3ConfigParserMixin, configparser.ConfigParser):
     """
     A config parser class that mimics the ConfigParser, reads the cfg format.
     """
@@ -297,7 +297,7 @@ class CfgConfigParser(B3ConfigParserMixin, ConfigParser.ConfigParser):
         Object constructor.
         :param allow_no_value: Whether or not to allow empty values in configuration sections
         """
-        ConfigParser.ConfigParser.__init__(self, allow_no_value=allow_no_value)
+        configparser.ConfigParser.__init__(self, allow_no_value=allow_no_value)
 
     def add_comment(self, section, comment):
         """
@@ -311,7 +311,7 @@ class CfgConfigParser(B3ConfigParserMixin, ConfigParser.ConfigParser):
             try:
                 sectdict = self._sections[section]
             except KeyError:
-                raise ConfigParser.NoSectionError(section)
+                raise configparser.NoSectionError(section)
         sectdict['; %s' % (comment,)] = None
 
     def get(self, section, option, *args, **kwargs):
@@ -319,13 +319,13 @@ class CfgConfigParser(B3ConfigParserMixin, ConfigParser.ConfigParser):
         Return a configuration value as a string.
         """
         try:
-            value = ConfigParser.ConfigParser.get(self, section, option, *args, **kwargs)
+            value = configparser.ConfigParser.get(self, section, option, *args, **kwargs)
             if value is None:
                 return ""
             return value
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             # plugins are used to only catch NoOptionError
-            raise ConfigParser.NoOptionError(option, section)
+            raise configparser.NoOptionError(option, section)
 
     def load(self, filename):
         """
@@ -342,8 +342,8 @@ class CfgConfigParser(B3ConfigParserMixin, ConfigParser.ConfigParser):
         """
         Read the cfg config from a string.
         """
-        import StringIO
-        fp = StringIO.StringIO(cfg_string)
+        import io
+        fp = io.StringIO(cfg_string)
         self.readfp(fp)
         fp.close()
         self.fileName = None
@@ -355,8 +355,8 @@ class CfgConfigParser(B3ConfigParserMixin, ConfigParser.ConfigParser):
         Inherits from ConfigParser.ConfigParser to throw our custom exception if needed
         """
         try:
-            ConfigParser.ConfigParser.readfp(self, fp, filename)
-        except Exception, e:
+            configparser.ConfigParser.readfp(self, fp, filename)
+        except Exception as e:
             raise ConfigFileNotValid("%s" % e)
 
     def save(self):
@@ -373,13 +373,13 @@ class CfgConfigParser(B3ConfigParserMixin, ConfigParser.ConfigParser):
         Write an .ini-format representation of the configuration state.
         """
         if self._defaults:
-            fp.write("[%s]\n" % ConfigParser.DEFAULTSECT)
-            for (key, value) in self._defaults.items():
+            fp.write("[%s]\n" % configparser.DEFAULTSECT)
+            for (key, value) in list(self._defaults.items()):
                 self._write_item(fp, key, value)
             fp.write("\n")
         for section in self._sections:
             fp.write("[%s]\n" % section)
-            for (key, value) in self._sections[section].items():
+            for (key, value) in list(self._sections[section].items()):
                 self._write_item(fp, key, value)
             fp.write("\n")
 
@@ -444,7 +444,7 @@ class MainConfig(B3ConfigParserMixin):
         ## Load the list of disabled plugins
         try:
             disabled_plugins_raw = self._config_parser.get('b3', 'disabled_plugins')
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             disabled_plugins = []
         else:
             disabled_plugins = re.split('\W+', disabled_plugins_raw.lower())
@@ -452,7 +452,7 @@ class MainConfig(B3ConfigParserMixin):
         def get_custom_plugin_path(plugin_name):
             try:
                 return self._config_parser.get('plugins_custom_path', plugin_name)
-            except ConfigParser.NoOptionError:
+            except configparser.NoOptionError:
                 return None
 
         self._plugins = []

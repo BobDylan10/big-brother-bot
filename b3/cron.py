@@ -26,7 +26,7 @@ __author__ = 'ThorN, Courgette'
 __version__ = '1.5'
 
 import re
-import thread
+import _thread
 import threading
 import time
 import traceback
@@ -155,7 +155,7 @@ class CronTab(object):
                         for val in result:
                             myset[int(val)] = None
 
-                mylist = myset.keys()
+                mylist = list(myset.keys())
                 mylist.sort()
                 return mylist
             else:
@@ -185,7 +185,7 @@ class CronTab(object):
             step = int(r.results.group(1))
             if step > maxrate:
                 raise ValueError('%s cannot be over every %s' % (rate, maxrate-1))
-            return range(0, maxrate, step)
+            return list(range(0, maxrate, step))
         elif r.match(r'^(?P<lmin>[0-9]+)-(?P<lmax>[0-9]+)(/(?P<step>[0-9]+))?$', rate):
             # 10-20 = [0, 10, 20, 30, 40, 50]
             lmin = int(r.results.group('lmin'))
@@ -201,7 +201,7 @@ class CronTab(object):
                 raise ValueError('%s is out of accepted range 0-%s' % (rate, maxrate-1))
             if lmin > lmax:
                 raise ValueError('%s cannot be greater than %s in %s' % (lmin, lmax, rate))
-            return range(lmin, lmax + 1, step)
+            return list(range(lmin, lmax + 1, step))
 
         raise TypeError('"%s" is not a known cron rate type' % rate)
 
@@ -316,7 +316,7 @@ class Cron(object):
         """
         Start the cron scheduler in a separate thread.
         """
-        thread.start_new_thread(self.run, ())
+        _thread.start_new_thread(self.run, ())
 
     @staticmethod
     def time():
@@ -349,7 +349,7 @@ class Cron(object):
                 nexttime = self.getNextTime()
 
             t = time.gmtime(nexttime)
-            for k, c in self._tabs.items():
+            for k, c in list(self._tabs.items()):
                 if c.match(t):
                     if 0 < c.maxRuns < c.numRuns + 1:
                         # reached max executions, remove tab
@@ -358,7 +358,7 @@ class Cron(object):
                         c.numRuns += 1
                         try:
                             c.run()
-                        except Exception, msg:
+                        except Exception as msg:
                             self.console.error('Exception raised while executing crontab %s: %s\n%s', c.command,
                                                msg, traceback.extract_tb(sys.exc_info()[2]))
             nexttime += 1

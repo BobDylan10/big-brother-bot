@@ -27,15 +27,15 @@ import os
 import re
 import sys
 import platform
-import pkg_handler
+from . import pkg_handler
 import traceback
 import time
 import signal
 import shutil
 
 from tempfile import TemporaryFile
-from ConfigParser import NoOptionError
-from ConfigParser import NoSectionError
+from configparser import NoOptionError
+from configparser import NoSectionError
 
 __author__ = 'ThorN'
 __version__ = '1.12'
@@ -328,13 +328,13 @@ def start(mainconfig, options):
         console.start()
     except KeyboardInterrupt:
         console.shutdown()
-        print 'Goodbye'
+        print('Goodbye')
         return
-    except SystemExit, msg:
-        print 'EXITING: %s' % msg
+    except SystemExit as msg:
+        print('EXITING: %s' % msg)
         raise
-    except Exception, msg:
-        print 'ERROR: %s' % msg
+    except Exception as msg:
+        print('ERROR: %s' % msg)
         traceback.print_exc()
         sys.exit(223)
 
