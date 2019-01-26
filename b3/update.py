@@ -33,7 +33,6 @@ import urllib.request, urllib.error, urllib.parse
 
 from distutils import version
 from time import sleep
-from types import StringType
 
 ## url from where we can get the latest B3 version number
 URL_B3_LATEST_VERSION = 'http://master.bigbrotherbot.net/version.json'
@@ -113,7 +112,7 @@ $''', re.VERBOSE)
         Compare current object with another one.
         :param other: The other object
         """
-        if isinstance(other, StringType):
+        if isinstance(other, str):
             other = B3version(other)
 
         compare = cmp(self.version, other.version)
