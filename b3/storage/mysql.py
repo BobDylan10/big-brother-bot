@@ -215,7 +215,7 @@ class MysqlStorage(DatabaseStorage):
 
             try:
                 # BACKUP USING MYSQL.CONNECTOR
-                from . import mysql.connector as mysqldriver
+                import mysql.connector as mysqldriver
                 cls.__bases__ = (MysqlConnectorStorage,)
                 cls.__driver = mysqldriver
                 # new inheritance: MysqlStorage -> MysqlConnectorStorage -> DatabaseStorage -> Storage
