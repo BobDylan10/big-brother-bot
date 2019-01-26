@@ -331,7 +331,7 @@ class CfgConfigParser(B3ConfigParserMixin, configparser.ConfigParser):
         """
         Load a configuration file.
         """
-        f = file(filename, 'r')
+        f = open(filename, 'r')
         self.readfp(f)
         f.close()
         self.fileName = filename

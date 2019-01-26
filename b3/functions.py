@@ -238,10 +238,11 @@ def escape(text, esc):
 def decode(text):
     """
     Return a copy of text decoded using the default system encoding.
+    TODO : remove it because utf8 is right everywhere ? Or maybe we'll have problems
     :param text: the text to decode
     :return: string
     """
-    return text.decode(sys.getfilesystemencoding())
+    return text
 
 
 def clamp(value, minv=None, maxv=None):
