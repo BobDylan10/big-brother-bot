@@ -22,15 +22,15 @@ class MemDumpLoader( object ):
     def load( self, stats ):
         """Build a squaremap-compatible model from a memory_dump loader"""
         rows = self.rows
-        for func, raw in stats.iteritems():
+        for func, raw in stats.items():
             try:
                 rows[func] =  PStatRow( func,raw )
-            except ValueError, err:
+            except ValueError as err:
                 log.info( 'Null row: %s', func )
-        for row in rows.itervalues():
+        for row in rows.values():
             row.weave( rows )
         roots = []
-        for key,value in rows.items():
+        for key,value in list(rows.items()):
             if not value.parents:
                 log.debug( 'Found node root: %s', value )
                 roots.append( value )
@@ -51,7 +51,7 @@ class MemDumpLoader( object ):
         files = {}
         root = PStatLocation( '/', 'PYTHONPATH' )
         self.location_rows = self.rows.copy()
-        for child in self.rows.values():
+        for child in list(self.rows.values()):
             current = directories.get( child.directory )
             directory, filename = child.directory, child.filename
             if current is None:
@@ -71,7 +71,7 @@ class MemDumpLoader( object ):
                 current.children.append( file_current )
             file_current.children.append( child )
         # now link the directories...
-        for key,value in directories.items():
+        for key,value in list(directories.items()):
             if value is root:
                 continue
             found = False
@@ -97,7 +97,7 @@ class BaseStat( object ):
         if already_done is None:
             already_done = {}
         for child in getattr(self,attribute,()):
-            if not already_done.has_key( child ):
+            if child not in already_done:
                 already_done[child] = True
                 yield child
                 for descendent in child.recursive_distinct( already_done=already_done, attribute=attribute ):
@@ -116,7 +116,7 @@ class PStatRow( BaseStat ):
         file,line,func = self.key = key
         try:
             dirname,basename = os.path.dirname(file),os.path.basename(file)
-        except ValueError, err:
+        except ValueError as err:
             dirname = ''
             basename = file
         nc, cc, tt, ct, callers = raw
@@ -145,7 +145,7 @@ class PStatRow( BaseStat ):
         self.children.append( child )
 
     def weave( self, rows ):
-        for caller,data in self.callers.iteritems():
+        for caller,data in self.callers.items():
             # data is (cc,nc,tt,ct)
             parent = rows.get( caller )
             if parent:
@@ -156,7 +156,7 @@ class PStatRow( BaseStat ):
         if total:
             try:
                 (cc,nc,tt,ct) = child.callers[ self.key ]
-            except TypeError, err:
+            except TypeError as err:
                 ct = child.callers[ self.key ]
             return float(ct)/total
         return 0
@@ -182,7 +182,7 @@ class PStatGroup( BaseStat ):
         """Finalize our values (recursively) taken from our children"""
         if already_done is None:
             already_done = {}
-        if already_done.has_key( self ):
+        if self in already_done:
             return True
         already_done[self] = True
         self.filter_children()
@@ -248,4 +248,4 @@ if __name__ == "__main__":
     import sys
     p = PStatsLoader( sys.argv[1] )
     assert p.tree
-    print p.tree
+    print(p.tree)
