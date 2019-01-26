@@ -83,7 +83,7 @@ class Cursor(object):
             return dict()
         d = dict()
         desc = self._cursor.description
-        for i in xrange(0, len(self.fields)):
+        for i in range(0, len(self.fields)):
             d[desc[i][0]] = self.fields[i]
         return d
 
