@@ -73,7 +73,7 @@ class DuelPlugin(b3.plugin.Plugin):
         """
         if event.client and event.client.isvar(self, 'duelling'):
             duels = event.client.var(self, 'duelling', {}).value
-            for duel in duels.values():
+            for duel in list(duels.values()):
                 if (duel.clientA == event.client and duel.clientB == event.target) or \
                     (duel.clientB == event.client and duel.clientA == event.target):
                     duel.registerKillEvent(event)
@@ -86,7 +86,7 @@ class DuelPlugin(b3.plugin.Plugin):
             self.debug('client disconnecting : %r' % event.client)
             for c in self.console.clients.getList():
                 duels = c.var(self, 'duelling', {}).value
-                for duel in duels.values():
+                for duel in list(duels.values()):
                     if duel.clientA == event.client or duel.clientB == event.client:
                         duel.announceScoreTo(duel.clientA)
                         duel.announceScoreTo(duel.clientB)
@@ -137,7 +137,7 @@ class DuelPlugin(b3.plugin.Plugin):
         :param client: the client we want to notice Duel scores.
         """
         duels = client.var(self, 'duelling', {}).value
-        for duel in duels.values():
+        for duel in list(duels.values()):
             duel.announceScoreTo(client)
 
     ####################################################################################################################
@@ -158,7 +158,7 @@ class DuelPlugin(b3.plugin.Plugin):
         x = self.adminPlugin.parseUserCmd(data)
         if not x:
             if len(duels) == 1:
-                self.cancelDuel(duels.values()[0])
+                self.cancelDuel(list(duels.values())[0])
             else:
                 client.message('^7You have ^3%s ^7duels running, type ^3!^7duelcancel <name>' % len(duels))
         else:
@@ -186,7 +186,7 @@ class DuelPlugin(b3.plugin.Plugin):
         x = self.adminPlugin.parseUserCmd(data)
         if not x:
             if len(duels) == 1:
-                duels.values()[0].resetScores()
+                list(duels.values())[0].resetScores()
             else:
                 client.message('^7You have ^3%s ^7duels running, type ^3!^7duelreset <name>' % len(duels))
         else:

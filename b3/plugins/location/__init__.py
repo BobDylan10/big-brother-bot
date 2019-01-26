@@ -33,7 +33,7 @@ import b3.events
 import math
 
 from b3.functions import getCmd
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 
 class LocationPlugin(b3.plugin.Plugin):

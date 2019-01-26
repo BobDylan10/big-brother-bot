@@ -247,14 +247,14 @@ class UrtserversidedemoPlugin(Plugin):
     def _load_config_haxbusterurt(self):
         try:
             self._haxbusterurt_demo_duration = self.config.getint('haxbusterurt', 'demo_duration')
-        except Exception, err:
+        except Exception as err:
             self.warning(err)
         self.info('haxbusterurt demo_duration: %s minutes' % self._haxbusterurt_demo_duration)
 
     def _load_config_follow(self):
         try:
             self._follow_demo_duration = self.config.getint('follow', 'demo_duration')
-        except Exception, err:
+        except Exception as err:
             self.warning(err)
         self.info('follow demo_duration: %s minutes' % self._follow_demo_duration)
 
@@ -339,7 +339,7 @@ class DemoManager(object):
         """
         Cancel all DemoStarter objects and stopper timers that would be waiting
         """
-        for guid, starter in self._demo_starters.items():
+        for guid, starter in list(self._demo_starters.items()):
             starter.cancel()
         for guid, stopper in self._auto_stop_timers:
             stopper.cancel()

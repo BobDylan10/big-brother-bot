@@ -33,9 +33,9 @@ import new
 import os
 import re
 
-from ConfigParser import ConfigParser
-from ConfigParser import NoOptionError
-from ConfigParser import NoSectionError
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
 from b3.config import XmlConfigParser
 from b3.functions import getCmd
 from b3.querybuilder import QueryBuilder
@@ -134,7 +134,7 @@ class CmdmanagerPlugin(b3.plugin.Plugin):
             grantlist = set([x for x in row['commands'].split(GRANT_SET_JOIN) if x != ''])
             setattr(client, GRANT_SET_ATTR, grantlist)
             self.debug('retrieved command grants for %s [@%s] from the storage: %r', client.name, client.id, grantlist)
-        except Exception, e:
+        except Exception as e:
             self.error('could not retrieve command grants for %s [@%s] : %s', client.name, client.id, e)
 
     def save_command_grants(self, client):
@@ -158,7 +158,7 @@ class CmdmanagerPlugin(b3.plugin.Plugin):
             else:
                 self.console.storage.query(QueryBuilder(self.console.storage.db).UpdateQuery(data, 'cmdgrants', {'id': client.id}))
             self.debug('stored command grants for %s [@%s]', client.name, client.id)
-        except Exception, e:
+        except Exception as e:
             self.error('could not store command grants for %s [@%s]: %s', client.name, client.id, e)
         finally:
             if cursor:
@@ -277,7 +277,7 @@ class CmdmanagerPlugin(b3.plugin.Plugin):
             # write in the plugin specific configuration file
             func = getattr(self, 'write_%s_config_file' % ('xml' if isinstance(plugin.config, XmlConfigParser) else 'ini'))
             func(command, data)
-        except (AttributeError, TypeError, IOError, NoSectionError), e:
+        except (AttributeError, TypeError, IOError, NoSectionError) as e:
             self.warning('could not change plugin <%s> config file: %s', data['plugin_name'], e)
             client.message('^7could not change plugin ^1%s ^7configuration file', data['plugin_name'])
 
