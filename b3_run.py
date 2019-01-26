@@ -28,13 +28,10 @@ __version__ = '1.2'
 
 import sys
 
-if sys.version_info >= (3,):
-    raise SystemExit("Sorry, cannot continue: B3 is not yet compatible with python version 3!")
+if sys.version_info <= (3,):
+    raise SystemExit("Sorry, cannot continue: B3 is yet compatible python version 2.7 anymore!")
 
-if sys.version_info < (2, 7):
-    raise SystemExit("Sorry, cannot continue: B3 is not compatible with python versions earlier than 2.7!")
-    
-import b3.run    
+import b3.run
 
 
 def main():
