@@ -130,7 +130,7 @@ TeamDeathMatch0;Team Deathmatch;64
 GAME_MODES_NAMES = dict([(x['Engine Name'], x['Human-Readable Name']) for x in
                          csv.DictReader(gamemodes_csv.splitlines(), dialect='dice')])
 
-GAMEMODES_IDS_BY_NAME = {name.lower(): x for x, name in GAME_MODES_NAMES.items()}
+GAMEMODES_IDS_BY_NAME = {name.lower(): x for x, name in list(GAME_MODES_NAMES.items())}
 
 maps_csv = """\
 Engine name;Human-readable name;Game modes,,,,,,,,,
@@ -149,7 +149,7 @@ mp_offshore;Riptide;TurfWarLarge0,TurfWarSmall0,Heist0,Hotwire0,Bloodmoney0,Hit0
 MAP_NAME_BY_ID = dict([(x['Engine name'].lower(), x['Human-readable name']) for x in
                        csv.DictReader(maps_csv.splitlines(), dialect='dice')])
 
-MAP_ID_BY_NAME = {name.lower(): x for x, name in MAP_NAME_BY_ID.items()}
+MAP_ID_BY_NAME = {name.lower(): x for x, name in list(MAP_NAME_BY_ID.items())}
 
 GAME_MODES_BY_MAP_ID = dict([(x['Engine name'].lower(), x['Game modes,,,,,,,,,'].split(',')) for x in
                              csv.DictReader(maps_csv.splitlines(), dialect='dice')])
@@ -254,7 +254,7 @@ class BfhParser(AbstractParser):
         AbstractParser.pluginsStarted(self)
         self.info('Connecting all players...')
         plist = self.getPlayerList()
-        for cid, p in plist.iteritems():
+        for cid, p in plist.items():
             self.getClient(cid)
 
     ####################################################################################################################
@@ -388,7 +388,7 @@ class BfhParser(AbstractParser):
                     pings[player['name']] = int(player['ping'])
         except (ValueError, TypeError):
             pass  # continue if the ping value is empty
-        except Exception, err:
+        except Exception as err:
             self.error('Unable to retrieve pings from player list', exc_info=err)
         return pings
 
@@ -492,7 +492,7 @@ class BfhParser(AbstractParser):
         Return a list of supported levels for the current game mod.
         """
         # TODO : remove this method once the method on from AbstractParser is working
-        return MAP_NAME_BY_ID.keys()
+        return list(MAP_NAME_BY_ID.keys())
 
     def getSupportedGameModesByMapId(self, map_id):
         """
@@ -622,7 +622,7 @@ class BfhParser(AbstractParser):
         # If this fails, we use the old method and get the map name from the server vars.
         try:
             return self.write(('currentLevel',))[0]
-        except CommandFailedError, err:
+        except CommandFailedError as err:
             self.warning(err)
             self.getServerInfo()
             return self.game.mapName
@@ -712,7 +712,7 @@ class BfhParser(AbstractParser):
         )
 
         start_index = 7 + numOfTeams + 8
-        for i, n in zip(range(start_index, start_index + len(new_info)), new_info):
+        for i, n in zip(list(range(start_index, start_index + len(new_info))), new_info):
             try:
                 response[n] = data[i]
             except IndexError:
@@ -742,12 +742,12 @@ class BfhParser(AbstractParser):
                         return False
             except IndexError:
                 pass
-            except CommandFailedError, err:
+            except CommandFailedError as err:
                 if err.message[0] == 'InvalidPlayerName':
                     pass
                 else:
                     raise Exception(err)
-            except Exception, err:
+            except Exception as err:
                 self.console.error("Could not get player state for player %s: %s" % (_player_name, err), exc_info=err)
 
         def getPlayerState(self):
@@ -773,7 +773,7 @@ class BfhParser(AbstractParser):
             try:
                 _player_info_block = PlayerInfoBlock(self.console.write(('admin.listPlayers', 'player', _player_name)))
                 return int(_player_info_block[0]['type'])
-            except Exception, err:
+            except Exception as err:
                 self.console.error("Could not get player_type for player %s: %s" % (self.name, err), exc_info=err)
 
         def get_player_type(self):

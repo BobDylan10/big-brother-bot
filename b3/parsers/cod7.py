@@ -388,7 +388,7 @@ def newLoadArbPlugins(self):
     Call original loadArbPlugin method from the Parser class then
     unload the httpytail plugin then load the cod7http plugin instead.
     """
-    print "running newLoadArbPlugins "
+    print("running newLoadArbPlugins ")
     
     ## first, run usual loadArbPlugins
     originalLoadArbPlugins(self)
@@ -410,7 +410,7 @@ def newLoadArbPlugins(self):
             self.bot('Plugin %s (%s - %s) loaded', p, version, author)
             self.screen.write('Loading          : COD7 http Plugin\n')
             self.screen.flush()
-        except Exception, msg:
+        except Exception as msg:
             self.critical('Error loading plugin: %s', msg)
             raise SystemExit('ERROR while loading %s' % p)
 

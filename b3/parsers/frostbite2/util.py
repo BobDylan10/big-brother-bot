@@ -308,12 +308,12 @@ class MapListBlock(object):
 
         try:
             num_maps = int(data[0])
-        except ValueError, err:
+        except ValueError as err:
             raise MapListBlockError("invalid data: first element should be a integer, got %r" % data[0], err)
 
         try:
             num_words = int(data[1])
-        except ValueError, err:
+        except ValueError as err:
             raise MapListBlockError("invalid data: second element should be a integer, got %r" % data[1], err)
 
         if len(data) != (2 + (num_maps * num_words)):

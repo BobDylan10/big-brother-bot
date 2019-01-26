@@ -26,8 +26,8 @@ import asyncore
 import b3
 import b3.cron
 import b3.events
-import protocol
-import rcon
+from . import protocol
+from . import rcon
 import re
 import sys
 import time
@@ -37,7 +37,7 @@ from b3.decorators import GameEventRouter
 from b3.functions import prefixText
 from b3.lib.sourcelib import SourceQuery
 from b3.parser import Parser
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 __author__ = 'Courgette'
 __version__ = '0.4.8'
@@ -94,7 +94,7 @@ class FrontlineParser(b3.parser.Parser):
         """
         try:
             self._rconUser = self.config.get("server", "rcon_user")
-        except NoOptionError, err:
+        except NoOptionError as err:
             self.error("Cannot find rcon_user in B3 main config file. %s", err)
             raise SystemExit("incomplete config")
 
@@ -232,7 +232,7 @@ class FrontlineParser(b3.parser.Parser):
                 self.game.sv_hostname = serverinfo['hostname']
             if 'maxplayers' in serverinfo:
                 self.game.sv_maxclients = serverinfo['maxplayers']
-        except Exception, err:
+        except Exception as err:
             self.exception(err)
 
     ####################################################################################################################
@@ -290,7 +290,7 @@ class FrontlineParser(b3.parser.Parser):
         for line in lines[2:]:
             if len(line):
                 data = line.split('\t')
-                pdata = dict(zip(headers, data))
+                pdata = dict(list(zip(headers, data)))
                 if 'ProfileID' not in pdata:
                     self.debug("no ProfileID found")
                     continue
@@ -456,11 +456,11 @@ class FrontlineParser(b3.parser.Parser):
         # disconnect clients that have left
         for client in self.clients.getList():
             howlongago = now - client.last_update_time
-            self.debug(u"%s last seen %d seconds ago" % (client, howlongago))
+            self.debug("%s last seen %d seconds ago" % (client, howlongago))
             if howlongago < (self._playerlistInterval * 2):
                 mlist[client.cid] = client
             else:
-                self.info(u"%s last update is too old" % client)
+                self.info("%s last update is too old" % client)
                 client.disconnect()
         return mlist
 
@@ -666,7 +666,7 @@ class FrontlineParser(b3.parser.Parser):
         pings = {}
         clients = self.clients.getList()
         if filter_client_ids:
-            clients = filter(lambda client: client.cid in filter_client_ids, clients)
+            clients = [client for client in clients if client.cid in filter_client_ids]
 
         for c in clients:
             try:

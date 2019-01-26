@@ -527,7 +527,7 @@ class Packet(object):
         return s
         
     def addGUID(self, playerId):
-        self.data += pack('>Q', long(playerId))
+        self.data += pack('>Q', int(playerId))
     
     def addString(self, s):
         encodedData = s.encode('utf-8')
@@ -635,5 +635,5 @@ class Client(asyncore.dispatcher_with_send):
         try:
             self.console.verbose2("RCON< %r" % packet)
             self.send(packet.encode())
-        except socket.error, e:
+        except socket.error as e:
             self.console.error(repr(e))

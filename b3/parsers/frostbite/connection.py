@@ -74,7 +74,7 @@ class FrostbiteConnection(object):
         try:
             self._connect()
             self._auth()
-        except socket.error, detail:
+        except socket.error as detail:
             raise FrostbiteNetworkException('cannot create FrostbiteConnection: %s'% detail)
    
     def __del__(self):
@@ -89,7 +89,7 @@ class FrostbiteConnection(object):
             self._receiveBuffer = ''
             self._serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._serverSocket.connect((self._host, self._port))
-        except Exception, err:
+        except Exception as err:
             raise FrostbiteException(err)
     
     def close(self):
@@ -126,7 +126,7 @@ class FrostbiteConnection(object):
         try:
             self._serverSocket.sendall(request)
             [response, self._receiveBuffer] = protocol.receivePacket(self._serverSocket, self._receiveBuffer)
-        except socket.error, detail:
+        except socket.error as detail:
             raise FrostbiteNetworkException(detail)
         
         if response is None:
@@ -204,7 +204,7 @@ class FrostbiteConnection(object):
                     self.printPacket(protocol.DecodePacket(request))
                     self._serverSocket.sendall(request)
                     timeout_counter = 0
-            except socket.error, detail:
+            except socket.error as detail:
                 raise FrostbiteNetworkException('readEvent: %r'% detail)
 
         try:
@@ -224,7 +224,7 @@ class FrostbiteConnection(object):
             
             try:
                 self._serverSocket.sendall(response)
-            except socket.error, detail:
+            except socket.error as detail:
                 self.console.warning("in readEvent while sending response OK to server : %s" % detail)
                 
             return words

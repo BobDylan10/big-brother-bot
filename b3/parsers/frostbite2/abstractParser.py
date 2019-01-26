@@ -31,7 +31,7 @@ import sys
 import traceback
 import time
 import string
-import Queue
+import queue
 import threading
 import new
 import b3.clients
@@ -66,8 +66,8 @@ class AbstractParser(b3.parser.Parser):
     PunkBuster = None
     ban_with_server = True
 
-    frostbite_event_queue = Queue.Queue(400)
-    sayqueue = Queue.Queue(100)
+    frostbite_event_queue = queue.Queue(400)
+    sayqueue = queue.Queue(100)
     sayqueue_get_timeout = 2
     sayqueuelistener = None
 
@@ -205,7 +205,7 @@ class AbstractParser(b3.parser.Parser):
             if not self._serverConnection or not self._serverConnection.connected:
                 try:
                     self.setup_frostbite_connection()
-                except CommandError, err:
+                except CommandError as err:
                     if err.message[0] == 'InvalidPasswordHash':
                         self.error("Your rcon password is incorrect: "
                                    "check setting 'rcon_password' in your main config file")
@@ -213,9 +213,9 @@ class AbstractParser(b3.parser.Parser):
                         break
                     else:
                         self.error(err)
-                except IOError, err:
+                except IOError as err:
                     self.error("IOError %s"% err)
-                except Exception, err:
+                except Exception as err:
                     self.error(err)
                     self.exitcode = 220
                     break
@@ -223,17 +223,17 @@ class AbstractParser(b3.parser.Parser):
             try:
                 added, expire, packet = self.frostbite_event_queue.get(timeout=5)
                 self.routeFrostbitePacket(packet)
-            except Queue.Empty:
+            except queue.Empty:
                 self.verbose2("No game server event to treat in the last 5s")
-            except CommandError, err:
+            except CommandError as err:
                 # it does not matter from the parser perspective if Frostbite command failed
                 # (timeout or bad reply)
                 self.warning(err)
-            except NetworkError, e:
+            except NetworkError as e:
                 # the connection to the frostbite server is lost
                 self.warning(e)
                 self.close_frostbite_connection()
-            except Exception, e:
+            except Exception as e:
                 self.error("Unexpected error: please report this on the B3 forums")
                 self.error(e)
                 self.error('%s: %s', e, traceback.extract_tb(sys.exc_info()[2]))
@@ -312,7 +312,7 @@ class AbstractParser(b3.parser.Parser):
         try:
             # checkout punkbuster support
             result = self._serverConnection.command('punkBuster.isActive')
-        except CommandError, e:
+        except CommandError as e:
             self.error("Could not get punkbuster status : %r" % e)
             self.PunkBuster = None
             self.ban_with_server = True
@@ -343,7 +343,7 @@ class AbstractParser(b3.parser.Parser):
         self.console(repr(packet))
         try:
             self.frostbite_event_queue.put((self.time(), self.time() + 10, packet), timeout=2)
-        except Queue.Full:
+        except queue.Full:
             self.error("Frostbite2 event queue full: dropping event %r" % packet)
 
     def routeFrostbitePacket(self, packet):
@@ -392,12 +392,12 @@ class AbstractParser(b3.parser.Parser):
                     if self.working:
                         time.sleep(self._message_delay)
                 self.sayqueue.task_done()
-            except Queue.Empty:
+            except queue.Empty:
                 #self.verbose2("sayqueuelistener: had nothing to do in the last %s sec" % self.sayqueue_get_timeout)
                 pass
             except (KeyboardInterrupt, SystemExit):
                 raise
-            except Exception, err:
+            except Exception as err:
                 self.error(err)
         self.info("sayqueuelistener job ended")
 
@@ -778,7 +778,7 @@ class AbstractParser(b3.parser.Parser):
                     else:
                         client.guid = matching_clients[0].guid
                         client.auth()
-                except Exception, err:
+                except Exception as err:
                     self.warning("Failed to try to auth %s by pbid. %r" % (name, err))
             if not client.guid:
                 self.error("Game server failed to provide a EA_guid for player %s: cannot auth player!" % name)
@@ -833,7 +833,7 @@ class AbstractParser(b3.parser.Parser):
         players = self.getPlayerList()
         self.verbose('authorizeClients() = %s' % players)
 
-        for cid, p in players.iteritems():
+        for cid, p in players.items():
             sp = self.clients.getByCID(cid)
             if sp:
                 # Only set provided data, otherwise use the currently set data
@@ -856,7 +856,7 @@ class AbstractParser(b3.parser.Parser):
         """
         plist = self.getPlayerList()
         mlist = {}
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.clients.getByCID(cid)
             if client:
                 mlist[cid] = client
@@ -935,7 +935,7 @@ class AbstractParser(b3.parser.Parser):
                                            big_msg_duration=int(float(self._big_msg_duration))))
                 if self._big_msg_repeat in ('all', 'pm'):
                     self.write(self.getCommand('message', message=text, cid=client.cid))
-        except Exception, err:
+        except Exception as err:
             self.warning(err)
 
     def ban(self, client, reason='', admin=None, silent=False, *kwargs):
@@ -947,7 +947,7 @@ class AbstractParser(b3.parser.Parser):
         :param silent: Whether or not to announce this ban
         """
         self.debug('BAN : client: %s, reason: %s', client, reason)
-        if isinstance(client, basestring):
+        if isinstance(client, str):
             # TODO: remove this stack trace when we figured out when tempban is called with a str as client
             traceback.print_stack()
             self.write(self.getCommand('banByName', name=client, reason=reason[:80]))
@@ -972,7 +972,7 @@ class AbstractParser(b3.parser.Parser):
                     self.write(('banList.save',))
                     if admin:
                         admin.message('Banned: %s (@%s) has been added to banlist' % (client.exactName, client.id))
-                except CommandFailedError, err:
+                except CommandFailedError as err:
                     self.error(err)
             elif not client.guid:
                 # ban by name
@@ -982,7 +982,7 @@ class AbstractParser(b3.parser.Parser):
                     self.write(('banList.save',))
                     if admin:
                         admin.message('Banned: %s (@%s) has been added to banlist' % (client.exactName, client.id))
-                except CommandFailedError, err:
+                except CommandFailedError as err:
                     self.error(err)
             else:
                 # ban by guid
@@ -992,7 +992,7 @@ class AbstractParser(b3.parser.Parser):
                     self.write(('banList.save',))
                     if admin:
                         admin.message('Banned: %s (@%s) has been added to banlist' % (client.exactName, client.id))
-                except CommandFailedError, err:
+                except CommandFailedError as err:
                     self.error(err)
 
         if self.PunkBuster:
@@ -1033,7 +1033,7 @@ class AbstractParser(b3.parser.Parser):
 
                 if not silent and fullreason != '':
                     self.say(fullreason)
-            except CommandFailedError, err:
+            except CommandFailedError as err:
                 if "NotInList" in err.message:
                     pass
                 else:
@@ -1044,7 +1044,7 @@ class AbstractParser(b3.parser.Parser):
             self.verbose('UNBAN: Removed guid (%s) from banlist' %client.guid)
             if admin:
                 admin.message('Unbanned: Removed %s guid from banlist' % client.exactName)
-        except CommandFailedError, err:
+        except CommandFailedError as err:
             if "NotInList" in err.message:
                 pass
             else:
@@ -1064,7 +1064,7 @@ class AbstractParser(b3.parser.Parser):
         """
         duration = b3.functions.time2minutes(duration)
 
-        if isinstance(client, basestring):
+        if isinstance(client, str):
             # TODO: remove this stack trace when we figured out when tempban is called with a str as client
             traceback.print_stack()
             self.write(self.getCommand('tempbanByName', name=client, duration=duration*60, reason=reason[:80]))
@@ -1099,7 +1099,7 @@ class AbstractParser(b3.parser.Parser):
                 try:
                     self.write(self.getCommand('tempban', guid=client.guid, duration=duration*60, reason=reason[:80]))
                     self.write(('banList.save',))
-                except CommandFailedError, err:
+                except CommandFailedError as err:
                     if admin:
                         admin.message("server replied with error %s" % err.message[0])
                     else:
@@ -1108,7 +1108,7 @@ class AbstractParser(b3.parser.Parser):
                 try:
                     self.write(self.getCommand('tempbanByName', name=client.name, duration=duration*60, reason=reason[:80]))
                     self.write(('banList.save',))
-                except CommandFailedError, err:
+                except CommandFailedError as err:
                     if admin:
                         admin.message("server replied with error %s" % err.message[0])
                     else:
@@ -1117,7 +1117,7 @@ class AbstractParser(b3.parser.Parser):
                 try:
                     self.write(self.getCommand('tempban', guid=client.guid, duration=duration*60, reason=reason[:80]))
                     self.write(('banList.save',))
-                except CommandFailedError, err:
+                except CommandFailedError as err:
                     if admin:
                         admin.message("server replied with error %s" % err.message[0])
                     else:
@@ -1160,7 +1160,7 @@ class AbstractParser(b3.parser.Parser):
             # maplist is empty, fix this situation by loading save mapList from disk
             try:
                 self.write(('mapList.load',))
-            except Exception, err:
+            except Exception as err:
                 self.warning(err)
             maplist = self.getFullMapRotationList()
             if not len(maplist):
@@ -1210,14 +1210,14 @@ class AbstractParser(b3.parser.Parser):
             if gamemode_id is not None:
                 maps_for_current_gamemode = mapList.getByNameAndGamemode(map_id, gamemode_id)
                 if len(maps_for_current_gamemode):
-                    nextMapListIndex = maps_for_current_gamemode.keys()[0]
+                    nextMapListIndex = list(maps_for_current_gamemode.keys())[0]
 
             # FIXME: some logic here is wrong (Fenix)
             # or it could be in map rotation list for another gamemode
             if nextMapListIndex is None:
                 filtered_mapList = mapList.getByName(map_id)
                 if len(filtered_mapList):
-                    nextMapListIndex = filtered_mapList.keys()[0]
+                    nextMapListIndex = list(filtered_mapList.keys())[0]
 
             # or map is not found in mapList and we need to insert it after the index of the current map
             current_index = self.write(('mapList.getMapIndices',))[0]
@@ -1245,7 +1245,7 @@ class AbstractParser(b3.parser.Parser):
             pib = PlayerInfoBlock(self.write(('admin.listPlayers', 'all')))
             for p in pib:
                 scores[p['name']] = int(p['score'])
-        except Exception, e:
+        except Exception as e:
             self.debug('Unable to retrieve scores from playerlist (%r)' % e)
         return scores
 
@@ -1278,7 +1278,7 @@ class AbstractParser(b3.parser.Parser):
             else:
                 self.write(self.getCommand('bigmessage', message=text, cid=client.cid,
                                            big_msg_duration=int(float(self._big_msg_duration))))
-        except Exception, err:
+        except Exception as err:
             self.warning(err)
 
     def getFullMapRotationList(self):
@@ -1345,10 +1345,10 @@ class AbstractParser(b3.parser.Parser):
 
         try:
             words = self.write(('vars.%s' % cvarName,))
-        except CommandFailedError, err:
+        except CommandFailedError as err:
             self.warning(err)
             return
-        except (CommandDisallowedError, CommandUnknownCommandError), err:
+        except (CommandDisallowedError, CommandUnknownCommandError) as err:
             self.warning('unable to retrieve cvar: %s : error: %s' % (cvarName, err))
             return None
 
@@ -1371,7 +1371,7 @@ class AbstractParser(b3.parser.Parser):
         self.debug('Set cvar: %s = %s', cvarName, value)
         try:
             self.write(('vars.%s' % cvarName, value))
-        except CommandFailedError, err:
+        except CommandFailedError as err:
             self.warning(err)
 
     def checkVersion(self):
@@ -1446,7 +1446,7 @@ class AbstractParser(b3.parser.Parser):
         if clean_map_name in supportedEasyNames:
             return self.getHardName(clean_map_name)
 
-        matches = getStuffSoundingLike(mapname, supportedEasyNames.keys())
+        matches = getStuffSoundingLike(mapname, list(supportedEasyNames.keys()))
         if len(matches) == 1:
             # one match, get the map id
             return supportedEasyNames[matches[0]]
@@ -1469,7 +1469,7 @@ class AbstractParser(b3.parser.Parser):
             elif clean_gamemode_name == self.getGameMode(_id).lower():
                 return _id
 
-        supported_gamemode_names = map(self.getGameMode, supported_gamemode_ids)
+        supported_gamemode_names = list(map(self.getGameMode, supported_gamemode_ids))
         aliases = getattr(self, '_gamemode_aliases', {})
         clean_gamemode_name = aliases.get(clean_gamemode_name, clean_gamemode_name)
 
@@ -1523,7 +1523,7 @@ class AbstractParser(b3.parser.Parser):
                 self._big_b3_private_responses = self.config.getboolean(self.gameName, 'big_b3_private_responses')
                 self.info("value for setting %s.big_b3_private_responses is " % self.gameName + (
                     'ON' if self._big_b3_private_responses else 'OFF'))
-            except ValueError, err:
+            except ValueError as err:
                 self._big_b3_private_responses = default_value
                 self.warning("Invalid value: %s: using default value '%s'" % (err, default_value))
         else:
@@ -1538,7 +1538,7 @@ class AbstractParser(b3.parser.Parser):
             try:
                 self._big_msg_duration = self.config.getint(self.gameName, 'big_msg_duration')
                 self.info("value for setting %s.big_msg_duration is %s" % (self.gameName, self._big_msg_duration))
-            except ValueError, err:
+            except ValueError as err:
                 self._big_msg_duration = default_value
                 self.warning("Invalid value: %s: using default value '%s'" % (err, default_value))
         else:
@@ -1558,7 +1558,7 @@ class AbstractParser(b3.parser.Parser):
                     self.warning('message_delay cannot be less than 0.5 second.')
                     delay_sec = .5
                 self._message_delay = delay_sec
-            except Exception, e:
+            except Exception as e:
                 self.error('Failed to read message_delay setting "%s" : %s' % (self.config.get(self.gameName, 'message_delay'), e))
 
         self.debug('message_delay: %s' % self._message_delay)
@@ -1592,7 +1592,7 @@ class AbstractParser(b3.parser.Parser):
                     _default_value = _cfg_result
                 else:
                     raise ValueError('invalid value %s' % _cfg_result)
-            except ValueError, err:
+            except ValueError as err:
                 # Houston - We have a problem.
                 # We give an error message and use the default value.
                 self.error('Failed to read big_msg_repeat setting: use default: %s' % err)
@@ -1662,7 +1662,7 @@ class AbstractParser(b3.parser.Parser):
                 # get the number of round from the current map
                 try:
                     num_rounds = int(this.console.game.serverinfo['roundsTotal'])
-                except Exception, err:
+                except Exception as err:
                     this.warning("Could not get current number of rounds", exc_info=err)
                     client.message("please specify the number of rounds you want")
                     return
@@ -1670,7 +1670,7 @@ class AbstractParser(b3.parser.Parser):
                 # validate given number of rounds
                 try:
                     num_rounds = int(num_rounds)
-                except Exception, err:
+                except Exception as err:
                     this.warning("Could not read the number of rounds of '%s'" % num_rounds, exc_info=err)
                     client.message("could not read the number of rounds of '%s'" % num_rounds)
                     return
@@ -1709,7 +1709,7 @@ class AbstractParser(b3.parser.Parser):
 
             try:
                 suggestions = this.console.changeMap(map_id, gamemode_id=gamemode_id, number_of_rounds=num_rounds)
-            except CommandFailedError, err:
+            except CommandFailedError as err:
                 if err.message == ['InvalidGameModeOnMap']:
                     client.message("%s cannot be played with gamemode %s" % (this.console.getEasyName(map_id),
                                                                              this.console.getGameMode(gamemode_id)))
@@ -1766,7 +1766,7 @@ def patch_b3_clients():
         if msg and len(msg.strip())>0:
             # do we have a queue?
             if not hasattr(self, 'messagequeue'):
-                self.messagequeue = Queue.Queue()
+                self.messagequeue = queue.Queue()
             # fill the queue
             text = self.console.stripColors(self.console.msgPrefix + ' [pm] ' + msg)
             for line in self.console.getWrap(text):

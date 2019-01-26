@@ -433,7 +433,7 @@ class CodParser(AbstractParser):
         if self.encoding:
             try:
                 data = data.decode(self.encoding)
-            except Exception, msg:
+            except Exception as msg:
                 self.warning('ERROR: decoding data: %r', msg)
 
         if client.name != match.group('name'):
@@ -460,7 +460,7 @@ class CodParser(AbstractParser):
         if self.encoding:
             try:
                 data = data.decode(self.encoding)
-            except Exception, msg:
+            except Exception as msg:
                 self.warning('ERROR: decoding data: %r', msg)
 
         if client.name != match.group('name'):
@@ -486,7 +486,7 @@ class CodParser(AbstractParser):
         if self.encoding:
             try:
                 data = data.decode(self.encoding)
-            except Exception, msg:
+            except Exception as msg:
                 self.warning('ERROR: decoding data: %r', msg)
 
         client.name = match.group('name')
@@ -552,7 +552,7 @@ class CodParser(AbstractParser):
         """
         players = self.getPlayerList()
         self.verbose('connectClient() = %s' % players)
-        for cid, p in players.iteritems():
+        for cid, p in players.items():
             #self.debug('cid: %s, ccid: %s, p: %s' %(cid, ccid, p))
             if int(cid) == int(ccid):
                 self.debug('%s found in status/playerList' % p['name'])
@@ -729,7 +729,7 @@ class CodParser(AbstractParser):
         plist = self.getPlayerList(maxRetries=4)
         mlist = {}
 
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.clients.getByCID(cid)
             if client:
                 if client.guid and 'guid' in c and not self.IpsOnly:
@@ -761,7 +761,7 @@ class CodParser(AbstractParser):
         """
         players = self.getPlayerList(maxRetries=4)
         self.verbose('authorizeClients() = %s' % players)
-        for cid, p in players.iteritems():
+        for cid, p in players.items():
             sp = self.clients.getByCID(cid)
             if sp:
                 # Only set provided data, otherwise use the currently set data

@@ -31,7 +31,7 @@ import re
 import traceback
 import time
 import string
-import Queue
+import queue
 import threading
 import b3.clients
 import b3.cron
@@ -61,7 +61,7 @@ class AbstractParser(b3.parser.Parser):
     _serverConnection = None
     _nbConsecutiveConnFailure = 0
     
-    sayqueue = Queue.Queue()
+    sayqueue = queue.Queue()
     sayqueuelistener = None
 
     # frostbite engine does not support color code, so we need this property
@@ -176,13 +176,13 @@ class AbstractParser(b3.parser.Parser):
                                     self.routeFrostbitePacket(packet)
                                 except SystemExit:
                                     raise
-                                except Exception, msg:
+                                except Exception as msg:
                                     self.error('%s: %s', msg, traceback.extract_tb(sys.exc_info()[2]))
-                            except FrostbiteException, e:
+                            except FrostbiteException as e:
                                 nbConsecutiveReadFailure += 1
                                 if nbConsecutiveReadFailure > 5:
                                     raise e
-                except FrostbiteException, e:
+                except FrostbiteException as e:
                     self.debug(e)
                     self._nbConsecutiveConnFailure += 1
                     self._serverConnection.close()
@@ -255,7 +255,7 @@ class AbstractParser(b3.parser.Parser):
     def joinPlayers(self):
         self.info('Joining players...')
         plist = self.getPlayerList()
-        for cid, p in plist.iteritems():
+        for cid, p in plist.items():
             client = self.clients.getByCID(cid)
             if client:
                 self.debug(' - joining %s' % cid)
@@ -870,7 +870,7 @@ class AbstractParser(b3.parser.Parser):
         """
         plist = self.getPlayerList()
         mlist = {}
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.clients.getByCID(cid)
             if client:
                 mlist[cid] = client
@@ -888,7 +888,7 @@ class AbstractParser(b3.parser.Parser):
         """
         players = self.getPlayerList()
         self.verbose('authorizeClients() = %s' % players)
-        for cid, p in players.iteritems():
+        for cid, p in players.items():
             sp = self.clients.getByCID(cid)
             if sp:
                 # only set provided data,
@@ -1035,7 +1035,7 @@ class AbstractParser(b3.parser.Parser):
                 self.debug("Shortmaplist sorted by distance : %s" % shortmaplist)
                 match = shortmaplist[:3]
             else:
-                easyNames = supportedEasyNames.keys()
+                easyNames = list(supportedEasyNames.keys())
                 easyNames.sort(key=lambda mn: levenshteinDistance(data, mn.strip()))
                 self.debug("Maplist sorted by distance : %s" % easyNames)
                 match = easyNames[:3]
@@ -1052,7 +1052,7 @@ class AbstractParser(b3.parser.Parser):
         
         try:
             words = self.write(('vars.%s' % cvarName,))
-        except FrostbiteCommandFailedError, err:
+        except FrostbiteCommandFailedError as err:
             self.error(err)
             return
         self.debug('Get cvar %s = %s', cvarName, words)
@@ -1076,7 +1076,7 @@ class AbstractParser(b3.parser.Parser):
         self.debug('Set cvar %s = \'%s\'', cvarName, value)
         try:
             self.write(('vars.%s' % cvarName, value))
-        except FrostbiteCommandFailedError, err:
+        except FrostbiteCommandFailedError as err:
             self.error(err)
 
 ########################################################################################################################
@@ -1104,7 +1104,7 @@ def patch_b3_clients():
         if msg and len(msg.strip())>0:
             # do we have a queue?
             if not hasattr(self, 'messagequeue'):
-                self.messagequeue = Queue.Queue()
+                self.messagequeue = queue.Queue()
             # fill the queue
             text = self.console.stripColors(self.console.msgPrefix + ' [pm] ' + msg)
             for line in self.console.getWrap(text):

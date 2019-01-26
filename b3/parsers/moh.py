@@ -94,7 +94,7 @@ class MohParser(AbstractParser):
         """
         self.info('Connecting all players...')
         plist = self.getPlayerList()
-        for cid, p in plist.iteritems():
+        for cid, p in plist.items():
             client = self.clients.getByCID(cid)
             if not client:
                 name = p['name']

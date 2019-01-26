@@ -297,7 +297,7 @@ class WopParser(AbstractParser):
                 # update existing client
                 bclient['cl_guid'] = client.guid 
                 bclient['ip'] = client.ip
-                for k, v in bclient.iteritems():
+                for k, v in bclient.items():
                     setattr(client, k, v)
             else:
                 # make a new client

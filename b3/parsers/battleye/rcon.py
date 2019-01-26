@@ -54,14 +54,14 @@ class Rcon(object):
     def write(self, cmd, *args, **kwargs):
         if not self.battleye_server or not self.battleye_server.connected:
             return
-        self.console.bot(u'RCON > %s' % repr(cmd))
+        self.console.bot('RCON > %s' % repr(cmd))
         response = None
         try:
             response = self.battleye_server.command(cmd)
-            self.console.bot(u'RCON < %s' % repr(response))
-        except CommandTimeoutError, err:
+            self.console.bot('RCON < %s' % repr(response))
+        except CommandTimeoutError as err:
             self.console.error("RCON # %s" % err)
-        except CommandError, err:
+        except CommandError as err:
             self.console.error("RCON ERROR : %s" % err, exc_info=err)
         return response
         

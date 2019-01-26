@@ -296,7 +296,7 @@ class SmgParser(AbstractParser):
 
             if client:
                 # update existing client
-                for k, v in bclient.iteritems():
+                for k, v in bclient.items():
                     setattr(client, k, v)
             else:
                 if not 'name' in bclient:
@@ -526,7 +526,7 @@ class SmgParser(AbstractParser):
         """
         plist = self.getPlayerList()
         mlist = dict()
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.clients.getByCID(cid)
             if client:
                 if client.guid and 'guid' in c:
@@ -559,7 +559,7 @@ class SmgParser(AbstractParser):
         players = self.getPlayerList()
         self.verbose('connectClient() = %s' % players)
 
-        for cid, p in players.iteritems():
+        for cid, p in players.items():
             if int(cid) == int(ccid):
                 self.debug('client found in status/playerList')
                 return p

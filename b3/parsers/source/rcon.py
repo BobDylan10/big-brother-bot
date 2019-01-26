@@ -22,7 +22,7 @@
 #                                                                     #
 # ################################################################### #
 
-from Queue import Queue
+from queue import Queue
 from socket import timeout
 from threading import Event
 from threading import Lock
@@ -45,7 +45,7 @@ legacy_receive = SourceRcon.receive
 
 def receive_wrapper(self):
     rv = legacy_receive(self)
-    if isinstance(rv, basestring) and rv.strip().endswith(": Bad Password"):
+    if isinstance(rv, str) and rv.strip().endswith(": Bad Password"):
         raise SourceRconError('Bad RCON password (patched SourceRcon)')
     else:
         return rv
@@ -78,7 +78,7 @@ class Rcon(object):
 
         try:
             self.server.connect()
-        except timeout, err:
+        except timeout as err:
             self.console.error("RCON: timeout error while trying to connect to game server at %s:%s. "
                                "Make sure the rcon_ip and port are correct and that the game server is "
                                "running" % (self.host, self.port))
@@ -176,7 +176,7 @@ class Rcon(object):
         """
         if not data:
             return data
-        if type(data) is unicode:
+        if type(data) is str:
             return data.encode('UTF-8')
         else:
             return data

@@ -479,7 +479,7 @@ class CsgoParser(Parser):
         """
         plist = self.getPlayerList()
         mlist = {}
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.clients.getByCID(cid)
             if client:
                 mlist[cid] = client
@@ -541,7 +541,7 @@ class CsgoParser(Parser):
         :param silent: Whether or not to announce this kick
         """
         self.debug('kick reason: [%s]' % reason)
-        if isinstance(client, basestring):
+        if isinstance(client, str):
             clients = self.clients.getByMagic(client)
             if len(clients) != 1:
                 return
@@ -575,7 +575,7 @@ class CsgoParser(Parser):
             return
 
         self.debug('BAN : client: %s, reason: %s', client, reason)
-        if isinstance(client, basestring):
+        if isinstance(client, str):
             clients = self.clients.getByMagic(client)
             if len(clients) != 1:
                 return
@@ -647,7 +647,7 @@ class CsgoParser(Parser):
             return
 
         self.debug('TEMPBAN : client: %s -  duration: %s - reason: %s', client, duration, reason)
-        if isinstance(client, basestring):
+        if isinstance(client, str):
             clients = self.clients.getByMagic(client)
             if len(clients) != 1:
                 return
@@ -705,7 +705,7 @@ class CsgoParser(Parser):
         Return a list of suggested map names in cases it fails to recognize the map that was provided.
         """
         rv = self.getMapsSoundingLike(map_name)
-        if isinstance(rv, basestring):
+        if isinstance(rv, str):
             self.output.write('sm_map %s' % map_name)
         else:
             return rv
@@ -716,7 +716,7 @@ class CsgoParser(Parser):
         """
         clients = self.queryServerInfo()
         pings = {}
-        for cid, client in clients.iteritems():
+        for cid, client in clients.items():
             pings[cid] = client.ping
         return pings
 
@@ -765,7 +765,7 @@ class CsgoParser(Parser):
             if data:
                 hfunc, param_dict = ger.getHandler(data)
                 if hfunc:
-                    self.verbose2("calling %s%r" % (hfunc.func_name, param_dict))
+                    self.verbose2("calling %s%r" % (hfunc.__name__, param_dict))
                     event = hfunc(self, **param_dict)
                     if event:
                         self.queueEvent(event)

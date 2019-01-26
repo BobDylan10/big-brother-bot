@@ -129,7 +129,7 @@ GAME_MODES_NAMES = {
     'Chainlink0': 'Chain Link',
 }
 
-GAMEMODES_IDS_BY_NAME = {name.lower(): x for x, name in GAME_MODES_NAMES.items()}
+GAMEMODES_IDS_BY_NAME = {name.lower(): x for x, name in list(GAME_MODES_NAMES.items())}
 
 # game maps: dict('Engine name'='Human-readable name')
 MAP_NAME_BY_ID = {
@@ -165,7 +165,7 @@ MAP_NAME_BY_ID = {
     'XP4_WlkrFtry': 'Giants Of Karelia',
 }
 
-MAP_ID_BY_NAME = {name.lower(): x for x, name in MAP_NAME_BY_ID.items()}
+MAP_ID_BY_NAME = {name.lower(): x for x, name in list(MAP_NAME_BY_ID.items())}
 
 GAME_MODES_BY_MAP_ID = {
     'MP_Abandoned': (
@@ -595,7 +595,7 @@ class Bf4Parser(AbstractParser):
         AbstractParser.pluginsStarted(self)
         self.info('Connecting all players...')
         plist = self.getPlayerList()
-        for cid, p in plist.iteritems():
+        for cid, p in plist.items():
             self.getClient(cid)
 
     ####################################################################################################################
@@ -742,7 +742,7 @@ class Bf4Parser(AbstractParser):
                     pings[player['name']] = int(player['ping'])
         except (ValueError, TypeError):
             pass  # continue if the ping value is empty
-        except Exception, err:
+        except Exception as err:
             self.error('Unable to retrieve pings from player list', exc_info=err)
         return pings
 
@@ -847,7 +847,7 @@ class Bf4Parser(AbstractParser):
         Return a list of supported levels for the current game mod.
         """
         # TODO : remove this method once the method on from AbstractParser is working
-        return MAP_NAME_BY_ID.keys()
+        return list(MAP_NAME_BY_ID.keys())
 
     def getSupportedGameModesByMapId(self, map_id):
         """
@@ -974,7 +974,7 @@ class Bf4Parser(AbstractParser):
         # If this fails, we use the old method and get the map name from the server vars.
         try:
             return self.write(('currentLevel',))[0]
-        except CommandFailedError, err:
+        except CommandFailedError as err:
             self.warning(err)
             self.getServerInfo()
             return self.game.mapName
@@ -1056,7 +1056,7 @@ class Bf4Parser(AbstractParser):
                     'closestPingSite', 'country', 'blazePlayerCount', 'blazeGameState')
 
         start_index = 7 + numOfTeams + 8
-        for i, n in zip(range(start_index, start_index + len(new_info)), new_info):
+        for i, n in zip(list(range(start_index, start_index + len(new_info))), new_info):
             try:
                 response[n] = data[i]
             except IndexError:
@@ -1086,12 +1086,12 @@ class Bf4Parser(AbstractParser):
                         return False
             except IndexError:
                 pass
-            except CommandFailedError, err:
+            except CommandFailedError as err:
                 if err.message[0] == 'InvalidPlayerName':
                     pass
                 else:
                     raise Exception(err)
-            except Exception, err:
+            except Exception as err:
                 self.console.error("Could not get player state for player %s: %s" % (_player_name, err), exc_info=err)
 
         def getPlayerState(self):
@@ -1116,7 +1116,7 @@ class Bf4Parser(AbstractParser):
             try:
                 _player_info_block = PlayerInfoBlock(self.console.write(('admin.listPlayers', 'player', _player_name)))
                 return int(_player_info_block[0]['type'])
-            except Exception, err:
+            except Exception as err:
                 self.console.error("Could not get player_type for player %s: %s" % (self.name, err), exc_info=err)
 
         def get_player_type(self):
