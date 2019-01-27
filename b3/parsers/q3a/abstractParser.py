@@ -29,7 +29,7 @@ __version__ = '1.8.1'
 import re
 import string
 import time
-import new
+import types
 import b3
 import b3.events
 import b3.clients
@@ -909,5 +909,5 @@ class AbstractParser(b3.parser.Parser):
 
         admin_plugin = self.getPlugin('admin')
         command = admin_plugin._commands['kick']
-        command.func = new.instancemethod(new_cmd_kick, admin_plugin)
+        command.func = types.MethodType(new_cmd_kick, admin_plugin)
         command.help = new_cmd_kick.__doc__.strip()

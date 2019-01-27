@@ -24,7 +24,7 @@
 
 import b3
 import re
-import new
+import types
 import time
 
 from b3.clients import Client
@@ -1389,7 +1389,7 @@ class Iourt43Parser(Iourt41Parser):
             new_event = Event(type=event.type, client=event.client, target=event.target, data=repr(event.data))
             this.onChat(new_event)
 
-        self.spamcontrolPlugin.onRadio = new.instancemethod(onRadio, self.spamcontrolPlugin, SpamcontrolPlugin)
+        self.spamcontrolPlugin.onRadio = types.MethodType(onRadio, self.spamcontrolPlugin, SpamcontrolPlugin)
         self.spamcontrolPlugin.registerEvent('EVT_CLIENT_RADIO', self.spamcontrolPlugin.onRadio)
 
     @staticmethod

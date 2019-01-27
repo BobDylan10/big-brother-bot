@@ -24,7 +24,7 @@
 
 import re
 import time
-import new
+import types
 
 from b3 import TEAM_UNKNOWN
 from b3 import TEAM_BLUE
@@ -179,9 +179,9 @@ class InsurgencyParser(Parser):
                 client.message('do you mean : %s ?' % ', '.join(suggestions))
 
         adminPlugin = self.getPlugin('admin')
-        adminPlugin.parse_map_parameters = new.instancemethod(parse_map_parameters, adminPlugin)
+        adminPlugin.parse_map_parameters = types.MethodType(parse_map_parameters, adminPlugin)
         command = adminPlugin._commands['map']
-        command.func = new.instancemethod(new_cmd_map, adminPlugin)
+        command.func = types.MethodType(new_cmd_map, adminPlugin)
         command.help = new_cmd_map.__doc__.strip()
 
     def startup(self):

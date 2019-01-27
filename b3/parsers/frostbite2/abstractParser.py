@@ -33,7 +33,7 @@ import time
 import string
 import queue
 import threading
-import new
+import types
 import b3.clients
 import b3.cron
 import b3.events
@@ -1731,9 +1731,9 @@ class AbstractParser(b3.parser.Parser):
                     return
 
         adminplugin = self.getPlugin('admin')
-        adminplugin.parse_map_parameters = new.instancemethod(parse_map_parameters, adminplugin)
+        adminplugin.parse_map_parameters = types.MethodType(parse_map_parameters, adminplugin)
         command = adminplugin._commands['map']
-        command.func = new.instancemethod(new_cmd_map, adminplugin)
+        command.func = types.MethodType(new_cmd_map, adminplugin)
         command.help = new_cmd_map.__doc__.strip()
 
 
