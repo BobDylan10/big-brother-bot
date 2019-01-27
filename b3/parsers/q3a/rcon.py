@@ -42,7 +42,7 @@ class Rcon(object):
     queue = None
     console = None
     socket_timeout = 0.80
-    rconsendstring = '\377\377\377\377rcon "%s" %s\n'
+    rconsendstring = b'\377\377\377\377rcon "%b" %b\n'
     rconreplystring = '\377\377\377\377print\n'
     qserversendstring = '\377\377\377\377%s\n'
 
@@ -93,9 +93,12 @@ class Rcon(object):
         :param source: Who requested the encoding
         """
         try:
-            if isinstance(data, str):
-                data = str(data, errors='ignore')
+            #if isinstance(data, str):
+                #data = str(data, errors='ignore')
+            #    data = unicode(data, errors='ignore')
+            #self.console.warning("Encoding of console is %s", self.console.encoding)
             data = data.encode(self.console.encoding, 'replace')
+            #data = data.encode()
         except Exception as msg:
             self.console.warning('%s: error encoding data: %r', source, msg)
             data = 'Encoding error'
@@ -182,7 +185,8 @@ class Rcon(object):
                 self.console.warning('RCON: %s', str(errors))
             elif len(writeables) > 0:
                 try:
-                    writeables[0].send(self.rconsendstring % (self.password, data))
+                    pwd = self.encode_data(self.password, 'RCON')
+                    writeables[0].send(self.rconsendstring % (pwd, data))
                 except Exception as msg:
                     self.console.warning('RCON: error sending: %r', msg)
                 else:
