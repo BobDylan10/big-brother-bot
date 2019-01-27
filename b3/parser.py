@@ -255,13 +255,13 @@ class Parser(object):
 
         if self._publicIp and self._publicIp[0:1] in ('~', '/'):
             # load ip from a file
-            f = file(b3.getAbsolutePath(self._publicIp, decode=True))
+            f = open(b3.getAbsolutePath(self._publicIp, decode=True))
             self._publicIp = f.read().strip()
             f.close()
 
         if self._rconIp[0:1] in ('~', '/'):
             # load ip from a file
-            f = file(b3.getAbsolutePath(self._rconIp, decode=True))
+            f = open(b3.getAbsolutePath(self._rconIp, decode=True))
             self._rconIp = f.read().strip()
             f.close()
 
@@ -358,7 +358,7 @@ class Parser(object):
             self.screen.write('Using gamelog    : %s\n' % b3.getShortPath(os.path.abspath(f)))
 
             if os.path.isfile(f):
-                self.input = file(f, 'r')
+                self.input = open(f, 'r')
                 if self.config.has_option('server', 'seek'):
                     seek = self.config.getboolean('server', 'seek')
                     if seek:
