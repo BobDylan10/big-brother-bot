@@ -188,7 +188,7 @@ Returns: a 1D or 2D list of lists from whitespace delimited text files
         for i in range(len(newelements)):
             for j in range(len(newelements[i])):
                 try:
-                    newelements[i][j] = string.atoi(newelements[i][j])
+                    newelements[i][j] = int(newelements[i][j])
                 except ValueError:
                     try:
                         newelements[i][j] = string.atof(newelements[i][j])
@@ -411,12 +411,12 @@ Usage:  brikget(imfile,unpackstr=N.int16,shp=None)  default shp: (-1,48,61,51)
         for i in range(len(lines)):
             if string.find(lines[i],'DATASET_DIMENSIONS') != -1:
                 dims = string.split(lines[i+2][0:string.find(lines[i+2],' 0')])
-                dims = list(map(string.atoi,dims))
+                dims = list(map(int,dims))
             if string.find(lines[i],'BRICK_FLOAT_FACS') != -1:
-                count = string.atoi(string.split(lines[i+1])[2])
+                count = int(string.split(lines[i+1])[2])
                 mults = []
                 for j in range(int(N.ceil(count/5.))):
-                    mults += list(map(string.atof,string.split(lines[i+2+j])))
+                    mults += list(map(float,string.split(lines[i+2+j])))
                 mults = N.array(mults)
         dims.reverse()
         shp = [-1]+dims

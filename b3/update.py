@@ -90,20 +90,20 @@ $''', re.VERBOSE)
 
         patch = match.group('patch')
         if patch:
-            self.version = tuple(map(string.atoi, [major, minor, patch]))
+            self.version = tuple(map(int, [major, minor, patch]))
         else:
-            self.version = tuple(list(map(string.atoi, [major, minor])) + [0])
+            self.version = tuple(list(map(int, [major, minor])) + [0])
 
         prerelease = match.group('tag')
         prerelease_num = match.group('tag_num')
         if prerelease:
-            self.prerelease = (prerelease, string.atoi(prerelease_num if prerelease_num else '0'))
+            self.prerelease = (prerelease, int(prerelease_num if prerelease_num else '0'))
         else:
             self.prerelease = None
 
         daily_num = match.group('build_num')
         if daily_num:
-            self.build_num = string.atoi(daily_num if daily_num else '0')
+            self.build_num = int(daily_num if daily_num else '0')
         else:
             self.build_num = None
 
