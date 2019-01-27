@@ -366,7 +366,7 @@ class Q3Parser(AbstractParser):
         Parse an infostring.
         :param info: The infostring to be parsed.
         """
-        player_id, info = string.split(info, ' ', 1)
+        player_id, info = info.split(' ', 1)
         # If userinfo not starting with \ character, prepend it to avoid breaking regex
         if info[:1] != '\\':
             info = '\\' + info

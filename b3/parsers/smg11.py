@@ -253,7 +253,7 @@ class Smg11Parser(AbstractParser):
         Parse an infostring.
         :param info: The infostring to be parsed.
         """
-        player_id, info = string.split(info, ' ', 1)
+        player_id, info = info.split(' ', 1)
 
         if info[:1] != '\\':
             info += '\\'
@@ -434,7 +434,7 @@ class Smg11Parser(AbstractParser):
         # Item: 0 pickup_money (5) picked up ($25)
         # Item: 0 weapon_schofield bought ($18/$20)
         # Item: 0 weapon_remington58 (7) picked up
-        cid, item = string.split(data, ' ', 1)
+        cid, item = data.split(' ', 1)
         client = self.getByCidOrJoinPlayer(cid)
         if client:
             if 'pickup_money' in item:

@@ -514,7 +514,7 @@ class CodParser(AbstractParser):
         return self.getEvent('EVT_GAME_EXIT', data=data)
 
     def OnItem(self, action, data, match=None):
-        guid, cid, name, item = string.split(data, ';', 3)
+        guid, cid, name, item = data.split(';', 3)
         client = self.clients.getByCID(cid)
         if client:
             return self.getEvent('EVT_CLIENT_ITEM_PICKUP', data=item, client=client)

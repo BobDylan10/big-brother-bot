@@ -410,13 +410,13 @@ Usage:  brikget(imfile,unpackstr=N.int16,shp=None)  default shp: (-1,48,61,51)
         lines = open(header).readlines()
         for i in range(len(lines)):
             if string.find(lines[i],'DATASET_DIMENSIONS') != -1:
-                dims = string.split(lines[i+2][0:string.find(lines[i+2],' 0')])
+                dims = lines[i+2][0:string.find(lines[i+2],' 0')].split()
                 dims = list(map(int,dims))
             if string.find(lines[i],'BRICK_FLOAT_FACS') != -1:
-                count = int(string.split(lines[i+1])[2])
+                count = int(lines[i+1].split()[2])
                 mults = []
                 for j in range(int(N.ceil(count/5.))):
-                    mults += list(map(float,string.split(lines[i+2+j])))
+                    mults += list(map(float,lines[i+2+j].split()))
                 mults = N.array(mults)
         dims.reverse()
         shp = [-1]+dims
@@ -871,13 +871,13 @@ Returns: numpy array of specified type
         os.system(cmd)
 
     ## GET NUMBER OF ROWS, COLUMNS AND LINE-LENGTH, USING WC
-    wc = string.split(os.popen("wc "+tmpname).read())
+    wc = os.popen("wc "+tmpname).read().split()
     numlines = int(wc[0]) - lines_to_ignore
     tfp = open(tmpname)
     if lines_to_ignore != 0:
         for i in range(lines_to_ignore):
             junk = tfp.readline()
-    numcols = len(string.split(tfp.readline())) #int(float(wc[1])/numlines)
+    numcols = len(tfp.readline().split()) #int(float(wc[1])/numlines)
     tfp.close()
 
     ## PREPARE INPUT SPACE
@@ -895,7 +895,7 @@ Returns: numpy array of specified type
         cutindex = string.rfind(d,'\n')
         carryover = d[cutindex+1:]
         d = d[:cutindex+1]
-        d = list(map(intype,string.split(d)))
+        d = list(map(intype,d.split()))
         a[i:i+len(d)] = d
         i = i + len(d)
     end = time.time()

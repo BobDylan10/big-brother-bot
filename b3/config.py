@@ -319,7 +319,7 @@ class CfgConfigParser(B3ConfigParserMixin, configparser.ConfigParser):
         Return a configuration value as a string.
         """
         try:
-            value = configparser.ConfigParser.get(self, section, option, *args, **kwargs)
+            value = configparser.ConfigParser.get(self, section, option, **kwargs)
             if value is None:
                 return ""
             return value

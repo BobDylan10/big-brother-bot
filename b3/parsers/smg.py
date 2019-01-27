@@ -237,7 +237,7 @@ class SmgParser(AbstractParser):
         Parse an infostring.
         :param info: The infostring to be parsed.
         """
-        player_id, info = string.split(info, ' ', 1)
+        player_id, info = info.split(' ', 1)
         if info[:1] != '\\':
             info += '\\'
 
@@ -254,7 +254,7 @@ class SmgParser(AbstractParser):
 
         # split port from ip field
         if 'ip' in data:
-            tip = string.split(data['ip'], ':', 1)
+            tip = data['ip'].split(':', 1)
             data['ip'] = tip[0]
             data['port'] = tip[1]
 

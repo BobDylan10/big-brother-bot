@@ -154,7 +154,7 @@ class LoginPlugin(b3.plugin.Plugin):
             client.message('Usage: %s%s <new password> [<client>]' % (cmd.prefix, cmd.command))
             return
 
-        data = string.split(data)
+        data = data.split()
         if len(data) > 1:
             sclient = self._adminPlugin.findClientPrompt(data[1], client)
             if not sclient:

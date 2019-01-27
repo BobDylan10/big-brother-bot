@@ -206,7 +206,7 @@ class WopParser(AbstractParser):
         :param info: The infostring to be parsed.
         """
         # 3 n\Dr.Schraube\t\0\model\padman/padsoldier_red\hmodel\padman/padsoldier_red\c1\4\c2\1\hc\100\w\0\l\0\tt\...
-        player_id, info = string.split(info, ' ', 1)
+        player_id, info = info.split(' ', 1)
 
         if info[:1] != '\\':
             info += '\\'
@@ -333,7 +333,7 @@ class WopParser(AbstractParser):
 
     def OnSay(self, action, data, match=None):
         # 3:59 say: XLR8or: general chat
-        msg = string.split(data, ': ', 1)
+        msg = data.split(': ', 1)
         if not len(msg) == 2:
             return None
 
@@ -347,7 +347,7 @@ class WopParser(AbstractParser):
 
     def OnSayteam(self, action, data, match=None):
         # 4:06 sayteam: XLR8or: teamchat
-        msg = string.split(data, ': ', 1)
+        msg = data.split(': ', 1)
         if not len(msg) == 2:
             return None
 
@@ -443,7 +443,7 @@ class WopParser(AbstractParser):
 
     def OnItem(self, action, data, match=None):
         # Item: 5 weapon_betty
-        cid, item = string.split(data, ' ', 1)
+        cid, item = data.split(' ', 1)
         client = self.clients.getByCID(cid)
         if client:
             return self.getEvent('EVT_CLIENT_ITEM_PICKUP', item, client)

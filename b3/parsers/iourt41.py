@@ -429,7 +429,7 @@ class Iourt41Parser(AbstractParser):
         """
         # 2 \ip\145.99.135.227:27960\challenge\-232198920\qport\2781\protocol\68\battleye\1\name\[SNT]^1XLR^78or...
         # 7 n\[SNT]^1XLR^78or\t\3\r\2\tl\0\f0\\f1\\f2\\a0\0\a1\0\a2\0
-        player_id, info = string.split(info, ' ', 1)
+        player_id, info = info.split(' ', 1)
 
         if info[:1] != '\\':
             info = '\\' + info
@@ -482,7 +482,7 @@ class Iourt41Parser(AbstractParser):
 
         # split port from ip field
         if 'ip' in bclient:
-            ip_port_data = string.split(bclient['ip'], ':', 1)
+            ip_port_data = bclient['ip'].split(':', 1)
             bclient['ip'] = ip_port_data[0]
             if len(ip_port_data) > 1:
                 bclient['port'] = ip_port_data[1]
@@ -788,7 +788,7 @@ class Iourt41Parser(AbstractParser):
     def OnItem(self, action, data, match=None):
         # Item: 3 ut_item_helmet
         # Item: 0 team_CTF_redflag
-        cid, item = string.split(data, ' ', 1)
+        cid, item = data.split(' ', 1)
         client = self.getByCidOrJoinPlayer(cid)
         if client:
             # correct flag/bomb-pickups

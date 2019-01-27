@@ -226,7 +226,7 @@ class AbstractParser(b3.parser.Parser):
         :param info: The infostring to be parsed.
         """
         # 0 \g_password\none\cl_guid\0A337702493AF67BB0B0F8565CE8BC6C\cl_wwwDownload\1\name\thorn\rate\25000...
-        cid, info = string.split(info, ' ', 1)
+        cid, info = info.split(' ', 1)
         if info[:1] != '\\':
             info = '\\' + info
 
@@ -259,7 +259,7 @@ class AbstractParser(b3.parser.Parser):
     ####################################################################################################################
 
     def OnSay(self, action, data, match=None):
-        msg = string.split(data, ': ', 1)
+        msg = data.split(': ', 1)
         if not len(msg) == 2:
             return None
 
@@ -278,7 +278,7 @@ class AbstractParser(b3.parser.Parser):
         return None
 
     def OnSayteam(self, action, data, match=None):
-        msg = string.split(data, ': ', 1)
+        msg = data.split(': ', 1)
         if not len(msg) == 2:
             return None
 
