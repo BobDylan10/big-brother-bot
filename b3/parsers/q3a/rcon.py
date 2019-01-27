@@ -43,7 +43,7 @@ class Rcon(object):
     console = None
     socket_timeout = 0.80
     rconsendstring = b'\377\377\377\377rcon "%b" %b\n'
-    rconreplystring = '\377\377\377\377print\n'
+    rconreplystring = b'\377\377\377\377print\n'
     qserversendstring = '\377\377\377\377%s\n'
 
     # default expiretime for the status cache in seconds and cache type
@@ -79,7 +79,7 @@ class Rcon(object):
         self.console.bot('Game name is: %s' % self.console.gameName)
         self.socket = socket.socket(type=socket.SOCK_DGRAM)
         self.host = host
-        self.password = password
+        self.password = self.encode_data(password, 'RCON')
         self.socket.settimeout(2)
         self.socket.connect(self.host)
 
@@ -185,8 +185,7 @@ class Rcon(object):
                 self.console.warning('RCON: %s', str(errors))
             elif len(writeables) > 0:
                 try:
-                    pwd = self.encode_data(self.password, 'RCON')
-                    writeables[0].send(self.rconsendstring % (pwd, data))
+                    writeables[0].send(self.rconsendstring % (self.password, data))
                 except Exception as msg:
                     self.console.warning('RCON: error sending: %r', msg)
                 else:
@@ -316,11 +315,11 @@ class Rcon(object):
             return ''
 
         while len(readables):
-            d = str(sock.recv(size))
+            d = sock.recv(size)
 
             if d:
                 # remove rcon header
-                data += d.replace(self.rconreplystring, '')
+                data += d.replace(self.rconreplystring, b'').decode()
 
             readables, writeables, errors = select.select([sock], [], [sock], socketTimeout)
             if len(readables):

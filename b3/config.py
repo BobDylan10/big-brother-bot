@@ -253,7 +253,7 @@ class XmlConfigParser(B3ConfigParserMixin):
         if not os.path.isfile(filename):
             raise ConfigFileNotFound(filename)
 
-        f = file(filename, 'r')
+        f = open(filename, 'r')
         self.readfp(f)
         f.close()
 
@@ -363,7 +363,7 @@ class CfgConfigParser(B3ConfigParserMixin, configparser.ConfigParser):
         """
         Save the configuration file.
         """
-        f = file(self.fileName, 'w')
+        f = open(self.fileName, 'w')
         self.write(f)
         f.close()
         return True
