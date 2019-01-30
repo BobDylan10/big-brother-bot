@@ -23,6 +23,9 @@ addons:
   # select postgresql version
   postgresql: "10.1"
 
+services:
+  - postgresql
+
 cache:
   # cache pip installs across jobs
   - pip
@@ -42,12 +45,3 @@ script:
 after_success:
   # report tests coverage if we are running tests
   - if [ "${TEST}" != "build" ]; then pip install coveralls && coveralls; fi
-
-notifications:
-  # send notifications to gitter
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/489374443a557d989111
-    on_success: always  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: never     # default: never
