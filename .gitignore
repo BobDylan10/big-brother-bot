@@ -16,3 +16,4 @@ dist
 releases/*
 b3/docs/user_documentation/_build/*
 b3/conf/b3_iourt43.ini
+.coverage
