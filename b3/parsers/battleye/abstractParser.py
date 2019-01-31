@@ -217,7 +217,7 @@ class AbstractParser(b3.parser.Parser):
                 try:
                     self.setup_battleye_connection()
                 except CommandError as err:
-                    self.error(err.message)
+                    self.error(err)
                 except IOError as err:
                     self.error("IOError %s"% err)
                 except Exception as err:
@@ -978,7 +978,7 @@ class AbstractParser(b3.parser.Parser):
             if admin:
                 admin.message('Unbanned: removed %s guid from banlist' % client.exactName)
         except CommandFailedError as err:
-            if "NotInList" in err.message:
+            if "NotInList" in err:
                 if admin:
                     admin.message("ban not found in banlist")
             else:
@@ -1017,7 +1017,7 @@ class AbstractParser(b3.parser.Parser):
                 self.write(('writeBans',))
             except CommandFailedError as err:
                 if admin:
-                    admin.message("server replied with error %s" % err.message[0])
+                    admin.message("server replied with error %s" % err)
                 else:
                     self.error(err)
         else:
@@ -1026,7 +1026,7 @@ class AbstractParser(b3.parser.Parser):
                 self.write(('writeBans',))
             except CommandFailedError as err:
                 if admin:
-                    admin.message("server replied with error %s" % err.message[0])
+                    admin.message("server replied with error %s" % err)
                 else:
                     self.error(err)
 
