@@ -39,7 +39,7 @@ class QueryBuilder(object):
         Escape quotes from a given string.
         :param word: The string on which to perform the escape
         """
-        if isinstance(word, int) or isinstance(word, int) or isinstance(word, complex) or isinstance(word, float):
+        if isinstance(word, bytes) or isinstance(word, int) or isinstance(word, complex) or isinstance(word, float):
             return str(word)
         elif word is None:
             return '"None"'
