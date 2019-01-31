@@ -30,7 +30,7 @@ import asyncore
 import ftplib
 import os
 from . import protocol
-import rcon
+from . import rcon
 import re
 import string
 import sys
