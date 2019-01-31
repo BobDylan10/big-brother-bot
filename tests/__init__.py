@@ -133,7 +133,7 @@ class B3TestCase(unittest.TestCase):
         def assertEvent(queueEvent_call_args):
             eventraised = queueEvent_call_args[0][0]
             return type(eventraised) == Event \
-                and self.console.getEventName(eventraised.type) == event_type_name \
+                and self.console.getEventName(eventraised.type) == self.console.getEventName(event_type_name) \
                 and eventraised.data == event_data \
                 and eventraised.target == event_target \
                 and eventraised.client == event_client

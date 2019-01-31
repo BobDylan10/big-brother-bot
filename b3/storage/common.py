@@ -399,17 +399,17 @@ class DatabaseStorage(Storage):
         if penalty.keyword and not re.match(r'^[a-z0-9]+$', penalty.keyword, re.I):
             penalty.keyword = ''
 
-        if penalty.reason:
+        #if penalty.reason:
             # decode the reason data, as the name may need it
-            if hasattr(self.console, "encoding") and self.console.encoding:
-                try:
-                    penalty.reason = penalty.reason.decode(self.console.encoding)
-                except Exception as msg:
-                    self.console.warning('ERROR: decoding reason: %r', msg)
-                try:
-                    penalty.reason = penalty.reason.encode('UTF-8', 'replace')
-                except Exception as msg:
-                    self.console.warning('ERROR: encoding reason: %r', msg)
+            # if hasattr(self.console, "encoding") and self.console.encoding:
+            #     try:
+            #         penalty.reason = penalty.reason.decode(self.console.encoding)
+            #     except Exception as msg:
+            #         self.console.warning('ERROR: decoding reason: %r', msg)
+            #     try:
+            #         penalty.reason = penalty.reason.encode('UTF-8', 'replace')
+            #     except Exception as msg:
+            #         self.console.warning('ERROR: encoding reason: %r', msg)
 
         for f in fields:
             if hasattr(penalty, self.getVar(f)):
