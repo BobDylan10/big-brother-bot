@@ -45,6 +45,7 @@ class QueryBuilder(object):
             return '"None"'
         elif isinstance(word, bytes):
             word = word.decode()
+            return '"%s"' % word.replace('"', '\\"')
         else:
             return '"%s"' % word.replace('"', '\\"')
 
