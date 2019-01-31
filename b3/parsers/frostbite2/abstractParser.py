@@ -206,7 +206,7 @@ class AbstractParser(b3.parser.Parser):
                 try:
                     self.setup_frostbite_connection()
                 except CommandError as err:
-                    if err.message[0] == 'InvalidPasswordHash':
+                    if err[0] == 'InvalidPasswordHash':
                         self.error("Your rcon password is incorrect: "
                                    "check setting 'rcon_password' in your main config file")
                         self.exitcode = 220
@@ -1034,7 +1034,7 @@ class AbstractParser(b3.parser.Parser):
                 if not silent and fullreason != '':
                     self.say(fullreason)
             except CommandFailedError as err:
-                if "NotInList" in err.message:
+                if "NotInList" in err:
                     pass
                 else:
                     raise
@@ -1045,7 +1045,7 @@ class AbstractParser(b3.parser.Parser):
             if admin:
                 admin.message('Unbanned: Removed %s guid from banlist' % client.exactName)
         except CommandFailedError as err:
-            if "NotInList" in err.message:
+            if "NotInList" in err:
                 pass
             else:
                 raise
@@ -1101,7 +1101,7 @@ class AbstractParser(b3.parser.Parser):
                     self.write(('banList.save',))
                 except CommandFailedError as err:
                     if admin:
-                        admin.message("server replied with error %s" % err.message[0])
+                        admin.message("server replied with error %s" % err[0])
                     else:
                         self.error(err)
             elif not client.guid:
@@ -1110,7 +1110,7 @@ class AbstractParser(b3.parser.Parser):
                     self.write(('banList.save',))
                 except CommandFailedError as err:
                     if admin:
-                        admin.message("server replied with error %s" % err.message[0])
+                        admin.message("server replied with error %s" % err[0])
                     else:
                         self.error(err)
             else:
@@ -1119,7 +1119,7 @@ class AbstractParser(b3.parser.Parser):
                     self.write(('banList.save',))
                 except CommandFailedError as err:
                     if admin:
-                        admin.message("server replied with error %s" % err.message[0])
+                        admin.message("server replied with error %s" % err[0])
                     else:
                         self.error(err)
 
@@ -1710,17 +1710,17 @@ class AbstractParser(b3.parser.Parser):
             try:
                 suggestions = this.console.changeMap(map_id, gamemode_id=gamemode_id, number_of_rounds=num_rounds)
             except CommandFailedError as err:
-                if err.message == ['InvalidGameModeOnMap']:
+                if err == ['InvalidGameModeOnMap']:
                     client.message("%s cannot be played with gamemode %s" % (this.console.getEasyName(map_id),
                                                                              this.console.getGameMode(gamemode_id)))
                     client.message("supported gamemodes are : " +
                                    ', '.join([this.console.getGameMode(mode_id) for mode_id in
                                               this.console.getSupportedGameModesByMapId(map_id)]))
                     return
-                elif err.message == ['InvalidRoundsPerMap']:
+                elif err == ['InvalidRoundsPerMap']:
                     client.message("number of rounds must be 1 or greater")
                     return
-                elif err.message == ['Full']:
+                elif err == ['Full']:
                     client.message("map list maximum size has been reached")
                     return
                 else:
