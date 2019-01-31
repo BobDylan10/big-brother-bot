@@ -320,13 +320,13 @@ def soundex(s1):
     Return the soundex value to a string argument.
     """
     ignore = "~!@#$%^&*()_+=-`[]\|;:'/?.,<>\" \t\f\v"
-    table = str.maketrans('ABCDEFGHIJKLMNOPQRSTUVWXYZ', '01230120022455012623010202')
+    table = str.maketrans('ABCDEFGHIJKLMNOPQRSTUVWXYZ', '01230120022455012623010202', ignore)
 
     s1 = s1.upper().strip()
     if not s1:
         return "Z000"
     s2 = s1[0]
-    s1 = s1.translate(table, ignore)
+    s1 = s1.translate(table)
     if not s1:
         return "Z000"
     prev = s1[0]
