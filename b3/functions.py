@@ -326,7 +326,7 @@ def soundex(s1):
     if not s1:
         return "Z000"
     s2 = s1[0]
-    s1 = s1.encode('ascii', 'ignore').translate(table, ignore)
+    s1 = s1.translate(table, ignore)
     if not s1:
         return "Z000"
     prev = s1[0]
