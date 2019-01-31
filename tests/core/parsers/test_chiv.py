@@ -138,7 +138,7 @@ class Test_gameevent_parsing(ChivTestCase):
         self.clear_events()
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\x03\x00\x00\x00\x17\x01\x10\x00\x01\x04\xabk\xa1\x00\x00\x00\x07 sorry \x00\x00\x00\x00'))
+            b'\x00\x03\x00\x00\x00\x17\x01\x10\x00\x01\x04\xabk\xa1\x00\x00\x00\x07 sorry \x00\x00\x00\x00'))
         # THEN
         self.assert_has_event("EVT_CLIENT_SAY", data='sorry', client=player)
 
@@ -150,7 +150,7 @@ class Test_gameevent_parsing(ChivTestCase):
         player.team = 0  # ugly, until chiv team ids got converted into b3 team ids
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\x03\x00\x00\x00\x17\x01\x10\x00\x01\x04\xabk\xa1\x00\x00\x00\x07 sorry \x00\x00\x00\x00'))
+            b'\x00\x03\x00\x00\x00\x17\x01\x10\x00\x01\x04\xabk\xa1\x00\x00\x00\x07 sorry \x00\x00\x00\x00'))
         # THEN
         self.assert_has_event("EVT_CLIENT_TEAM_SAY", data='sorry', client=player)
 
@@ -159,7 +159,7 @@ class Test_gameevent_parsing(ChivTestCase):
         self.assertIsNone(self.parser.clients.getByGUID("1234567890"))
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\x04\x00\x00\x00\x13\x00\x00\x00\x00I\x96\x02\xd2\x00\x00\x00\x07player1'
+            b'\x00\x04\x00\x00\x00\x13\x00\x00\x00\x00I\x96\x02\xd2\x00\x00\x00\x07player1'
         ))
         # THEN
         player = self.parser.clients.getByGUID("1234567890")
@@ -173,7 +173,7 @@ class Test_gameevent_parsing(ChivTestCase):
         self.clear_events()
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\x05\x00\x00\x00\x08\x01\x10\x00\x01\x04\x83\xdb\x11'
+            b'\x00\x05\x00\x00\x00\x08\x01\x10\x00\x01\x04\x83\xdb\x11'
         ))
         # THEN
         self.assert_has_event("EVT_CLIENT_DISCONNECT", data='1', client=player)
@@ -183,7 +183,7 @@ class Test_gameevent_parsing(ChivTestCase):
         # GIVEN
         self.parser.game.mapName = "old"
         # WHEN
-        self.parser.handlePacket(Packet.decode('\x00\t\x00\x00\x00\x0f\x00\x00\x00#\x00\x00\x00\x07TD-Isle'))
+        self.parser.handlePacket(Packet.decode(b'\x00\t\x00\x00\x00\x0f\x00\x00\x00#\x00\x00\x00\x07TD-Isle'))
         # THEN
         self.assertEqual("TD-Isle", self.parser.game.mapName)
         self.assertEqual("TD-Isle", self.parser.getMap())
@@ -193,10 +193,10 @@ class Test_gameevent_parsing(ChivTestCase):
         self.parser._mapList = None
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\n\x00\x00\x00E\x00\x00\x00ATD-Bamboo_small?game=CDW.AOCTD?numteams=2?class0=Open?class1=Open'
+            b'\x00\n\x00\x00\x00E\x00\x00\x00ATD-Bamboo_small?game=CDW.AOCTD?numteams=2?class0=Open?class1=Open'
         ))
         self.parser.handlePacket(Packet.decode(
-            '\x00\n\x00\x00\x00O\x00\x00\x00KPTB-Valley_small?game=CDW.PlantTheBanner?numteams=2?class0=Open?class1=Open'
+            b'\x00\n\x00\x00\x00O\x00\x00\x00KPTB-Valley_small?game=CDW.PlantTheBanner?numteams=2?class0=Open?class1=Open'
         ))
         # THEN
         self.assertListEqual(['TD-Bamboo_small', 'PTB-Valley_small'], self.parser._mapList)
@@ -207,7 +207,7 @@ class Test_gameevent_parsing(ChivTestCase):
         player.connects("1")
         self.assertEqual(TEAM_UNKNOWN, player.team)
         # WHEN
-        self.parser.handlePacket(Packet.decode('\x00\r\x00\x00\x00\x0c\x01\x10\x00\x01\x06\x8c\x87\xd6\x00\x00\x00\x00'))
+        self.parser.handlePacket(Packet.decode(b'\x00\r\x00\x00\x00\x0c\x01\x10\x00\x01\x06\x8c\x87\xd6\x00\x00\x00\x00'))
         # THEN
         self.assertEqual(0, player.team)
 
@@ -217,7 +217,7 @@ class Test_gameevent_parsing(ChivTestCase):
         player.connects("1")
         self.assertEqual(TEAM_UNKNOWN, player.team)
         # WHEN
-        self.parser.handlePacket(Packet.decode('\x00\r\x00\x00\x00\x0c\x01\x10\x00\x01\x06\x8c\x87\xd6\x00\x00\x00\x01'))
+        self.parser.handlePacket(Packet.decode(b'\x00\r\x00\x00\x00\x0c\x01\x10\x00\x01\x06\x8c\x87\xd6\x00\x00\x00\x01'))
         # THEN
         self.assertEqual(1, player.team)
 
@@ -227,7 +227,7 @@ class Test_gameevent_parsing(ChivTestCase):
         player.connects("1")
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\x0e\x00\x00\x00\x14\x00\x00\x00\x00\x07[\xcd\x15\x00\x00\x00\x08new name'
+            b'\x00\x0e\x00\x00\x00\x14\x00\x00\x00\x00\x07[\xcd\x15\x00\x00\x00\x08new name'
         ))
         # THEN
         self.assertEqual('new name', player.name)
@@ -240,7 +240,7 @@ class Test_gameevent_parsing(ChivTestCase):
         victim.connects("2")
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\x0f\x00\x00\x00\x1e\x01\x10\x00\x01\x04\x83\xdb\x11\x01\x10\x00\x01\x03\xa81]\x00\x00\x00\nTekko Kagi'
+            b'\x00\x0f\x00\x00\x00\x1e\x01\x10\x00\x01\x04\x83\xdb\x11\x01\x10\x00\x01\x03\xa81]\x00\x00\x00\nTekko Kagi'
         ))
         # THEN
         self.assert_has_event("EVT_CLIENT_KILL", client=attacker, target=victim, data=(100, 'Tekko Kagi', 'body'))
@@ -253,7 +253,7 @@ class Test_gameevent_parsing(ChivTestCase):
         victim.connects("2")
         # WHEN
         self.parser.handlePacket(Packet.decode(
-            '\x00\x0f\x00\x00\x00\x1e\x01\x10\x00\x01\x04\x83\xdb\x11\x01\x10\x00\x01\x03\xa81]\x00\x00\x00\nTekko Kagi'
+            b'\x00\x0f\x00\x00\x00\x1e\x01\x10\x00\x01\x04\x83\xdb\x11\x01\x10\x00\x01\x03\xa81]\x00\x00\x00\nTekko Kagi'
         ))
         # THEN
         self.assert_has_event("EVT_CLIENT_KILL_TEAM", client=attacker, target=victim, data=(100, 'Tekko Kagi', 'body'))
@@ -263,7 +263,7 @@ class Test_gameevent_parsing(ChivTestCase):
         poorguy = FakeClient(self.parser, name="attacker_name", guid='76561198070138838')
         poorguy.connects("1")
         # WHEN
-        self.parser.handlePacket(Packet.decode('\x00\x10\x00\x00\x00\x08\x01\x10\x00\x01\x06\x8c\x87\xd6'))
+        self.parser.handlePacket(Packet.decode(b'\x00\x10\x00\x00\x00\x08\x01\x10\x00\x01\x06\x8c\x87\xd6'))
         # THEN
         self.assert_has_event("EVT_CLIENT_SUICIDE", client=poorguy, target=poorguy, data=(100, None, None))
 
@@ -271,7 +271,7 @@ class Test_gameevent_parsing(ChivTestCase):
         # WHEN
         with patch.object(self.parser, "warning") as warning_mock:
             self.parser.handlePacket(
-                Packet.decode('\x00c\x00\x00\x00\x0f\x00\x00\x00\x00I\x96\x02\xd2\x00\x00\x00\x03f00'))
+                Packet.decode(b'\x00c\x00\x00\x00\x0f\x00\x00\x00\x00I\x96\x02\xd2\x00\x00\x00\x03f00'))
         # THEN
         self.assertListEqual([], self.evt_queue)
         self.assertListEqual([
@@ -285,12 +285,12 @@ class Test_parser_other(ChivTestCase):
         # GIVEN
         self.parser._mapList = None
         self.parser.handlePacket(Packet.decode(
-            '\x00\n\x00\x00\x00E\x00\x00\x00ATD-Bamboo_small?game=CDW.AOCTD?numteams=2?class0=Open?class1=Open'
+            b'\x00\n\x00\x00\x00E\x00\x00\x00ATD-Bamboo_small?game=CDW.AOCTD?numteams=2?class0=Open?class1=Open'
         ))
         self.parser.handlePacket(Packet.decode(
-            '\x00\n\x00\x00\x00O\x00\x00\x00KPTB-Valley_small?game=CDW.PlantTheBanner?numteams=2?class0=Open?class1=Open'
+            b'\x00\n\x00\x00\x00O\x00\x00\x00KPTB-Valley_small?game=CDW.PlantTheBanner?numteams=2?class0=Open?class1=Open'
         ))
-        self.parser.handlePacket(Packet.decode('\x00\t\x00\x00\x00\x17\x00\x00\x00\x00\x00\x00\x00\x0fTD-Bamboo_small'))
+        self.parser.handlePacket(Packet.decode(b'\x00\t\x00\x00\x00\x17\x00\x00\x00\x00\x00\x00\x00\x0fTD-Bamboo_small'))
         # WHEN
         self.assertEqual("TD-Bamboo_small", self.parser.getMap())
         # THEN
@@ -300,12 +300,12 @@ class Test_parser_other(ChivTestCase):
         # GIVEN
         self.parser._mapList = None
         self.parser.handlePacket(Packet.decode(
-            '\x00\n\x00\x00\x00E\x00\x00\x00ATD-Bamboo_small?game=CDW.AOCTD?numteams=2?class0=Open?class1=Open'
+            b'\x00\n\x00\x00\x00E\x00\x00\x00ATD-Bamboo_small?game=CDW.AOCTD?numteams=2?class0=Open?class1=Open'
         ))
         self.parser.handlePacket(Packet.decode(
-            '\x00\n\x00\x00\x00O\x00\x00\x00KPTB-Valley_small?game=CDW.PlantTheBanner?numteams=2?class0=Open?class1=Open'
+            b'\x00\n\x00\x00\x00O\x00\x00\x00KPTB-Valley_small?game=CDW.PlantTheBanner?numteams=2?class0=Open?class1=Open'
         ))
-        self.parser.handlePacket(Packet.decode('\x00\t\x00\x00\x00\x18\x00\x00\x00\x01\x00\x00\x00\x10PTB-Valley_small'))
+        self.parser.handlePacket(Packet.decode(b'\x00\t\x00\x00\x00\x18\x00\x00\x00\x01\x00\x00\x00\x10PTB-Valley_small'))
         # WHEN
         self.assertEqual("PTB-Valley_small", self.parser.getMap())
         # THEN
