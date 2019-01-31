@@ -89,7 +89,7 @@ class Iourt41TestCase(unittest.TestCase):
 
         eventraised = args[0][0]
         self.assertIsInstance(eventraised, Event)
-        self.assertEqual(self.console.getEventName(eventraised.type), event_type_name)
+        self.assertEqual(self.console.getEventName(eventraised.type), self.console.getEventName(event_type_name))
         self.assertEqual(eventraised.data, event_data)
         self.assertEqual(eventraised.target, event_target)
         self.assertEqual(eventraised.client, event_client)
