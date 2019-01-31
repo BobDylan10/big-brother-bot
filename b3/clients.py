@@ -1388,7 +1388,7 @@ class Clients(dict):
         """
         name = name.lower()
         for cid,c in list(self.items()):
-            if not c.hide and string.find(c.name.lower(), name) != -1:
+            if not c.hide and c.name.lower().find(name) != -1:
                 return c
         return None
 
