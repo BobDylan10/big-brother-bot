@@ -111,7 +111,7 @@ class BanlistContent(object):
         Returns the ban data for the provided index.
         :param index: The index of the ban data
         """
-        if index >= self.numOfBans:
+        if index >= int(self.numOfBans):
             raise IndexError
         tmp = self.bansData[index * 6:(index + 1) * 6]
         return {
@@ -189,7 +189,7 @@ class PlayerInfoBlock(object):
             return self._getPlayerData(key)
 
     def _getPlayerData(self, index):
-        if index >= self._num_players:
+        if index >= int(self._num_players):
             raise IndexError
         data = {}
         playerData = self._players_data[index*self._num_parameters:(index + 1) * self._num_parameters]
