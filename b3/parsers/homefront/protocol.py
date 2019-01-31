@@ -187,7 +187,7 @@ class Client(asyncore.dispatcher_with_send):
             for handler in self._handlers:
                 try:
                     handler(p)
-                except Exception, err:
+                except Exception as err:
                     self.console.exception(err)
             p = self._readPacket()
 
