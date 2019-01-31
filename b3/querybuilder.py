@@ -39,10 +39,13 @@ class QueryBuilder(object):
         Escape quotes from a given string.
         :param word: The string on which to perform the escape
         """
-        if isinstance(word, int) or isinstance(word, int) or isinstance(word, complex) or isinstance(word, float):
+        if isinstance(word, int) or isinstance(word, complex) or isinstance(word, float):
             return str(word)
         elif word is None:
             return '"None"'
+        elif isinstance(word, bytes):
+            word = word.decode()
+            return '"%s"' % word.replace('"', '\\"')
         else:
             return '"%s"' % word.replace('"', '\\"')
 
