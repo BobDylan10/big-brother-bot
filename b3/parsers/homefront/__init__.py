@@ -154,7 +154,7 @@ class HomefrontParser(Parser):
                 self.game.sv_hostname = serverinfo['hostname']
             if 'maxplayers' in serverinfo:
                 self.game.sv_maxclients = serverinfo['maxplayers']
-        except Exception, err:
+        except Exception as err:
             self.exception(err)
 
     def run(self):
@@ -230,7 +230,7 @@ class HomefrontParser(Parser):
                     return
                 match = re.search(r"^(?P<event>[A-Z ]+): (?P<data>.*)$", packet.data, re.MULTILINE | re.DOTALL)
                 if match:
-                    func = 'onServer%s' % (string.capitalize(match.group('event').replace(' ','_')))
+                    func = 'onServer%s' % (match.group('event').replace(' ','_')).capitalize()
                     data = match.group('data')
                     #self.debug('DATA: %s' % data)
                     #self.debug("-==== FUNC!!: " + func)
@@ -331,7 +331,7 @@ class HomefrontParser(Parser):
             remoteSize = ftp.size(os.path.basename(self.ftpconfig['path']))
             self.verbose("Connection successfull: remote file size is %s" % remoteSize)
             ftp.retrlines('RETR ' + os.path.basename(self.ftpconfig['path']), handleDownload)
-        except ftplib.all_errors, e:
+        except ftplib.all_errors as e:
             self.debug(str(e))
             try:
                 ftp.close()

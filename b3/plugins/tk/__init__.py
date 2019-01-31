@@ -716,10 +716,10 @@ class TkPlugin(b3.plugin.Plugin):
 
             if len(forgave):
                 if self._private_messages:
-                    variables = {'vname': client.exactName, 'attackers': string.join(forgave, ', ')}
+                    variables = {'vname': client.exactName, 'attackers': ', '.join(forgave)}
                     client.message(self.getMessage('forgive_many', variables))
                 else:
-                    variables = {'vname': client.exactName, 'attackers': string.join(forgave, ', ')}
+                    variables = {'vname': client.exactName, 'attackers': ', '.join(forgave)}
                     self.console.say(self.getMessage('forgive_many', variables))
             else:
                 client.message(self.getMessage('no_forgive'))

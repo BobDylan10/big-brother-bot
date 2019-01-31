@@ -522,7 +522,7 @@ class IpBanlist(Banlist):
         Banlist.__init__(self, plugin, config)
         # set specific settings
         node = config.find('force_ip_range')
-        if node is not None and string.upper(node.text) in ('YES', '1', 'ON', 'TRUE'):
+        if node is not None and node.text.upper() in ('YES', '1', 'ON', 'TRUE'):
             self._forceRange = True
         else:
             self._forceRange = False

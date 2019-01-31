@@ -702,7 +702,7 @@ class PoweradminmohPlugin(b3.plugin.Plugin):
         else:
             match = self.console.getMapsSoundingLike(data)
             if len(match) > 1:
-                client.message('Do you mean: %s ?' % string.join(match,', '))
+                client.message('Do you mean: %s ?' % ', '.join(match))
                 return
             if len(match) == 1:
                 levelname = match[0]

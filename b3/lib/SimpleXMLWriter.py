@@ -107,7 +107,7 @@ def encode_entity(text, pattern=_escape):
         out = []
         for char in m.group():
             out.append("&#%d;" % ord(char))
-        return string.join(out, "")
+        return "".join(out)
     return encode(pattern.sub(escape_entities, text), "ascii")
 
 del _escape
@@ -116,7 +116,7 @@ del _escape
 # the following functions assume an ascii-compatible encoding
 # (or "utf-16")
 
-def escape_cdata(s, encoding=None, replace=string.replace):
+def escape_cdata(s, encoding=None, replace=str.replace):
     s = replace(s, "&", "&amp;")
     s = replace(s, "<", "&lt;")
     s = replace(s, ">", "&gt;")
@@ -127,7 +127,7 @@ def escape_cdata(s, encoding=None, replace=string.replace):
             return encode_entity(s)
     return s
 
-def escape_attrib(s, encoding=None, replace=string.replace):
+def escape_attrib(s, encoding=None, replace=str.replace):
     s = replace(s, "&", "&amp;")
     s = replace(s, "'", "&apos;")
     s = replace(s, "\"", "&quot;")
@@ -166,7 +166,7 @@ class XMLWriter:
             self.__write(">")
             self.__open = 0
         if self.__data:
-            data = string.join(self.__data, "")
+            data = "".join(self.__data)
             self.__write(escape_cdata(data, self.__encoding))
             self.__data = []
 

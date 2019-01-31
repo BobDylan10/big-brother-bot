@@ -438,7 +438,7 @@ class Poweradmincod7Plugin(b3.plugin.Plugin):
         if not config_files:
             client.message('No server config files found')
         else:
-            client.message('^3Available config files are:^7 %s' % string.join(config_files, ', '))
+            client.message('^3Available config files are:^7 %s' % ', '.join(config_files))
 
     def cmd_paload(self, data, client, cmd=None):
         """

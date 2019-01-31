@@ -85,7 +85,7 @@ in the interpreter without ()'s, it gets called anyway
         def __init__(self, f):
             self.f = f
         def __repr__(self):
-            x =apply(self.f)
+            x =self.f()
             if x:
                 return repr(x)
             else:
@@ -133,8 +133,8 @@ Usage:   rename (source, dest)     e.g., rename('*.txt', '*.c')
 
     infiles = glob.glob(source)
     outfiles = []
-    incutindex = string.index(source,'*')
-    outcutindex = string.index(source,'*')
+    incutindex = source.index('*')
+    outcutindex = source.index('*')
     findpattern1 = source[0:incutindex]
     findpattern2 = source[incutindex+1:]
     replpattern1 = dest[0:incutindex]
@@ -144,10 +144,10 @@ Usage:   rename (source, dest)     e.g., rename('*.txt', '*.c')
             newname = re.sub(findpattern1,replpattern1,fname,1)
         if outcutindex < len(dest)-1:
             if incutindex > 0:
-                lastone = string.rfind(newname,replpattern2)
+                lastone = newname.rfind(replpattern2)
                 newname = newname[0:lastone] + re.sub(findpattern2,replpattern2,fname[lastone:],1)
             else:
-                lastone = string.rfind(fname,findpattern2)
+                lastone = fname.rfind(findpattern2)
                 if lastone != -1:
                     newname = fname[0:lastone]
                     newname = newname + re.sub(findpattern2,replpattern2,fname[lastone:],1)
@@ -168,7 +168,7 @@ Returns: a 1D or 2D list of lists from whitespace delimited text files
          are so converted
 """
     fnames = []
-    if type(namepatterns) in [ListType,TupleType]:
+    if isinstance(namepatterns, (list,tuple)):
         for item in namepatterns:
             fnames = fnames + glob.glob(item)
     else:
@@ -184,7 +184,7 @@ Returns: a 1D or 2D list of lists from whitespace delimited text files
     elements = []
     for i in range(len(fnames)):
         file = open(fnames[i])
-        newelements = list(map(string.split,file.readlines()))
+        newelements = list(map(str.split,file.readlines()))
         for i in range(len(newelements)):
             for j in range(len(newelements[i])):
                 try:
@@ -219,7 +219,7 @@ Returns: a list of strings, one per line in each text file specified by
     elements = []
     for filename in fnames:
         file = open(filename)
-        newelements = list(map(string.split,file.readlines()))
+        newelements = list(map(str.split,file.readlines()))
         elements = elements + newelements
     return elements
 
@@ -233,10 +233,10 @@ file.
 Usage:   put (outlist,fname,writetype='w',oneperline=0,delimit=' ')
 Returns: None
 """
-    if type(outlist) in [N.ArrayType]:
+    if isinstance(outlist, N.array):
         aput(outlist,fname,writetype)
         return
-    if type(outlist[0]) not in [ListType,TupleType]:  # 1D list
+    if isinstance(outlist[0], (list,tuple)):  # 1D list
         outfile = open(fname,writetype)
         if not oneperline:
             outlist = pstat.list2string(outlist,delimit)
@@ -256,7 +256,7 @@ Returns: None
 
 
 def isstring(x):
-    if type(x)==StringType:
+    if isinstance(x,str):
         return 1
     else:
         return 0
@@ -292,7 +292,7 @@ Returns: an array of integers, floats or objects (type='O'), depending on the
         del_list.reverse()
         for i in del_list:
             newelements.pop(i)
-        newelements = list(map(string.split,newelements))
+        newelements = list(map(str.split,newelements))
         for i in range(len(newelements)):
             for j in range(len(newelements[i])):
                 try:
@@ -320,12 +320,12 @@ Returns: None
 """
     outfile = open(fname,writetype)
     if len(outarray.shape) == 1:
-        outarray = outarray[N.NewAxis,:]
+        outarray = outarray[N.newaxis,:]
     if len(outarray.shape) > 2:
         raise TypeError("put() and aput() require 1D or 2D arrays.  Otherwise use some kind of pickling.")
     else: # must be a 2D array
         for row in outarray:
-            outfile.write(string.join(list(map(str,row)),delimit))
+            outfile.write(delimit.join(list(map(str,row))))
             outfile.write('\n')
         outfile.close()
     return None
@@ -364,7 +364,7 @@ Reads a binary COR-nnn file (flattening file).
 Usage:   CORget(imfile)
 Returns: 2D array of 16-bit ints
 """
-    d=braw(infile,N.Int8)
+    d=braw(infile,N.int8)
     d.shape = (256,256)
     d = N.where(N.greater_equal(d,0),d,256+d)
     return d
@@ -409,10 +409,10 @@ Usage:  brikget(imfile,unpackstr=N.int16,shp=None)  default shp: (-1,48,61,51)
         header = imfile[0:-4]+'HEAD'
         lines = open(header).readlines()
         for i in range(len(lines)):
-            if string.find(lines[i],'DATASET_DIMENSIONS') != -1:
-                dims = lines[i+2][0:string.find(lines[i+2],' 0')].split()
+            if lines[i].find('DATASET_DIMENSIONS') != -1:
+                dims = lines[i+2][0:lines[i+2].find(' 0')].split()
                 dims = list(map(int,dims))
-            if string.find(lines[i],'BRICK_FLOAT_FACS') != -1:
+            if lines[i].find('BRICK_FLOAT_FACS') != -1:
                 count = int(lines[i+1].split()[2])
                 mults = []
                 for j in range(int(N.ceil(count/5.))):
@@ -492,7 +492,7 @@ Usage:   mghbget(imfile, numslices=-1, xsize=64, ysize=64,
     elif suffix[-3:] == 'img':
         pass
     elif suffix == 'bfloat':
-        unpackstr = N.Float32
+        unpackstr = N.float32
         bytesperpixel = 4.0
         sliceinit = 0.0
     else:
@@ -518,7 +518,7 @@ Usage:   mghbget(imfile, numslices=-1, xsize=64, ysize=64,
             numslices = len(bdata)/8200  # 8200=(64*64*2)+8 bytes per image
             xsize = 64
             ysize = 128
-        slices = N.zeros((numslices,xsize,ysize),N.Int)
+        slices = N.zeros((numslices,xsize,ysize),N.intc)
         for i in range(numslices):
             istart = i*8 + i*xsize*ysize
             iend = i*8 + (i+1)*xsize*ysize
@@ -571,7 +571,7 @@ Returns: array of 'btype elements with shape 'shape', suitable for im.ashow()
     f = open(fname,'rb')
     shp = f.read(8)
     f.close()
-    shp = N.fromstring(shp,N.Int)
+    shp = N.fromstring(shp,N.intc)
     shp[0],shp[1] = shp[1],shp[0]
     try:
         carray = N.reshape(d,shp)
@@ -633,7 +633,7 @@ Save a file for use in matlab.
     outfile.close()
     if writeheader == 1:
         try:
-            suffixindex = string.rfind(fname,'.')
+            suffixindex = fname.rfind('.')
             hdrname = fname[0:suffixindex]
         except ValueError:
             hdrname = fname
@@ -659,7 +659,7 @@ Usage:   bput (outarray,filename,writeheader=0,packtype=N.int16,writetype='wb')
     if suffix == 'bshort':
         packtype = N.int16
     elif suffix == 'bfloat':
-        packtype = N.Float32
+        packtype = N.float32
     else:
         print('Not a bshort or bfloat file.  Using packtype=',packtype)
 
@@ -673,7 +673,7 @@ Usage:   bput (outarray,filename,writeheader=0,packtype=N.int16,writetype='wb')
     outfile.close()
     if writeheader == 1:
         try:
-            suffixindex = string.rfind(fname,'.')
+            suffixindex = fname.rfind('.')
             hdrname = fname[0:suffixindex]
         except ValueError:
             hdrname = fname
@@ -720,10 +720,10 @@ Returns: array filled with data in fname
     f.close()
     print(fname,'read in.')
     d = d[linestocut:]
-    d = list(map(string.split,d))
-    print('Done with string.split on lines.')
+    d = list(map(str.split,d))
+    print('Done with str.split on lines.')
     for i in range(len(d)):
-        d[i] = list(map(string.atoi,d[i]))
+        d[i] = list(map(str,d[i]))
     print('Conversion to ints done.')
     return N.array(d)
 
@@ -735,7 +735,7 @@ to specified file.  File-overwrite is the default.
 Usage:   writedelimited (listoflists,delimiter,filename,writetype='w')
 Returns: None
 """
-    if type(listoflists[0]) not in [ListType,TupleType]:
+    if isinstance(listoflists[0],(list, tuple)):
         listoflists = [listoflists]
     outfile = open(file,writetype)
     rowstokill = []
@@ -770,7 +770,7 @@ to specified file.  File-overwrite is the default.
 Usage:   writecc (listoflists,file,writetype='w',extra=2)
 Returns: None
 """
-    if type(listoflists[0]) not in [ListType,TupleType]:
+    if isinstance(listoflists[0], (list, tuple)):
         listoflists = [listoflists]
     outfile = open(file,writetype)
     rowstokill = []
@@ -809,9 +809,9 @@ is the default.
 Usage:   writefc (listoflists,colsize,file,writetype='w')
 Returns: None
 """
-    if type(listoflists) == N.ArrayType:
+    if isinstance(listoflists,N.array):
         listoflists = listoflists.tolist()
-    if type(listoflists[0]) not in [ListType,TupleType]:
+    if isinstance(listoflists[0], (list, tuple)):
         listoflists = [listoflists]
     outfile = open(file,writetype)
     rowstokill = []
@@ -892,7 +892,7 @@ Returns: numpy array of specified type
     carryover = ''
     while len(d) != 0:
         d = carryover + data.read(block)
-        cutindex = string.rfind(d,'\n')
+        cutindex = d.rfind('\n')
         carryover = d[cutindex+1:]
         d = d[:cutindex+1]
         d = list(map(intype,d.split()))
@@ -1000,7 +1000,7 @@ Usage:  binput(outarray,filename,packtype=None,writetype='wb')
 
     # Now, write the header file
     try:
-        suffixindex = string.rfind(fname,'.')
+        suffixindex = fname.rfind('.')
         hdrname = fname[0:suffixindex+2]+'hdr'  # include .s or .f or .1 or whatever
     except ValueError:
         hdrname = fname
@@ -1039,7 +1039,7 @@ Returns: None
         raise ValueError("A 3D or 4D array is required for array2afni() ... %s" %d.shape)
 
     # Save out the array to a binary file, homebrew style
-    if d.typecode() == N.Float64:
+    if d.typecode() == N.float64:
         outcode = 'f'
     else:
         outcode = d.typecode()

@@ -727,7 +727,7 @@ class Poweradminurt41Plugin(b3.plugin.Plugin):
 
         # distribute nonforced players
         random.shuffle(nonforced)
-        n = (len(nonforced) + len(blue) + len(red)) / 2 - len(blue)
+        n = ((len(nonforced) + len(blue) + len(red)) / 2) - len(blue)
         blue.extend(nonforced[:n])
         red.extend(nonforced[n:])
         return blue, red
@@ -2619,7 +2619,7 @@ class Poweradminurt41Plugin(b3.plugin.Plugin):
                 if client:
                     client.message('^7nextmap set to %s' % mapname)
             elif isinstance(match, list):
-                client.message('do you mean : %s ?' % string.join(match[:5], ', '))
+                client.message('do you mean : %s ?' % ', '.join(match[:5]))
             else:
                 client.message('^7cannot find any map like [^4%s^7]' % data)
 

@@ -155,7 +155,7 @@ class FrostbiteConnection(object):
         # given the salt and the password, combine them and compute hash value
         salt = words[1].decode("hex")
         passwordHash = protocol.generatePasswordHash(salt, self._password)
-        passwordHashHexString = string.upper(passwordHash.encode("hex"))
+        passwordHashHexString = passwordHash.encode("hex").upper()
 
         # send password hash to server
         loginResponse = self.sendRequest("login.hashed", passwordHashHexString)
