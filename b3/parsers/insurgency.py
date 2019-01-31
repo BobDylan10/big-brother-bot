@@ -938,7 +938,7 @@ class InsurgencyParser(Parser):
             return
         if line.startswith("mp\x08 \x08\x08 \x08"):
             line = line[8:]
-        text = line.decode('UTF-8', 'replace')
+        text = line
         data = None
 
         m = re.match(RE_HL_LOG_LINE, text)
@@ -1041,7 +1041,7 @@ class InsurgencyParser(Parser):
         finally return a dict of <cid, client>
         """
         current_clients = dict()
-        rv = self.output.write("status")
+        rv = str(self.output.write("status"))
         self.verbose2('Querying Server Status')
         if rv:
             self.verbose2('Status: %s' % rv)
