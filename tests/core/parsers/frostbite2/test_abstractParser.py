@@ -822,7 +822,7 @@ class Map_related_TestCase(AbstractParser_TestCase):
                         try:
                             offset = int(data[1])
                         except ValueError:
-                            raise CommandFailedError(['InvalidArguments'])
+                            raise CommandFailedError('InvalidArguments')
                             # simulate that the Frostbite2 server responds with 5 maps at most for the mapList.list command
                     maps_to_send = self.__class__.maps[offset:offset + 5]
                     return [len(maps_to_send), 3] + list(reduce(tuple.__add__, maps_to_send, tuple()))
@@ -975,7 +975,7 @@ class Test_getFullBanList(AbstractParser_TestCase):
                         try:
                             offset = int(data[1])
                         except ValueError:
-                            raise CommandFailedError(['InvalidArguments'])
+                            raise CommandFailedError('InvalidArguments')
                             # simulate that the Frostbite2 server responds with 5 bans at most for the banList.list command
                     bans_to_send = self.__class__.bans[offset:offset + 5]
                     return list(reduce(tuple.__add__, bans_to_send, tuple()))
