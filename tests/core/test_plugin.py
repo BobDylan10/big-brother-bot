@@ -125,7 +125,7 @@ f00: bar
         # GIVEN
         self.conf.loadFromString("""
 [messages]
-f00: bar -%s- bar
+f00: bar -%%s- bar
         """)
         p = MyPlugin(self.console, self.conf)
         # WHEN
@@ -137,7 +137,7 @@ f00: bar -%s- bar
         # GIVEN
         self.conf.loadFromString("""
 [messages]
-f00: bar -%s- bar
+f00: bar -%%s- bar
         """)
         p = MyPlugin(self.console, self.conf)
         # WHEN
@@ -151,7 +151,7 @@ f00: bar -%s- bar
         # GIVEN
         self.conf.loadFromString("""
 [messages]
-f00: bar -%s- bar
+f00: bar -%%s- bar
         """)
         p = MyPlugin(self.console, self.conf)
         # WHEN
