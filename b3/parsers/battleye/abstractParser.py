@@ -1017,7 +1017,7 @@ class AbstractParser(b3.parser.Parser):
                 self.write(('writeBans',))
             except CommandFailedError as err:
                 if admin:
-                    admin.message("server replied with error %s" % err)
+                    admin.message("server replied with error %s" % err[0])
                 else:
                     self.error(err)
         else:
@@ -1026,7 +1026,7 @@ class AbstractParser(b3.parser.Parser):
                 self.write(('writeBans',))
             except CommandFailedError as err:
                 if admin:
-                    admin.message("server replied with error %s" % err)
+                    admin.message("server replied with error %s" % err[0])
                 else:
                     self.error(err)
 

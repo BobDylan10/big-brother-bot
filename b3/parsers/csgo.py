@@ -759,7 +759,7 @@ class CsgoParser(Parser):
             return
         if line.startswith("mp\x08 \x08\x08 \x08"):
             line = line[8:]
-        m = re.match(RE_HL_LOG_LINE, line.decode('UTF-8', 'replace'))
+        m = re.match(RE_HL_LOG_LINE, line)
         if m:
             data = m.group('data')
             if data:
