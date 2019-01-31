@@ -221,10 +221,10 @@ class Ro2Parser(Parser):
         """
         Handle the chat from players.
         """
-        if string.capitalize(data['div_class']) == 'Chatnotice':
+        if data['div_class'].capitalize() == 'Chatnotice':
             return
         
-        func = 'onChat_type%s' % (string.capitalize(data['div_class']))
+        func = 'onChat_type%s' % (data['div_class'].capitalize())
         if hasattr(self, func):
             self.debug('routing ----> %s' % func)
             func = getattr(self, func)
