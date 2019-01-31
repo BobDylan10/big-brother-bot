@@ -29,7 +29,7 @@ import b3.events
 import asyncore
 import ftplib
 import os
-import protocol
+from . import protocol
 import rcon
 import re
 import string
@@ -124,7 +124,7 @@ class HomefrontParser(Parser):
                 self.bot('Getting configs from %s', ini_file)
                 f = self.config.getpath('server', 'inifile')
                 if os.path.isfile(f):
-                    self.input  = file(f, 'r')
+                    self.input  = open(f, 'r')
                     self._ini_file = f
 
         if not self._ini_file:
