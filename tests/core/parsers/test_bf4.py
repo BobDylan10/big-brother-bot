@@ -814,7 +814,7 @@ class Test_patch_b3_Client_isAlive(BF4TestCase):
         self.assertEqual(b3.STATE_DEAD, self.foobar.state)
 
     def test_exception_InvalidPlayerName(self):
-        when(self.parser).write(('player.isAlive', 'Foobar')).thenRaise(CommandFailedError(['InvalidPlayerName']))
+        when(self.parser).write(('player.isAlive', 'Foobar')).thenRaise(CommandFailedError('InvalidPlayerName'))
         self.assertEqual(b3.STATE_UNKNOWN, self.foobar.state)
 
 
