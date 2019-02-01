@@ -1087,7 +1087,7 @@ class Bf4Parser(AbstractParser):
             except IndexError:
                 pass
             except CommandFailedError as err:
-                if err == 'InvalidPlayerName':
+                if str(err) == 'InvalidPlayerName':
                     pass
                 else:
                     raise Exception(err)
