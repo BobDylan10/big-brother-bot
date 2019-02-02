@@ -1184,7 +1184,7 @@ class InsurgencyParser(Parser):
         re_sm_plugin = re.compile(r'^(?P<index>.+) "(?P<name>.+)" \((?P<version>.+)\) by (?P<author>.+)$', re.MULTILINE)
 
         response = dict()
-        data = self.output.write("sm plugins list")
+        data = str(self.output.write("sm plugins list"))
         if data:
             for m in re.finditer(re_sm_plugin, data):
                 response[m.group('name')] = (m.group('index'), m.group('version'), m.group('author'))
