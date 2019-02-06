@@ -31,7 +31,7 @@ import b3.plugin
 import b3.cron
 
 from b3.functions import getCmd
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 
 class PingwatchPlugin(b3.plugin.Plugin):
@@ -61,7 +61,7 @@ class PingwatchPlugin(b3.plugin.Plugin):
             self.debug('loaded settings/interval: %s' % self._interval)
         except NoOptionError:
             self.warning('could not find settings/interval in config file, using default: %s' % self._interval)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/interval config value: %s' % e)
             self.debug('using default value (%s) for settings/interval' % self._interval)
 
@@ -70,7 +70,7 @@ class PingwatchPlugin(b3.plugin.Plugin):
             self.debug('loaded settings/max_ping: %s' % self._maxPing)
         except NoOptionError:
             self.warning('could not find settings/max_ping in config file, using default: %s' % self._maxPing)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/max_ping config value: %s' % e)
             self.debug('using default value (%s) for settings/max_ping' % self._maxPing)
 
@@ -80,7 +80,7 @@ class PingwatchPlugin(b3.plugin.Plugin):
         except NoOptionError:
             self.warning('could not find settings/max_ping_duration in config file, '
                          'using default: %s' % self._maxPingDuration)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/max_ping_duration config value: %s' % e)
             self.debug('using default value (%s) for settings/max_ping_duration' % self._maxPingDuration)
 
@@ -142,7 +142,7 @@ class PingwatchPlugin(b3.plugin.Plugin):
             # we are not supposed to check
             return
 
-        for cid, ping in self.console.getPlayerPings().items():
+        for cid, ping in list(self.console.getPlayerPings().items()):
             # loop through all the connected clients
             # self.console.verbose('ping %s = %s', cid, ping)
             if ping <= self._maxPing:

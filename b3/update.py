@@ -29,11 +29,10 @@ import os
 import re
 import string
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from distutils import version
 from time import sleep
-from types import StringType
 
 ## url from where we can get the latest B3 version number
 URL_B3_LATEST_VERSION = 'http://master.bigbrotherbot.net/version.json'
@@ -91,20 +90,20 @@ $''', re.VERBOSE)
 
         patch = match.group('patch')
         if patch:
-            self.version = tuple(map(string.atoi, [major, minor, patch]))
+            self.version = tuple(map(int, [major, minor, patch]))
         else:
-            self.version = tuple(map(string.atoi, [major, minor]) + [0])
+            self.version = tuple(list(map(int, [major, minor])) + [0])
 
         prerelease = match.group('tag')
         prerelease_num = match.group('tag_num')
         if prerelease:
-            self.prerelease = (prerelease, string.atoi(prerelease_num if prerelease_num else '0'))
+            self.prerelease = (prerelease, int(prerelease_num if prerelease_num else '0'))
         else:
             self.prerelease = None
 
         daily_num = match.group('build_num')
         if daily_num:
-            self.build_num = string.atoi(daily_num if daily_num else '0')
+            self.build_num = int(daily_num if daily_num else '0')
         else:
             self.build_num = None
 
@@ -113,7 +112,7 @@ $''', re.VERBOSE)
         Compare current object with another one.
         :param other: The other object
         """
-        if isinstance(other, StringType):
+        if isinstance(other, str):
             other = B3version(other)
 
         compare = cmp(self.version, other.version)
@@ -202,30 +201,30 @@ def checkUpdate(currentVersion, channel=None, singleLine=True, showErrormsg=Fals
     errormessage = None
     
     try:
-        json_data = urllib2.urlopen(URL_B3_LATEST_VERSION, timeout=timeout).read()
+        json_data = urllib.request.urlopen(URL_B3_LATEST_VERSION, timeout=timeout).read()
         version_info = json.loads(json_data)
-    except IOError, e:
+    except IOError as e:
         if hasattr(e, 'reason'):
             errormessage = '%s' % e.reason
         elif hasattr(e, 'code'):
             errormessage = 'error code: %s' % e.code
         else:
             errormessage = '%s' % e
-    except Exception, e:
+    except Exception as e:
         errormessage = repr(e)
     else:
         latestVersion = None
         try:
             channels = version_info['B3']['channels']
-        except KeyError, err:
+        except KeyError as err:
             errormessage = repr(err) + '. %s' % version_info
         else:
             if channel not in channels:
-                errormessage = "unknown channel '%s': expecting (%s)"  % (channel, ', '.join(channels.keys()))
+                errormessage = "unknown channel '%s': expecting (%s)"  % (channel, ', '.join(list(channels.keys())))
             else:
                 try:
                     latestVersion = channels[channel]['latest-version']
-                except KeyError, err:
+                except KeyError as err:
                     errormessage = repr(err) + '. %s' % version_info
 
         if not errormessage:
@@ -286,7 +285,7 @@ class DBUpdate(object):
                 for e in ('ini', 'cfg', 'xml'):
                     path = b3.getAbsolutePath(p % e, True)
                     if os.path.isfile(path):
-                        print "Using configuration file: %s" % path
+                        print("Using configuration file: %s" % path)
                         config = path
                         sleep(3)
                         break
@@ -307,7 +306,7 @@ class DBUpdate(object):
         Run the DB update
         """
         clearscreen()
-        print """
+        print("""
                         _\|/_
                         (o o)    {:>32}
                 +----oOO---OOo----------------------------------+
@@ -316,9 +315,9 @@ class DBUpdate(object):
                 |                                               |
                 +-----------------------------------------------+
 
-        """.format('B3 : %s' % b3.__version__)
+        """.format('B3 : %s' % b3.__version__))
 
-        raw_input("press any key to start the update...")
+        input("press any key to start the update...")
 
         def _update_database(storage, update_version):
             """
@@ -330,11 +329,11 @@ class DBUpdate(object):
                 sql = b3.getAbsolutePath('@b3/sql/%s/b3-update-%s.sql' % (storage.protocol, update_version))
                 if os.path.isfile(sql):
                     try:
-                        print '>>> updating database to version %s' % update_version
+                        print('>>> updating database to version %s' % update_version)
                         sleep(.5)
                         storage.queryFromFile(sql)
-                    except Exception, err:
-                        print 'WARNING: could not update database properly: %s' % err
+                    except Exception as err:
+                        print('WARNING: could not update database properly: %s' % err)
                         sleep(3)
 
         dsn = self.config.get('b3', 'database')

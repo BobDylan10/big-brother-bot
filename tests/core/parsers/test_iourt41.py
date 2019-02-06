@@ -62,7 +62,7 @@ class Iourt41TestCase(unittest.TestCase):
         self.output_mock = mock()
         # simulate game server actions
         def write(*args, **kwargs):
-            pretty_args = map(repr, args) + ["%s=%s" % (k, v) for k, v in kwargs.iteritems()]
+            pretty_args = list(map(repr, args)) + ["%s=%s" % (k, v) for k, v in kwargs.items()]
             log.info("write(%s)" % ', '.join(pretty_args))
             return self.output_mock.write(*args, **kwargs)
         self.console.write = write
@@ -81,7 +81,7 @@ class Iourt41TestCase(unittest.TestCase):
             assert queueEvent.called, "No event was fired"
             args = queueEvent.call_args
 
-        if type(event_type) is basestring:
+        if type(event_type) is str:
             event_type_name = event_type
         else:
             event_type_name = self.console.getEventName(event_type)
@@ -89,10 +89,10 @@ class Iourt41TestCase(unittest.TestCase):
 
         eventraised = args[0][0]
         self.assertIsInstance(eventraised, Event)
-        self.assertEquals(self.console.getEventName(eventraised.type), event_type_name)
-        self.assertEquals(eventraised.data, event_data)
-        self.assertEquals(eventraised.target, event_target)
-        self.assertEquals(eventraised.client, event_client)
+        self.assertEqual(self.console.getEventName(eventraised.type), self.console.getEventName(event_type_name))
+        self.assertEqual(eventraised.data, event_data)
+        self.assertEqual(eventraised.target, event_target)
+        self.assertEqual(eventraised.client, event_client)
 
 
 class Test_parser_API_implementation(Iourt41TestCase):
@@ -655,10 +655,10 @@ class Test_OnKill(Iourt41TestCase):
             eventraised = args[0][0]
             self.assertIsInstance(eventraised, Event)
             self.assertIn(self.console.getEventKey(eventraised.type), event_type_name)
-            self.assertEquals(eventraised.data[0], 100)
-            self.assertEquals(eventraised.data[1], getattr(self.console, kill_mod_name))
-            self.assertEquals(eventraised.data[2], 'body')
-            self.assertEquals(eventraised.data[3], kill_mod_name)
+            self.assertEqual(eventraised.data[0], 100)
+            self.assertEqual(eventraised.data[1], getattr(self.console, kill_mod_name))
+            self.assertEqual(eventraised.data[2], 'body')
+            self.assertEqual(eventraised.data[3], kill_mod_name)
 
         assert_mod('1', 'MOD_WATER')
         assert_mod('3', 'MOD_LAVA')

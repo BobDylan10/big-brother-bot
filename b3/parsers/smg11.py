@@ -210,7 +210,7 @@ class Smg11Parser(AbstractParser):
         # initialize connected clients
         self.info('Discover connected clients')
         plist = self.getPlayerList()
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             userinfostring = self.queryClientUserInfoByCid(cid)
             if userinfostring:
                 self.OnClientuserinfochanged(None, userinfostring)
@@ -253,7 +253,7 @@ class Smg11Parser(AbstractParser):
         Parse an infostring.
         :param info: The infostring to be parsed.
         """
-        player_id, info = string.split(info, ' ', 1)
+        player_id, info = info.split(' ', 1)
 
         if info[:1] != '\\':
             info += '\\'
@@ -311,7 +311,7 @@ class Smg11Parser(AbstractParser):
 
             if client:
                 # update existing client
-                for k, v in bclient.iteritems():
+                for k, v in bclient.items():
                     setattr(client, k, v)
             else:
                 if 'name' not in bclient:
@@ -434,7 +434,7 @@ class Smg11Parser(AbstractParser):
         # Item: 0 pickup_money (5) picked up ($25)
         # Item: 0 weapon_schofield bought ($18/$20)
         # Item: 0 weapon_remington58 (7) picked up
-        cid, item = string.split(data, ' ', 1)
+        cid, item = data.split(' ', 1)
         client = self.getByCidOrJoinPlayer(cid)
         if client:
             if 'pickup_money' in item:
@@ -578,7 +578,7 @@ class Smg11Parser(AbstractParser):
         players = self.getPlayerList()
         self.verbose('connectClient() = %s' % players)
 
-        for cid, p in players.iteritems():
+        for cid, p in players.items():
             #self.debug('cid: %s, ccid: %s, p: %s' %(cid, ccid, p))
             if int(cid) == int(ccid):
                 self.debug('Client found in status/playerList')
@@ -697,7 +697,7 @@ class Smg11Parser(AbstractParser):
         """
         plist = self.getPlayerList()
         mlist = dict()
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.getByCidOrJoinPlayer(cid)
             if client:
                 if client.guid and 'guid' in c():

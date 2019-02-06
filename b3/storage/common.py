@@ -26,7 +26,7 @@ import b3
 import os
 import re
 import sys
-import thread
+import _thread
 
 from b3.clients import Client
 from b3.clients import ClientBan
@@ -64,7 +64,7 @@ class DatabaseStorage(Storage):
         self.dsnDict = dsnDict
         self.console = console
         self.db = None
-        self._lock = thread.allocate_lock()
+        self._lock = _thread.allocate_lock()
 
     ####################################################################################################################
     #                                                                                                                  #
@@ -137,7 +137,7 @@ class DatabaseStorage(Storage):
                 raise KeyError('no client matching guid %s' % client.guid)
 
             found = False
-            for k, v in cursor.getRow().iteritems():
+            for k, v in cursor.getRow().items():
                 #if hasattr(client, k) and getattr(client, k):
                 #    # don't set already set items
                 #    continue
@@ -175,7 +175,7 @@ class DatabaseStorage(Storage):
         while not cursor.EOF:
             g = cursor.getRow()
             client = Client()
-            for k, v in g.iteritems():
+            for k, v in g.items():
                 setattr(client, self.getVar(k), v)
             clients.append(client)
             cursor.moveNext()
@@ -399,17 +399,17 @@ class DatabaseStorage(Storage):
         if penalty.keyword and not re.match(r'^[a-z0-9]+$', penalty.keyword, re.I):
             penalty.keyword = ''
 
-        if penalty.reason:
+        #if penalty.reason:
             # decode the reason data, as the name may need it
-            if hasattr(self.console, "encoding") and self.console.encoding:
-                try:
-                    penalty.reason = penalty.reason.decode(self.console.encoding)
-                except Exception, msg:
-                    self.console.warning('ERROR: decoding reason: %r', msg)
-                try:
-                    penalty.reason = penalty.reason.encode('UTF-8', 'replace')
-                except Exception, msg:
-                    self.console.warning('ERROR: encoding reason: %r', msg)
+            # if hasattr(self.console, "encoding") and self.console.encoding:
+            #     try:
+            #         penalty.reason = penalty.reason.decode(self.console.encoding)
+            #     except Exception as msg:
+            #         self.console.warning('ERROR: decoding reason: %r', msg)
+            #     try:
+            #         penalty.reason = penalty.reason.encode('UTF-8', 'replace')
+            #     except Exception as msg:
+            #         self.console.warning('ERROR: encoding reason: %r', msg)
 
         for f in fields:
             if hasattr(penalty, self.getVar(f)):
@@ -629,7 +629,7 @@ class DatabaseStorage(Storage):
         try:
             # always return a cursor instance (also when EOF is reached)
             return self._query(query=query, bindata=bindata)
-        except Exception, e:
+        except Exception as e:
             # log so we can inspect the issue and raise again
             self.console.error('Query failed [%s] %r: %s', query, bindata, e)
             raise e

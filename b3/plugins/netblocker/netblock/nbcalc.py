@@ -35,7 +35,7 @@ def warn(str):
 def dumpout(r):
 	res = r.tocidr()
 	if len(res) > 0:
-		print "\n".join(res)
+		print("\n".join(res))
 
 def process(args):
 	r = netblock.IPRanges()

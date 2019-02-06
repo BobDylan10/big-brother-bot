@@ -52,7 +52,7 @@ class Rcon(object):
     def write(self, cmd, *args, **kwargs):
         if not self.frontline_client:
             return
-        self.console.verbose(u'RCON :\t %s' % cmd)
+        self.console.verbose('RCON :\t %s' % cmd)
         self.frontline_client.command(cmd)
         
     def flush(self):

@@ -136,9 +136,9 @@ class Test_chatlogfile(ChatloggerTestCase):
 
     def test_unicode(self):
         # WHEN
-        self.joe.name = u"★joe★"
-        self.simon.name = u"❮❮simon❯❯"
-        self.joe.sendsPM(u"hi ✪", self.simon)
+        self.joe.name = "★joe★"
+        self.simon.name = "❮❮simon❯❯"
+        self.joe.sendsPM("hi ✪", self.simon)
         # THEN
         self.assertEqual(1, self.count_chatlog_lines())
-        self.assert_log_line(self.get_all_chatlog_lines_from_logfile()[0], u"@1 [★joe★] to PM:\thi ✪")
+        self.assert_log_line(self.get_all_chatlog_lines_from_logfile()[0], "@1 [★joe★] to PM:\thi ✪")

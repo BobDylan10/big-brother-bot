@@ -25,7 +25,7 @@
         <set name="bot_name">b3</set>
         <!-- Ingame messages are prefixed with this code, you can use colorcodes -->
         <set name="bot_prefix">(b3):</set>
-        <set name="time_format">%I:%M%p %Z %m/%d/%y</set>
+        <set name="time_format">%%I:%%M%%p %%Z %%m/%%d/%%y</set>
         <!-- The timezone your bot is in -->
         <set name="time_zone">CST</set>
         <!-- How much detail in the b3 logfile: 9 = verbose, 10 = debug, 21 = bot, 22 = console -->

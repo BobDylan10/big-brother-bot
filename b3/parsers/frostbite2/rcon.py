@@ -65,9 +65,9 @@ class Rcon(object):
         """
         if not self.frostbite_server:
             return
-        self.console.verbose(u'RCON :\t %s' % repr(cmd))
+        self.console.verbose('RCON :\t %s' % repr(cmd))
         response = self.frostbite_server.command(cmd)
-        self.console.verbose(u'RCON response:\t %s' % repr(response))
+        self.console.verbose('RCON response:\t %s' % repr(response))
         return response
 
     def flush(self):

@@ -52,9 +52,9 @@ class Rcon(object):
     def write(self, cmd, *args, **kwargs):
         if not self.server_conn:
             return
-        self.console.verbose(u'RCON :\t %s' % repr(cmd))
+        self.console.verbose('RCON :\t %s' % repr(cmd))
         response = self.server_conn.command(cmd)
-        self.console.verbose(u'RCON response:\t %s' % repr(response))
+        self.console.verbose('RCON response:\t %s' % repr(response))
         return response
 
     def flush(self):

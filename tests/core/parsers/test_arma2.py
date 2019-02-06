@@ -96,7 +96,7 @@ class EventParsingTestCase(Arma2TestCase):
         """
         assert that self.evt_queue contains at least one event for the given type that has the given characteristics.
         """
-        assert isinstance(event_type, basestring)
+        assert isinstance(event_type, str)
 
         def assert_event_equals(expected_event, actual_event):
             if expected_event is None:
@@ -119,7 +119,7 @@ class EventParsingTestCase(Arma2TestCase):
                     return
                 except Exception:
                     pass
-            self.fail("expecting event %s. Got instead: %s" % (expected_event, map(str, self.evt_queue)))
+            self.fail("expecting event %s. Got instead: %s" % (expected_event, list(map(str, self.evt_queue))))
 
 
     ################################################################################################################
@@ -262,36 +262,36 @@ class Test_utf8_issues(EventParsingTestCase):
         # GIVEN
         self.clear_events()
         # WHEN routeBattleyeMessagePacket is given a UTF-8 encoded message
-        self.parser.routeBattleyeEvent(u"""Player #0 F00Åéxx (11.1.1.8:2304) connected""")
+        self.parser.routeBattleyeEvent("""Player #0 F00Åéxx (11.1.1.8:2304) connected""")
         # THEN
         self.assertEqual(1, len(self.evt_queue))
         event = self.evt_queue[0]
         self.assertEqual(self.parser.getEventID("EVT_CLIENT_CONNECT"), event.type)
-        self.assertEqual(u"F00Åéxx", event.client.name)
+        self.assertEqual("F00Åéxx", event.client.name)
 
 
     def test_player_connected_utf8_2(self):
         # GIVEN
         self.clear_events()
         # WHEN
-        self.parser.routeBattleyeEvent(u'Player #1 étoiléàtèsté (77.205.193.131:2304) connected')
+        self.parser.routeBattleyeEvent('Player #1 étoiléàtèsté (77.205.193.131:2304) connected')
         # THEN
         self.assertEqual(1, len(self.evt_queue))
         event = self.evt_queue[0]
         self.assertEqual(self.parser.getEventID("EVT_CLIENT_CONNECT"), event.type)
-        self.assertEqual(u"étoiléàtèsté", event.client.name)
+        self.assertEqual("étoiléàtèsté", event.client.name)
 
 
     def test_verified_guid(self):
         # GIVEN
         self.clear_events()
         # WHEN
-        self.parser.routeBattleyeEvent(u'Verified GUID (a4c3eba0a790300fd7d9d39e26e00eb0) of player #1 étoiléàtèsté')
+        self.parser.routeBattleyeEvent('Verified GUID (a4c3eba0a790300fd7d9d39e26e00eb0) of player #1 étoiléàtèsté')
         # THEN
         self.assertTrue(len(self.evt_queue))
         event = self.evt_queue[0]
         self.assertEqual(self.parser.getEventID("EVT_CLIENT_CONNECT"), event.type)
-        self.assertEqual(u"étoiléàtèsté", event.client.name)
+        self.assertEqual("étoiléàtèsté", event.client.name)
 
 
 
@@ -315,7 +315,7 @@ class Test_parser_API(Arma2TestCase):
 
     def test_getPlayerList(self, sleep_mock):
         # GIVEN
-        when(self.parser.output).write('players').thenReturn(u'''\
+        when(self.parser.output).write('players').thenReturn('''\
 Players on server:
 [#] [IP Address]:[Port] [Ping] [GUID] [Name]
 --------------------------------------------------
@@ -327,14 +327,14 @@ Players on server:
         players = self.parser.getPlayerList()
         # THEN
         self.maxDiff = 1024
-        self.assertDictEqual({u'0': {'cid': u'0',
-                                     'guid': u'80a5885eb00000000000000000000000',
-                                     'ip': u'192.168.0.100',
+        self.assertDictEqual({'0': {'cid': '0',
+                                     'guid': '80a5885eb00000000000000000000000',
+                                     'ip': '192.168.0.100',
                                      'lobby': True,
-                                     'name': u'étoiléàÄ',
-                                     'ping': u'0',
-                                     'port': u'2316',
-                                     'verified': u'OK'}}, players)
+                                     'name': 'étoiléàÄ',
+                                     'ping': '0',
+                                     'port': '2316',
+                                     'verified': 'OK'}}, players)
 
 
     def test_say(self, sleep_mock):
@@ -428,7 +428,7 @@ Players on server:
 
     def test_getPlayerPings(self, sleep_mock):
         # GIVEN
-        when(self.parser.output).write('players').thenReturn(u'''\
+        when(self.parser.output).write('players').thenReturn('''\
 Players on server:
 [#] [IP Address]:[Port] [Ping] [GUID] [Name]
 --------------------------------------------------
@@ -441,7 +441,7 @@ Players on server:
         pings = self.parser.getPlayerPings()
         # THEN
         self.maxDiff = 1024
-        self.assertDictEqual({u'0': 63, u'2': 47}, pings)
+        self.assertDictEqual({'0': 63, '2': 47}, pings)
 
 #
 #    def test_getPlayerScores(self, sleep_mock):

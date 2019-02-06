@@ -28,7 +28,7 @@ import b3.plugin
 
 from b3.functions import hash_password
 from b3.clients import Client
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 __author__ = 'Tim ter Laak'
 __version__ = '1.4'
@@ -154,7 +154,7 @@ class LoginPlugin(b3.plugin.Plugin):
             client.message('Usage: %s%s <new password> [<client>]' % (cmd.prefix, cmd.command))
             return
 
-        data = string.split(data)
+        data = data.split()
         if len(data) > 1:
             sclient = self._adminPlugin.findClientPrompt(data[1], client)
             if not sclient:

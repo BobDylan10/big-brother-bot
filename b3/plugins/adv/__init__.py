@@ -33,7 +33,7 @@ import b3.plugin
 import b3.cron
 
 from b3 import B3_RSS
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 
 class MessageLoop(object):
@@ -107,7 +107,7 @@ class AdvPlugin(b3.plugin.Plugin):
     _fileName = None
     _rate = '2'
     _feed = B3_RSS
-    _feedpre = u'News: '
+    _feedpre = 'News: '
     _feedmaxitems = 5
     _feeditemnr = 0
     _replay = 0
@@ -296,7 +296,7 @@ class AdvPlugin(b3.plugin.Plugin):
                     command = self._adminPlugin._commands['admins']
                     command.executeLoud(data=None, client=None)
                     ad = None
-                except Exception, err:
+                except Exception as err:
                     self.error("could not send adv message @admins", exc_info=err)
                     if first_try:
                         # try another ad
@@ -309,7 +309,7 @@ class AdvPlugin(b3.plugin.Plugin):
                     command = self._adminPlugin._commands['regulars']
                     command.executeLoud(data=None, client=None)
                     ad = None
-                except Exception, err:
+                except Exception as err:
                     self.error("could not send adv message @regulars", exc_info=err)
                     if first_try:
                         # try another ad
@@ -392,7 +392,7 @@ class AdvPlugin(b3.plugin.Plugin):
         try:
             self.save()
             client.message('^3Adv: ^7saved %s messages' % len(self._msg.items))
-        except Exception, e:
+        except Exception as e:
             client.message('^3Adv: ^7error saving: %s' % e)
 
     def cmd_advload(self, data, client=None, cmd=None):

@@ -187,7 +187,7 @@ class Client(asyncore.dispatcher_with_send):
             for handler in self._handlers:
                 try:
                     handler(p)
-                except Exception, err:
+                except Exception as err:
                     self.console.exception(err)
             p = self._readPacket()
 
@@ -229,7 +229,7 @@ class Client(asyncore.dispatcher_with_send):
         try:
             self.send(packet.encode())
             self.last_ping_time = time.time()
-        except socket.error, e:
+        except socket.error as e:
             self.console.error(repr(e))
     
     def command(self, text):
@@ -241,7 +241,7 @@ class Client(asyncore.dispatcher_with_send):
         packet.data = text
         try:
             self.send(packet.encode())
-        except socket.error, e:
+        except socket.error as e:
             self.console.error(repr(e))
         
     def _readPacket(self):

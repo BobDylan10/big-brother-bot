@@ -24,7 +24,7 @@
 
 import time
 from b3 import update
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest2 as unittest
 from mock import patch
 from b3.update import B3version
@@ -167,16 +167,16 @@ class TestCheckUpdateUrl(unittest.TestCase):
 class TestCheckUpdate (unittest.TestCase):
 
     def setUp(self):
-        self.expected_stable = u'update available (v1.4.3 : http://www.url.stable.fake)'
-        self.expected_beta = u'update available (v1.5.3b3 : http://www.url.beta.fake)'
-        self.expected_dev = u'update available (v1.6dev5.daily135 : http://www.url.dev.fake)'
+        self.expected_stable = 'update available (v1.4.3 : http://www.url.stable.fake)'
+        self.expected_beta = 'update available (v1.5.3b3 : http://www.url.beta.fake)'
+        self.expected_dev = 'update available (v1.6dev5.daily135 : http://www.url.dev.fake)'
 
         def urlopen(*args, **kwargs):
             """
             will fake urllib2.urlopen
             """
-            import StringIO
-            return StringIO.StringIO("""
+            import io
+            return io.StringIO("""
                 {
                     "B3": {
                         "channels": {
@@ -196,11 +196,11 @@ class TestCheckUpdate (unittest.TestCase):
                     }
                 }
             """)
-        self.original_urlopen = urllib2.urlopen
-        urllib2.urlopen = urlopen
+        self.original_urlopen = urllib.request.urlopen
+        urllib.request.urlopen = urlopen
 
     def tearDown(self):
-        urllib2.urlopen = self.original_urlopen
+        urllib.request.urlopen = self.original_urlopen
 
     def test_default_channel(self):
         for v in ('1.0', '1.1.1', '1.4', '1.4.2'):

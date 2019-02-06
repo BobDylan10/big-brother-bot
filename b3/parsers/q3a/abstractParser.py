@@ -29,7 +29,7 @@ __version__ = '1.8.1'
 import re
 import string
 import time
-import new
+import types
 import b3
 import b3.events
 import b3.clients
@@ -226,7 +226,7 @@ class AbstractParser(b3.parser.Parser):
         :param info: The infostring to be parsed.
         """
         # 0 \g_password\none\cl_guid\0A337702493AF67BB0B0F8565CE8BC6C\cl_wwwDownload\1\name\thorn\rate\25000...
-        cid, info = string.split(info, ' ', 1)
+        cid, info = info.split(' ', 1)
         if info[:1] != '\\':
             info = '\\' + info
 
@@ -259,7 +259,7 @@ class AbstractParser(b3.parser.Parser):
     ####################################################################################################################
 
     def OnSay(self, action, data, match=None):
-        msg = string.split(data, ': ', 1)
+        msg = data.split(': ', 1)
         if not len(msg) == 2:
             return None
 
@@ -278,7 +278,7 @@ class AbstractParser(b3.parser.Parser):
         return None
 
     def OnSayteam(self, action, data, match=None):
-        msg = string.split(data, ': ', 1)
+        msg = data.split(': ', 1)
         if not len(msg) == 2:
             return None
 
@@ -321,7 +321,7 @@ class AbstractParser(b3.parser.Parser):
 
             if client:
                 # update existing client
-                for k, v in bclient.iteritems():
+                for k, v in bclient.items():
                     setattr(client, k, v)
             else:
                 self.clients.newClient(bclient['cid'], **bclient)
@@ -493,7 +493,7 @@ class AbstractParser(b3.parser.Parser):
         :param admin: The admin who performed the kick
         :param silent: Whether or not to announce this kick
         """
-        if isinstance(client, basestring) and re.match('^[0-9]+$', client):
+        if isinstance(client, str) and re.match('^[0-9]+$', client):
             self.write(self.getCommand('kick', cid=client, reason=reason))
             return
 
@@ -527,7 +527,7 @@ class AbstractParser(b3.parser.Parser):
         """
         # We get here if a name was given, and the name was not found as a client
         # This will allow the kicking of non autenticated players
-        if 'kickbyfullname' in self._commands.keys():
+        if 'kickbyfullname' in list(self._commands.keys()):
             self.debug('Trying kick by full name: %s for %s' % (client, reason))
             result = self.write(self.getCommand('kickbyfullname', name=client))
             if result.endswith('is not on the server\n'):
@@ -816,10 +816,10 @@ class AbstractParser(b3.parser.Parser):
         plist = self.getPlayerList()
         mlist = {}
 
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.clients.getByCID(cid)
             if client:
-                if client.guid and 'guid' in c.keys():
+                if client.guid and 'guid' in list(c.keys()):
                     if client.guid == c['guid']:
                         # player matches
                         self.debug('in-sync %s == %s', client.guid, c['guid'])
@@ -827,7 +827,7 @@ class AbstractParser(b3.parser.Parser):
                     else:
                         self.debug('no-sync %s <> %s', client.guid, c['guid'])
                         client.disconnect()
-                elif client.ip and 'ip' in c.keys():
+                elif client.ip and 'ip' in list(c.keys()):
                     if client.ip == c['ip']:
                         # player matches
                         self.debug('in-sync %s == %s', client.ip, c['ip'])
@@ -849,7 +849,7 @@ class AbstractParser(b3.parser.Parser):
         players = self.getPlayerList(maxRetries=4)
         self.verbose('authorizeClients() = %s' % players)
 
-        for cid, p in players.iteritems():
+        for cid, p in players.items():
             sp = self.clients.getByCID(cid)
             if sp:
                 # Only set provided data, otherwise use the currently set data
@@ -909,5 +909,5 @@ class AbstractParser(b3.parser.Parser):
 
         admin_plugin = self.getPlugin('admin')
         command = admin_plugin._commands['kick']
-        command.func = new.instancemethod(new_cmd_kick, admin_plugin)
+        command.func = types.MethodType(new_cmd_kick, admin_plugin)
         command.help = new_cmd_kick.__doc__.strip()

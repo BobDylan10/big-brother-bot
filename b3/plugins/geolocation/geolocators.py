@@ -52,7 +52,7 @@ class Geolocator(object):
         :raise TypeError: if we receive an invalid input data
         :return: string
         """
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             if not re.match(r'''^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}''', str(data)):
                 raise GeolocalizationError('invalid ip address string supplied: %s' % data)
         elif isinstance(data, b3.clients.Client):
@@ -65,7 +65,7 @@ class Geolocator(object):
             raise GeolocalizationError('invalid argument supplied: %s' % type(data).__name__)
 
 
-        return data if isinstance(data, basestring) else data.ip
+        return data if isinstance(data, str) else data.ip
 
     def getLocation(self, data):
         """

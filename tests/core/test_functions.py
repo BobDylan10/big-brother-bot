@@ -146,7 +146,7 @@ class TestTime2minutes(unittest.TestCase):
 class Test_misc(unittest.TestCase):
 
     def test_minutesStr(self):
-        for test_data, expected in {
+        for test_data, expected in list({
             '3s': '3 seconds',
             '4m': '4 minutes',
             '41': '41 minutes',
@@ -170,13 +170,13 @@ class Test_misc(unittest.TestCase):
             861984: '1.6 year',
             1051200: '2 years',
             10512000: '20 years',
-        }.items():
+        }.items()):
             result = functions.minutesStr(test_data)
             if expected != result:
                 self.fail("%r, expecting '%s' but got '%s'" % (test_data, expected, result))
 
     def test_vars2printf(self):
-        for test_data, expected in {
+        for test_data, expected in list({
             '': '',
             'qsdf': 'qsdf',
             'qsdf $azer xcw': 'qsdf %(azer)s xcw',
@@ -184,17 +184,17 @@ class Test_misc(unittest.TestCase):
             '$test': '%(test)s',
             '  $test ': '  %(test)s ',
             '  $test $foo $ $bar': '  %(test)s %(foo)s $ %(bar)s',
-        }.items():
+        }.items()):
             result = functions.vars2printf(test_data)
             if expected != result:
                 self.fail("%r, expecting '%s' but got '%s'" % (test_data, expected, result))
 
     def test_meanstdv(self):
-        for test_data, expected in {
+        for test_data, expected in list({
             (5,): (5.0, 0),
             (10,): (10.0, 0),
             (): (0, 0)
-        }.items():
+        }.items()):
             result = functions.meanstdv(test_data)
             if expected != result:
                 self.fail("%r, expecting '%s' but got '%s'" % (test_data, expected, result))

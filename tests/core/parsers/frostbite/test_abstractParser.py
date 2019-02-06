@@ -31,6 +31,7 @@ from b3.clients import Client
 from b3.plugins.admin import AdminPlugin
 from b3.config import XmlConfigParser
 from b3.parsers.frostbite.abstractParser import AbstractParser
+from functools import reduce
 
 
 sleep_patcher = None
@@ -346,7 +347,7 @@ class Map_related_TestCase(AbstractParser_TestCase):
                         try:
                             offset = int(data[1])
                         except ValueError:
-                            raise CommandFailedError(['InvalidArguments'])
+                            raise CommandFailedError('InvalidArguments')
                             # simulate that the Frostbite2 server responds with 5 maps at most for the mapList.list command
                     maps_to_send = self.__class__.maps[offset:offset + 5]
                     return [len(maps_to_send), 3] + list(reduce(tuple.__add__, maps_to_send, tuple()))

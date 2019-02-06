@@ -58,7 +58,7 @@ vipremove: 0
     def test_frostbite_error(self):
         self.joe.connects("joe")
         self.superadmin.connects('superadmin')
-        when(self.console).write(('reservedSlotsList.remove', u'Joe')).thenRaise(CommandFailedError(['f00']))
+        when(self.console).write(('reservedSlotsList.remove', 'Joe')).thenRaise(CommandFailedError(['f00']))
         self.superadmin.clearMessageHistory()
         self.superadmin.says("!vipremove joe")
         self.assertEqual(["Error: f00"], self.superadmin.message_history)
@@ -67,7 +67,7 @@ vipremove: 0
     def test_frostbite_error_PlayerNotInList(self):
         self.joe.connects("joe")
         self.superadmin.connects('superadmin')
-        when(self.console).write(('reservedSlotsList.remove', u'Joe')).thenRaise(CommandFailedError(['PlayerNotInList']))
+        when(self.console).write(('reservedSlotsList.remove', 'Joe')).thenRaise(CommandFailedError(['PlayerNotInList']))
         self.superadmin.clearMessageHistory()
         self.superadmin.says("!vipremove joe")
         self.assertEqual(["There is no VIP named 'Joe'"], self.superadmin.message_history)

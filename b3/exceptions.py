@@ -23,7 +23,7 @@
 # ################################################################### #
 
 
-import ConfigParser
+import configparser
 
 
 class ConfigFileNotFound(Exception):
@@ -34,7 +34,7 @@ class ConfigFileNotFound(Exception):
         Exception.__init__(self, message)
         
     def __str__(self):
-        return repr(self.message)
+        return repr(str(self))
 
 
 class ConfigFileNotValid(Exception):
@@ -45,7 +45,7 @@ class ConfigFileNotValid(Exception):
         Exception.__init__(self, message)
         
     def __str__(self):
-        return repr(self.message)
+        return repr(str(self))
 
 
 class MissingRequirement(Exception):
@@ -58,8 +58,8 @@ class MissingRequirement(Exception):
 
     def __str__(self):
         if self.throwable:
-            return '%s - %r' % (self.message, repr(self.throwable))
-        return repr(self.message)
+            return '%s - %r' % (str(self), repr(self.throwable))
+        return repr(str(self))
 
 
 class ProgrammingError(Exception):
@@ -70,7 +70,7 @@ class ProgrammingError(Exception):
         Exception.__init__(self, message)
 
     def __str__(self):
-        return repr(self.message)
+        return repr(str(self))
 
 
 class DatabaseError(Exception):
@@ -81,7 +81,7 @@ class DatabaseError(Exception):
         Exception.__init__(self, message)
 
     def __str__(self):
-        return repr(self.message)
+        return repr(str(self))
 
 
 class UpdateError(Exception):
@@ -94,9 +94,9 @@ class UpdateError(Exception):
 
     def __str__(self):
         if self.throwable:
-            return '%s - %r' % (self.message, repr(self.throwable))
-        return repr(self.message)
+            return '%s - %r' % (str(self), repr(self.throwable))
+        return repr(str(self))
 
 
-NoOptionError = ConfigParser.NoOptionError
-NoSectionError = ConfigParser.NoSectionError
+NoOptionError = configparser.NoOptionError
+NoSectionError = configparser.NoSectionError

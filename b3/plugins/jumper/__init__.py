@@ -37,7 +37,7 @@ import re
 from b3.functions import getCmd
 from b3.functions import getStuffSoundingLike
 from b3.functions import right_cut
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 from threading import Timer
 
 ########################################################################################################################
@@ -64,7 +64,7 @@ class JumpRun(object):
         Object constructor.
         """
         self.p = plugin
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k, v)
 
     def start(self):
@@ -140,7 +140,7 @@ class JumpRun(object):
                 try:
                     self.p.console.game.fs_game = right_cut(self.p.console.getCvar('fs_game').getString(), '/')
                     self.p.debug('retrieved server cvar <fs_game> : %s' % self.p.console.game.fs_game)
-                except AttributeError, e:
+                except AttributeError as e:
                     self.p.warning('could not retrieve server cvar <fs_game> : %s' % e)
                     return
 
@@ -150,7 +150,7 @@ class JumpRun(object):
                 try:
                     self.p.console.game.fs_basepath = self.p.console.getCvar('fs_basepath').getString().rstrip('/')
                     self.p.debug('retrieved server cvar <fs_basepath> : %s' % self.p.console.game.fs_basepath)
-                except AttributeError, e:
+                except AttributeError as e:
                     self.p.warning('could not retrieve server cvar <fs_basepath> : %s' % e)
                     return
 
@@ -166,7 +166,7 @@ class JumpRun(object):
                     try:
                         self.p.console.game.fs_homepath = self.p.console.getCvar('fs_homepath').getString().rstrip('/')
                         self.p.debug('retrieved server cvar <fs_homepath> : %s' % self.p.console.game.fs_basepath)
-                    except AttributeError, e:
+                    except AttributeError as e:
                         self.p.warning('could not retrieve server cvar <fs_homepath> : %s' % e)
                         return
 
@@ -180,7 +180,9 @@ class JumpRun(object):
             try:
                 os.unlink(path)
                 self.p.debug('removed jumprun demo file : %s' % path)
-            except os.error, (errno, errstr):
+            except os.error as xxx_todo_changeme:
+                # when this happen is mostly a problem related to misconfiguration
+                (errno, errstr) = xxx_todo_changeme.args
                 # when this happen is mostly a problem related to misconfiguration
                 self.p.error("could not remove jumprun demo file : %s | [%d] %s" % (path, errno, errstr))
 
@@ -623,7 +625,7 @@ class JumperPlugin(b3.plugin.Plugin):
         try:
             self.debug('contacting http://api.urtjumpers.com to retrieve maps data...')
             rt = requests.get('http://api.urtjumpers.com/?key=B3urtjumpersplugin&liste=maps&format=json', timeout=self._timeout).json()
-        except Exception, e:
+        except Exception as e:
             self.warning('could not connect to http://api.urtjumpers.com: %s' % e)
             return {}
         else:
@@ -674,7 +676,7 @@ class JumperPlugin(b3.plugin.Plugin):
         cleaned_wanted_map = re.sub("^ut4?_", '', wanted_map, count=1)
 
         matches = [cleaned_supported_maps[match] for match in getStuffSoundingLike(cleaned_wanted_map,
-                                                                                   cleaned_supported_maps.keys())]
+                                                                                   list(cleaned_supported_maps.keys()))]
         if len(matches) == 1:
             # one match, get the map id
             return matches[0]
@@ -797,7 +799,7 @@ class JumperPlugin(b3.plugin.Plugin):
                     client.message('do you mean: ^3%s?' % '^7, ^3'.join(mp[:5]))
                     return
 
-                if not isinstance(mp, basestring):
+                if not isinstance(mp, str):
                     client.message('^7could not find any map matching ^1%s' % ps[1])
                     return
 
@@ -828,7 +830,7 @@ class JumperPlugin(b3.plugin.Plugin):
                 client.message('do you mean: ^3%s?' % '^7, ^3'.join(mp[:5]))
                 return
 
-            if not isinstance(mp, basestring):
+            if not isinstance(mp, str):
                 client.message('^7could not find any map matching ^1%s' % data)
                 return
 
@@ -859,7 +861,7 @@ class JumperPlugin(b3.plugin.Plugin):
                 client.message('do you mean: ^3%s?' % '^7, ^3'.join(mp[:5]))
                 return
 
-            if not isinstance(mp, basestring):
+            if not isinstance(mp, str):
                 client.message('^7could not find any map matching ^1%s' % data)
                 return
 
@@ -907,7 +909,7 @@ class JumperPlugin(b3.plugin.Plugin):
                     client.message('do you mean: ^3%s?' % '^7, ^3'.join(mp[:5]))
                     return
 
-                if not isinstance(mp, basestring):
+                if not isinstance(mp, str):
                     client.message('^7could not find any map matching ^1%s' % ps[1])
                     return
 
@@ -1037,7 +1039,7 @@ class JumperPlugin(b3.plugin.Plugin):
             client.message('^7do you mean: %s?' % ', '.join(match[:5]))
             return
 
-        if isinstance(match, basestring):
+        if isinstance(match, str):
             cmd.sayLoudOrPM(client, '^7changing map to ^3%s' % match)
             time.sleep(1)
             self.console.write('map %s' % match)
@@ -1059,7 +1061,7 @@ class JumperPlugin(b3.plugin.Plugin):
             client.message('^7do you mean: %s?' % ', '.join(match[:5]))
             return
 
-        if isinstance(match, basestring):
+        if isinstance(match, str):
             self.console.setCvar('g_nextmap', match)
             if client:
                 client.message('^7nextmap set to ^3%s' % match)

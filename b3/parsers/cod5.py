@@ -193,7 +193,7 @@ class Cod5Parser(b3.parsers.cod2.Cod2Parser):
         plist = self.getPlayerList(maxRetries=4)
         mlist = {}
 
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             cid = str(cid)
             client = self.clients.getByCID(cid)
             if client:

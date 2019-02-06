@@ -140,7 +140,7 @@ class EtParser(AbstractParser):
 
     def OnClientuserinfochangedguid(self, action, data, match=None):
         client = self.clients.getByCID(match.group('cid'))
-        cid, pbid, data = string.split(data, ' ', 2)
+        cid, pbid, data = data.split(' ', 2)
         bclient = self.parseUserInfo(cid + ' ' + data)
         if bclient:
             self.clients.update(bclient, client)

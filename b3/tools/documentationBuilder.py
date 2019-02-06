@@ -34,7 +34,7 @@ __version__ = '1.2.9'
 import datetime
 import os
 import re
-import StringIO
+import io
 import time
 
 from b3 import getConfPath, getB3Path, getWritableFilePath
@@ -238,7 +238,7 @@ class DocBuilder:
         if self._maxlevel is not None:
             self._console.debug('AUTODOC: get commands with level <= %s' % self._maxlevel)
         commands = {}
-        for cmd in self._adminPlugin._commands.values():
+        for cmd in list(self._adminPlugin._commands.values()):
             if cmd in commands or \
                 cmd.level is None:
                 continue
@@ -272,7 +272,7 @@ class DocBuilder:
             else:
                 return 0
 
-        listCommands = commands.values()
+        listCommands = list(commands.values())
         listCommands.sort(commands_compare)
         return listCommands
     
@@ -285,7 +285,7 @@ class DocBuilder:
             self._console.debug('AUTODOC: uploading to FTP server %s' % dsn['host'])
             ftp = FTP(dsn['host'], dsn['user'], passwd=dsn['password'])
             ftp.cwd(os.path.dirname(dsn['path']))
-            ftpfile = StringIO.StringIO()
+            ftpfile = io.StringIO()
             ftpfile.write(text)
             ftpfile.seek(0)
             ftp.storbinary('STOR ' + os.path.basename(dsn['path']), ftpfile)

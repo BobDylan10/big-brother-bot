@@ -179,7 +179,7 @@ class Test_bfh_events(BFHTestCase):
 
         event = self.parser.queueEvent.call_args[0][0]
         self.assertEqual("Say", self.parser.getEventName(event.type))
-        self.assertEquals('test all', event.data)
+        self.assertEqual('test all', event.data)
         self.assertEqual(self.joe, event.client)
 
     def test_player_onChat_event_team(self):
@@ -190,7 +190,7 @@ class Test_bfh_events(BFHTestCase):
 
         event = self.parser.queueEvent.call_args[0][0]
         self.assertEqual("Team Say", self.parser.getEventName(event.type))
-        self.assertEquals('test team', event.data)
+        self.assertEqual('test team', event.data)
         self.assertEqual(self.joe, event.client)
 
     def test_player_onChat_event_squad(self):
@@ -201,7 +201,7 @@ class Test_bfh_events(BFHTestCase):
 
         event = self.parser.queueEvent.call_args[0][0]
         self.assertEqual("Squad Say", self.parser.getEventName(event.type))
-        self.assertEquals('test squad', event.data)
+        self.assertEqual('test squad', event.data)
         self.assertEqual(self.joe, event.client)
 
     def test_server_onLevelLoaded(self):
@@ -216,7 +216,7 @@ class Test_bfh_events(BFHTestCase):
         # THEN
         event = self.parser.queueEvent.call_args[0][0]
         self.assertEqual('Game Warmup', self.parser.getEventName(event.type))
-        self.assertEquals('MP_Glades', event.data)
+        self.assertEqual('MP_Glades', event.data)
         self.assertListEqual([], warning_mock.mock_calls)
 
 
@@ -242,7 +242,7 @@ class Test_punkbuster_events(BFHTestCase):
         self.assert_pb_misc_evt(
             'PunkBuster Server: 1   b59ffffffffffffffffffffffffffc7d {0/1440} "Cucurbitaceae" "87.45.14.2:3659" mlkjsqfd" ""')
 
-        self.assertEquals(
+        self.assertEqual(
             '''Event<EVT_PUNKBUSTER_UNKNOWN>(['PunkBuster Server: 1   (UnBanned) b59ffffffffffffffffffffffffffc7d {15/15} "Cucurbitaceae" "87.45.14.2:3659" retest" ""'], None, None)''',
             str(self.pb(
                 'PunkBuster Server: 1   (UnBanned) b59ffffffffffffffffffffffffffc7d {15/15} "Cucurbitaceae" "87.45.14.2:3659" retest" ""')))
@@ -390,7 +390,7 @@ class Test_bfh_maps(BFHTestCase):
 
     def test_each_gamemode_is_valid(self):
         game_modes_found = set()
-        map(game_modes_found.update, GAME_MODES_BY_MAP_ID.values())
+        list(map(game_modes_found.update, list(GAME_MODES_BY_MAP_ID.values())))
         self.assertSetEqual(set(GAME_MODES_NAMES.keys()), game_modes_found)
         for game_mode in game_modes_found:
             self.assertIn(game_mode, GAME_MODES_NAMES)
@@ -703,7 +703,7 @@ class Test_patch_b3_Client_isAlive(BFHTestCase):
         self.assertEqual(b3.STATE_DEAD, self.foobar.state)
 
     def test_exception_InvalidPlayerName(self):
-        when(self.parser).write(('player.isAlive', 'Foobar')).thenRaise(CommandFailedError(['InvalidPlayerName']))
+        when(self.parser).write(('player.isAlive', 'Foobar')).thenRaise(CommandFailedError('InvalidPlayerName'))
         self.assertEqual(b3.STATE_UNKNOWN, self.foobar.state)
 
 

@@ -24,7 +24,7 @@
 
 import b3
 import b3.events
-import functions
+from . import functions
 import re
 import string
 import sys
@@ -66,7 +66,7 @@ class ClientVar(object):
         """
         if self.value is None:
             return ()
-        return self.value.items()
+        return list(self.value.items())
 
     def length(self):
         """
@@ -126,7 +126,7 @@ class Client(object):
         if 'console' in kwargs:
             self.console = kwargs['console']
             
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k, v)
 
     ####################################################################################################################
@@ -223,7 +223,7 @@ class Client(object):
     # -----------------------
 
     def _set_data(self, data):
-        for k, v in data.iteritems():
+        for k, v in data.items():
             self._data[k] = v
 
     def _get_data(self):
@@ -494,7 +494,7 @@ class Client(object):
         elif not self._maskGroup:
             try:
                 group = self.console.storage.getGroup(Group(level=self.maskLevel))
-            except Exception, err:
+            except Exception as err:
                 self.console.error("Could not find group with level %r" % self.maskLevel, exc_info=err)
                 self.maskLevel = 0
                 return None
@@ -878,10 +878,10 @@ class Client(object):
             ip = self.ip
             try:
                 inStorage = self.console.storage.getClient(self)
-            except KeyError, msg:
+            except KeyError as msg:
                 self.console.debug('Client not found %s: %s', self.guid, msg)
                 inStorage = False
-            except Exception, e:
+            except Exception as e:
                 self.console.error('Auth self.console.storage.getClient(client) - %s\n%s', e,
                                    traceback.extract_tb(sys.exc_info()[2]))
                 self.authorizing = False
@@ -930,7 +930,7 @@ class Struct(object):
         """
         Object constructor.
         """
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k, v)
 
     def _set_id(self, v):
@@ -1280,14 +1280,14 @@ class Clients(dict):
         self._guidIndex = {}
         self._nameIndex = {}
 
-        self.escape_table = [unichr(x) for x in range(128)]
-        self.escape_table[0] = u'\\0'
-        self.escape_table[ord('\\')] = u'\\\\'
-        self.escape_table[ord('\n')] = u'\\n'
-        self.escape_table[ord('\r')] = u'\\r'
-        self.escape_table[ord('\032')] = u'\\Z'
-        self.escape_table[ord('"')] = u'\\"'
-        self.escape_table[ord("'")] = u"\\'"
+        self.escape_table = [chr(x) for x in range(128)]
+        self.escape_table[0] = '\\0'
+        self.escape_table[ord('\\')] = '\\\\'
+        self.escape_table[ord('\n')] = '\\n'
+        self.escape_table[ord('\r')] = '\\r'
+        self.escape_table[ord('\032')] = '\\Z'
+        self.escape_table[ord('"')] = '\\"'
+        self.escape_table[ord("'")] = "\\'"
 
     def find(self, handle, maxres=None):
         """
@@ -1312,7 +1312,7 @@ class Clients(dict):
         try:
             return self[self._nameIndex[name]]
         except Exception:
-            for cid, c in self.items():
+            for cid, c in list(self.items()):
                 if c.name and c.name.lower() == name:
                     # self.console.debug('found client by name %s = %s', name, c.name)
                     self._nameIndex[name] = c.cid
@@ -1330,7 +1330,7 @@ class Clients(dict):
             # self.console.debug('found client by exact name in index %s = %s : %s', name, c.exactName, c.__class__.__name__)
             return c
         except Exception:
-            for cid, c in self.items():
+            for cid, c in list(self.items()):
                 if c.exactName and c.exactName.lower() == name:
                     #self.console.debug('Found client by exact name %s = %s', name, c.exactName)
                     self._exactNameIndex[name] = c.cid
@@ -1342,7 +1342,7 @@ class Clients(dict):
         Return the list of line clients.
         """
         clist = []
-        for cid, c in self.items():
+        for cid, c in list(self.items()):
             if not c.hide:
                 clist.append(c)
         return clist
@@ -1356,7 +1356,7 @@ class Clients(dict):
         """
         clist = []
         minlevel, maxlevel = int(min), int(max)
-        for cid, c in self.items():
+        for cid, c in list(self.items()):
             if c.hide:
                 continue
             elif not masked and c.maskGroup and minlevel <= c.maskGroup.level <= maxlevel:
@@ -1375,7 +1375,7 @@ class Clients(dict):
         """
         clist = []
         needle = re.sub(r'\s', '', name.lower())
-        for cid,c in self.items():
+        for cid,c in list(self.items()):
             cleanname = re.sub(r'\s', '', c.name.lower())
             if not c.hide and needle in cleanname:
                 clist.append(c)
@@ -1387,8 +1387,8 @@ class Clients(dict):
         :param name: The name to match
         """
         name = name.lower()
-        for cid,c in self.items():
-            if not c.hide and string.find(c.name.lower(), name) != -1:
+        for cid,c in list(self.items()):
+            if not c.hide and c.name.lower().find(name) != -1:
                 return c
         return None
 
@@ -1398,7 +1398,7 @@ class Clients(dict):
         :param state: The clients state
         """
         clist = []
-        for cid,c in self.items():
+        for cid,c in list(self.items()):
             if not c.hide and c.state == state:
                 clist.append(c)
         return clist
@@ -1464,7 +1464,7 @@ class Clients(dict):
         try:
             return self[self._guidIndex[guid]]
         except Exception:
-            for cid,c in self.items():
+            for cid,c in list(self.items()):
                 if c.guid and c.guid == guid:
                     self._guidIndex[guid] = c.cid
                     return c
@@ -1482,7 +1482,7 @@ class Clients(dict):
             c = self[cid]
         except KeyError:
             return None
-        except Exception, e:
+        except Exception as e:
             self.console.error('Unexpected error getByCID(%s) - %s', cid, e)
         else:
             # self.console.debug('found client by CID %s = %s', cid, c.name)
@@ -1499,7 +1499,7 @@ class Clients(dict):
         Value should be bytes or unicode.
         Source - https://github.com/PyMySQL/PyMySQL/blob/40f6a706144a9b65baa123e6d5d89d23558646ac/pymysql/converters.py
         """
-        if isinstance(value, unicode):
+        if isinstance(value, str):
             return value.translate(self.escape_table)
         if isinstance(value, (bytes, bytearray)):
             value = value.replace('\\', '\\\\')
@@ -1548,7 +1548,7 @@ class Clients(dict):
         try:
             group = Group(keyword='superadmin')
             group = self.console.storage.getGroup(group)
-        except Exception, e:
+        except Exception as e:
             self.console.error('Could not get superadmin group: %s', e)
             return False
 
@@ -1621,7 +1621,7 @@ class Clients(dict):
         Empty the clients list and reset the indexes.
         """
         self.resetIndex()
-        for cid, c in self.items():
+        for cid, c in list(self.items()):
             if not c.hide:
                 del self[cid]
 
@@ -1633,7 +1633,7 @@ class Clients(dict):
         # remove existing clients
         self.clear()
         # add list of matching clients
-        for cid, c in mlist.iteritems():
+        for cid, c in mlist.items():
             self[cid] = c
 
     def authorizeClients(self):

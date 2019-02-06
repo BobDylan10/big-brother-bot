@@ -32,7 +32,7 @@ import b3.parser
 import re
 import string
 import time
-import thread
+import _thread
 
 from b3.functions import getStuffSoundingLike
 from b3.functions import prefixText
@@ -358,7 +358,7 @@ class Iourt41Parser(AbstractParser):
         Called after the parser loaded and started all plugins.
         """
         plist = self.getPlayerList()
-        for cid in plist.keys():
+        for cid in list(plist.keys()):
             userinfostring = self.queryClientUserInfoByCid(cid)
             if userinfostring:
                 self.OnClientuserinfo(None, userinfostring)
@@ -377,7 +377,7 @@ class Iourt41Parser(AbstractParser):
                     self.error("Cannot fix players teams: %s" % err)
                     return
 
-        for cid in plist.keys():
+        for cid in list(plist.keys()):
             client = self.clients.getByCID(cid)
             if client and client.cid in player_teams:
                 newteam = player_teams[client.cid]
@@ -429,7 +429,7 @@ class Iourt41Parser(AbstractParser):
         """
         # 2 \ip\145.99.135.227:27960\challenge\-232198920\qport\2781\protocol\68\battleye\1\name\[SNT]^1XLR^78or...
         # 7 n\[SNT]^1XLR^78or\t\3\r\2\tl\0\f0\\f1\\f2\\a0\0\a1\0\a2\0
-        player_id, info = string.split(info, ' ', 1)
+        player_id, info = info.split(' ', 1)
 
         if info[:1] != '\\':
             info = '\\' + info
@@ -482,7 +482,7 @@ class Iourt41Parser(AbstractParser):
 
         # split port from ip field
         if 'ip' in bclient:
-            ip_port_data = string.split(bclient['ip'], ':', 1)
+            ip_port_data = bclient['ip'].split(':', 1)
             bclient['ip'] = ip_port_data[0]
             if len(ip_port_data) > 1:
                 bclient['port'] = ip_port_data[1]
@@ -499,7 +499,7 @@ class Iourt41Parser(AbstractParser):
             client = self.clients.getByCID(bclient['cid'])
             if client:
                 # update existing client
-                for k, v in bclient.iteritems():
+                for k, v in bclient.items():
                     if hasattr(client, 'gear') and k == 'gear' and client.gear != v:
                         self.queueEvent(b3.events.Event(self.getEventID('EVT_CLIENT_GEAR_CHANGE'), v, client))
                     if not k.startswith('_') and k not in ('login', 'password', 'groupBits', 'maskLevel',
@@ -534,7 +534,7 @@ class Iourt41Parser(AbstractParser):
                             plist = self.getPlayerList()
                             client_data = plist[bclient['cid']]
                             bclient['ip'] = client_data['ip']
-                        except Exception, err:
+                        except Exception as err:
                             bclient['ip'] = ''
                             self.warning("Failed to get client %s ip address" % bclient['cid'], err)
 
@@ -788,7 +788,7 @@ class Iourt41Parser(AbstractParser):
     def OnItem(self, action, data, match=None):
         # Item: 3 ut_item_helmet
         # Item: 0 team_CTF_redflag
-        cid, item = string.split(data, ' ', 1)
+        cid, item = data.split(' ', 1)
         client = self.getByCidOrJoinPlayer(cid)
         if client:
             # correct flag/bomb-pickups
@@ -933,7 +933,7 @@ class Iourt41Parser(AbstractParser):
         self.verbose('...self.console.game.gameType: %s' % self.game.gameType)
         self.game.startMap()
         self.game.rounds = 0
-        thread.start_new_thread(self.clients.sync, ())
+        _thread.start_new_thread(self.clients.sync, ())
         return self.getEvent('EVT_GAME_ROUND_START', data=self.game)
 
     def OnWarmup(self, action, data=None, match=None):
@@ -962,7 +962,7 @@ class Iourt41Parser(AbstractParser):
         self.verbose('...self.console.game.gameType: %s' % self.game.gameType)
         self.game.startMap()
         self.game.rounds = 0
-        thread.start_new_thread(self.clients.sync, ())
+        _thread.start_new_thread(self.clients.sync, ())
         return self.getEvent('EVT_GAME_ROUND_START', data=self.game)
 
     ####################################################################################################################
@@ -1095,7 +1095,7 @@ class Iourt41Parser(AbstractParser):
         plist = self.getPlayerList(maxRetries=4)
         mlist = dict()
 
-        for cid, c in plist.iteritems():
+        for cid, c in plist.items():
             client = self.getByCidOrJoinPlayer(cid)
             if client:
                 # Disconnect the zombies first
@@ -1136,7 +1136,7 @@ class Iourt41Parser(AbstractParser):
         Load a given map/level.
         """
         rv = self.getMapsSoundingLike(map_name)
-        if isinstance(rv, basestring):
+        if isinstance(rv, str):
             self.say('^7Changing map to %s' % rv)
             time.sleep(1)
             self.write('map %s' % rv)
@@ -1295,7 +1295,7 @@ class Iourt41Parser(AbstractParser):
         cleaned_wanted_map = re.sub("^ut4?_", '', wanted_map, count=1)
 
         matches = [cleaned_supported_maps[match] for match in getStuffSoundingLike(cleaned_wanted_map,
-                                                                                   cleaned_supported_maps.keys())]
+                                                                                   list(cleaned_supported_maps.keys()))]
         if len(matches) == 1:
             # one match, get the map id
             return matches[0]
@@ -1467,7 +1467,7 @@ class Iourt41Parser(AbstractParser):
             points = self.damage[weapon][int(hitloc)]
             self.debug("_getDamagePoints(%s, %s) -> %s" % (weapon, hitloc, points))
             return points
-        except KeyError, err:
+        except KeyError as err:
             self.warning("_getDamagePoints(%s, %s) cannot find value : %s" % (weapon, hitloc, err))
             return 15
         
@@ -1478,7 +1478,7 @@ class Iourt41Parser(AbstractParser):
         """
         try:
             return self.hitweapon2killweapon[int(hitweapon_id)]
-        except KeyError, err:
+        except KeyError as err:
             self.warning("Unknown weapon ID on Hit line: %s", err)
             return None
 
