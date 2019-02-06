@@ -2,14 +2,9 @@
 
 **********
 
-![status: seeking maintainer](https://img.shields.io/badge/status-seeking%20maintainer-yellow.svg)
-
 ```
-This project is NO LONGER actively maintained. It is provided 'as is' in its current state! 
-If you wish to apply as project maintainer please contact B3 development team by opening a 
-topic on the B3 forums.
-
-B3 Development Team
+This is a fork of the original B3 bot. It intends to port it on python3, so as to prepare for the new Urban Terror Resurgence.
+While the main work is on Urban Terror (upcoming and old versions), I plan to test it on csgo.
 ```
 
 Big Brother Bot (B3) is a complete and total server administration package for online games. It is the prefered ingame
