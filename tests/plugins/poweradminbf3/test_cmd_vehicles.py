@@ -79,7 +79,7 @@ vehicles: 20
         # simulate Frostbite error when changing vehicleSpawnAllowed
         def getCvar_proxy(var_name):
             if var_name == 'vehicleSpawnAllowed':
-                raise CommandFailedError(['foo'])
+                raise CommandFailedError('foo')
             else:
                 return Mock()
         self.p.console.getCvar = Mock(side_effect=getCvar_proxy)
@@ -95,7 +95,7 @@ vehicles: 20
         # simulate Frostbite error when changing vehicleSpawnAllowed
         def setCvar_proxy(var_name, value):
             if var_name == 'vehicleSpawnAllowed':
-                raise CommandFailedError(['InvalidArguments'])
+                raise CommandFailedError('InvalidArguments')
             else:
                 return Mock()
         self.p.console.setCvar = Mock(side_effect=setCvar_proxy)

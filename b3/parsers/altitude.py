@@ -529,7 +529,7 @@ class AltitudeParser(Parser):
         ## Also, we have no way to query the exact list of currently connected
         ## players, so we use the last ping report as they are quite frequent
         players = {}
-        for cid in self._last_ping_report.keys():
+        for cid in list(self._last_ping_report.keys()):
             client = self.clients.getByCID(cid)
             if client:
                 players[cid] = client
@@ -715,7 +715,7 @@ class AltitudeParser(Parser):
         Returns a dict having players' id for keys and players' scores for values
         """
         scores = {} 
-        for cid, client in self.getPlayerList().items():
+        for cid, client in list(self.getPlayerList().items()):
             scores[cid] = client.kills
         return scores
         
@@ -767,7 +767,7 @@ class AltitudeParser(Parser):
             ## erase Altitude command file content so the Altitude
             ## server wron't try to redo those commands on restart
             self.output.clear()
-        except Exception, e:
+        except Exception as e:
             self.error(e)
         finally:
             ## call original shutdown()
@@ -847,7 +847,7 @@ class AltitudeRcon():
         To send a command to the server, the format to respect is :
         [server port],[command type],[data]
         """
-        self.console.verbose(u'RCON :\t %s' % cmd)
+        self.console.verbose('RCON :\t %s' % cmd)
         self._fh.write("%s,console,%s\n" % (self.console._port, cmd))
         
     def flush(self):

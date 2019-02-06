@@ -70,7 +70,7 @@ class Test_getMessage(unittest.TestCase):
 
     def test_with_unicode_dict_parameter(self):
         self.parser._messages['f00'] = "bar %(p1)s"
-        self.assertEqual(u"bar joéÄ", self.parser.getMessage('f00', {'p1': u'joéÄ'}))
+        self.assertEqual("bar joéÄ", self.parser.getMessage('f00', {'p1': 'joéÄ'}))
 
 
 
@@ -89,7 +89,7 @@ class Test_getMessageVariables(unittest.TestCase):
         self.assertDictContainsSubset({'clientname': client.name, 'reason': 'this is a good reason'}, self.parser.getMessageVariables(client=client, reason="this is a good reason"))
 
     def test_with_named_parameters__unicode(self):
-        client = Client(name=u"ÄÖé")
+        client = Client(name="ÄÖé")
         self.assertDictContainsSubset({'clientname':client.name, 'reason': 'this is a good reason'}, self.parser.getMessageVariables(client=client, reason="this is a good reason"))
 
 

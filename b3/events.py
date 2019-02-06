@@ -129,7 +129,7 @@ class Events:
         Get the key of a given event ID.
         :param event_id: The event ID
         """
-        matching_keys = [k for k, v in self._events.iteritems() if v == event_id]
+        matching_keys = [k for k, v in self._events.items() if v == event_id]
         if not len(matching_keys):
             raise KeyError('could not find any B3 event with ID %s' % event_id)
         assert len(matching_keys) == 1, 'expecting only one event key per event ID: %r' % matching_keys
@@ -221,8 +221,8 @@ class EventsStats(object):
         Print event stats in the log file.
         """
         if self.console.log.isEnabledFor(VERBOSE):
-            for plugin_name, plugin_timers in self._handling_timers.iteritems():
-                for event_name, event_timers in plugin_timers.iteritems():
+            for plugin_name, plugin_timers in self._handling_timers.items():
+                for event_name, event_timers in plugin_timers.items():
                     mean, stdv = meanstdv(event_timers)
                     if len(event_timers):
                         self.console.verbose("%s %s : (ms) min(%0.1f), max(%0.1f), mean(%0.1f), "

@@ -94,7 +94,7 @@ class B3TestCase(unittest.TestCase):
         self.console.cron.stop()
 
         def myError(msg, *args, **kwargs):
-            print(("ERROR: %s" % msg) % args)
+            print((("ERROR: %s" % msg) % args))
         self.console.error = myError
 
     def tearDown(self):
@@ -117,7 +117,7 @@ class B3TestCase(unittest.TestCase):
                 # WHEN
                 self.client.team = 24
         """
-        if type(event_type) is basestring:
+        if type(event_type) is str:
             event_type_name = event_type
         else:
             event_type_name = self.console.getEventName(event_type)
@@ -133,7 +133,7 @@ class B3TestCase(unittest.TestCase):
         def assertEvent(queueEvent_call_args):
             eventraised = queueEvent_call_args[0][0]
             return type(eventraised) == Event \
-                and self.console.getEventName(eventraised.type) == event_type_name \
+                and self.console.getEventName(eventraised.type) == self.console.getEventName(event_type_name) \
                 and eventraised.data == event_data \
                 and eventraised.target == event_target \
                 and eventraised.client == event_client

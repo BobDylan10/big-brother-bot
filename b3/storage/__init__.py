@@ -104,9 +104,9 @@ class Storage(object):
     def status(self):
         raise NotImplementedError
 
-from mysql import MysqlStorage
-from sqlite import SqliteStorage
-from postgresql import PostgresqlStorage
+from .mysql import MysqlStorage
+from .sqlite import SqliteStorage
+from .postgresql import PostgresqlStorage
 
 def getStorage(dsn, dsnDict, console):
     """

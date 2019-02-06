@@ -66,10 +66,10 @@ except ImportError:
 if is_mysql_ready:
     try:
         driver.connect(host=MYSQL_TEST_HOST, user=MYSQL_TEST_USER, passwd=MYSQL_TEST_PASSWORD)
-    except driver.Error, err:
+    except driver.Error as err:
         is_mysql_ready = False
         no_mysql_reason = "%s" % err[1]
-    except Exception, err:
+    except Exception as err:
         is_mysql_ready = False
         no_mysql_reason = "%s" % err
 
@@ -89,7 +89,7 @@ class Test_MySQL(B3TestCase, StorageAPITest):
 
         try:
             db = driver.connect(host=MYSQL_TEST_HOST, user=MYSQL_TEST_USER, password=MYSQL_TEST_PASSWORD)
-        except driver.OperationalError, message:
+        except driver.OperationalError as message:
             self.fail("Error %d:\n%s" % (message[0], message[1]))
 
         db.query("DROP DATABASE IF EXISTS `%s`" % MYSQL_TEST_DB)

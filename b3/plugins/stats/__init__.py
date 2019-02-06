@@ -28,7 +28,7 @@ import b3.plugin
 import string
 
 from b3.functions import getCmd
-from ConfigParser import NoOptionError, NoSectionError
+from configparser import NoOptionError, NoSectionError
 
 __author__ = 'ThorN, GrosBedo'
 __version__ = '1.5.1'
@@ -89,7 +89,7 @@ class StatsPlugin(b3.plugin.Plugin):
             self.mapstatslevel = load_command_level('mapstats')
         except NoOptionError:
             pass
-        except Exception, e:
+        except Exception as e:
             self.error(e)
 
         self.info('commands::mapstats level: %s', self.mapstatslevel)
@@ -98,7 +98,7 @@ class StatsPlugin(b3.plugin.Plugin):
             self.testscorelevel = load_command_level('testscore')
         except NoOptionError:
             pass
-        except Exception, e:
+        except Exception as e:
             self.error(e)
 
         self.info('commands::testscore level: %s', self.testscorelevel)
@@ -107,7 +107,7 @@ class StatsPlugin(b3.plugin.Plugin):
             self.topstatslevel = load_command_level('topstats')
         except NoOptionError:
             pass
-        except Exception, e:
+        except Exception as e:
             self.error(e)
 
         self.info('commands::topstats level: %s', self.topstatslevel)
@@ -116,7 +116,7 @@ class StatsPlugin(b3.plugin.Plugin):
             self.topxplevel = load_command_level('topxp')
         except NoOptionError:
             pass
-        except Exception, e:
+        except Exception as e:
             self.error(e)
 
         self.info('commands::topxp level: %s', self.topxplevel)
@@ -127,7 +127,7 @@ class StatsPlugin(b3.plugin.Plugin):
         except NoOptionError:
             self.warning('could not find settings/startPoints in config file, '
                          'using default: %s' % self.startPoints)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/startPoints config value: %s' % e)
             self.debug('using default value (%s) for settings/startPoints' % self.startPoints)
 
@@ -137,7 +137,7 @@ class StatsPlugin(b3.plugin.Plugin):
         except NoOptionError:
             self.warning('could not find settings/resetscore in config file, '
                          'using default: %s' % self.resetscore)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/resetscore config value: %s' % e)
             self.debug('using default value (%s) for settings/resetscore' % self.resetscore)
 
@@ -147,7 +147,7 @@ class StatsPlugin(b3.plugin.Plugin):
         except NoOptionError:
             self.warning('could not find settings/resetxp in config file, '
                          'using default: %s' % self.resetxp)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/resetxp config value: %s' % e)
             self.debug('using default value (%s) for settings/resetxp' % self.resetxp)
 
@@ -157,7 +157,7 @@ class StatsPlugin(b3.plugin.Plugin):
         except NoOptionError:
             self.warning('could not find settings/show_awards in config file, '
                          'using default: %s' % self.show_awards)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/show_awards config value: %s' % e)
             self.debug('using default value (%s) for settings/show_awards' % self.show_awards)
 
@@ -167,7 +167,7 @@ class StatsPlugin(b3.plugin.Plugin):
         except NoOptionError:
             self.warning('could not find settings/show_awards_xp in config file, '
                          'using default: %s' % self.show_awards_xp)
-        except ValueError, e:
+        except ValueError as e:
             self.error('could not load settings/show_awards_xp config value: %s' % e)
             self.debug('using default value (%s) for settings/show_awards_xp' % self.show_awards_xp)
 
@@ -219,7 +219,7 @@ class StatsPlugin(b3.plugin.Plugin):
         Handle EVT_GAME_ROUND_START
         """
         self.debug('Map Start: clearing stats')
-        for cid, c in self.console.clients.items():
+        for cid, c in list(self.console.clients.items()):
             if c.maxLevel >= self.mapstatslevel:
                 try:
                     c.setvar(self, 'shotsTeamHit', 0)
@@ -243,7 +243,7 @@ class StatsPlugin(b3.plugin.Plugin):
                     else:
                         c.var(self, 'oldexperience', 0).value += c.var(self, 'experience', 0).value
                         c.setvar(self, 'experience', 0)
-                except Exception, e:
+                except Exception as e:
                     self.error(e)
 
     def onDamage(self, event):
@@ -449,9 +449,9 @@ class StatsPlugin(b3.plugin.Plugin):
                 results.append('^3#%s^7 %s ^7[^3%s^7]' % (i, name, score))
                 
             if client:        
-                client.message('^3Top Stats:^7 %s' % string.join(results,', '))
+                client.message('^3Top Stats:^7 %s' % ', '.join(results))
             else:
-                self.console.say('^3Top Stats:^7 %s' % string.join(results,', '))
+                self.console.say('^3Top Stats:^7 %s' % ', '.join(results))
         else:
             client.message('^3Stats: ^7No top players')
 
@@ -480,8 +480,8 @@ class StatsPlugin(b3.plugin.Plugin):
                 results.append('^3#%s^7 %s ^7[^3%s^7]' % (i, name, score))
 
             if client:
-                client.message('^3Top Experienced Players:^7 %s' % string.join(results, ', '))
+                client.message('^3Top Experienced Players:^7 %s' % ', '.join(results))
             else:
-                self.console.say('^3Top Experienced Players:^7 %s' % string.join(results, ', '))
+                self.console.say('^3Top Experienced Players:^7 %s' % ', '.join(results))
         else:
             client.message('^3Stats: ^7No top experienced players')

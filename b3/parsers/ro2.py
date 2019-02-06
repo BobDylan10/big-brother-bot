@@ -30,9 +30,9 @@ import re
 import string
 import sys
 import time
-import urllib
-import urllib2
-import cookielib
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.cookiejar
 import hashlib
 
 from b3 import functions
@@ -221,10 +221,10 @@ class Ro2Parser(Parser):
         """
         Handle the chat from players.
         """
-        if string.capitalize(data['div_class']) == 'Chatnotice':
+        if data['div_class'].capitalize() == 'Chatnotice':
             return
         
-        func = 'onChat_type%s' % (string.capitalize(data['div_class']))
+        func = 'onChat_type%s' % (data['div_class'].capitalize())
         if hasattr(self, func):
             self.debug('routing ----> %s' % func)
             func = getattr(self, func)
@@ -297,7 +297,7 @@ class Ro2Parser(Parser):
         self.headers['Referer'] = referer
         
         try:
-            request_console = urllib2.Request(data_url, data, self.headers)
+            request_console = urllib.request.Request(data_url, data, self.headers)
             console_read = self.opener.open(request_console)
             console_data = console_read.read()
             return console_data
@@ -314,16 +314,16 @@ class Ro2Parser(Parser):
         password = ''
         login_url = self.url + '/'
         headers = {'Content-type' : 'application/x-www-form-urlencoded', 'User-Agent' : self.user_agent}
-        self.cj = cookielib.LWPCookieJar()
-        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
-        urllib2.install_opener(self.opener)
+        self.cj = http.cookiejar.LWPCookieJar()
+        self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cj))
+        urllib.request.install_opener(self.opener)
         findpage_attempt = 0
         self._paused = True
         response = ""
         while findpage_attempt < 11:
             try:
-                request = urllib2.Request(login_url, None, headers)
-                page = urllib2.urlopen(request)
+                request = urllib.request.Request(login_url, None, headers)
+                page = urllib.request.urlopen(request)
                 response = page.read()
                 break
             except Exception:
@@ -343,7 +343,7 @@ class Ro2Parser(Parser):
 
         login_url = self.url + '/'
         referer = login_url
-        data = urllib.urlencode({'token': token_value,
+        data = urllib.parse.urlencode({'token': token_value,
                                  'password_hash': self.password_hash,
                                  'username': self.username,
                                  'password': password,
@@ -354,7 +354,7 @@ class Ro2Parser(Parser):
         while login_attempt < 11:
             try:
                 self.debug('Login attempt %s' % login_attempt)
-                request_console = urllib2.Request(login_url, data, self.headers)
+                request_console = urllib.request.Request(login_url, data, self.headers)
                 self.opener.open(request_console)
                 self._paused = False
                 return True
@@ -595,7 +595,7 @@ class Ro2Parser(Parser):
                    "Content-type": "application/x-www-form-urlencoded",
                    "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.7",
                    "Referer": referer}
-        request_banlist = urllib2.Request(banlist_url, None, headers)
+        request_banlist = urllib.request.Request(banlist_url, None, headers)
         banlist_read = self.opener.open(request_banlist)
         banlist_data = banlist_read.read()
         ban_list = self.decodeBans(banlist_data)
@@ -624,7 +624,7 @@ class Ro2Parser(Parser):
             self.verbose("Connection successful: remote file size is %s" % remoteSize)
             ftp.retrlines('RETR ' + os.path.basename(self.ftpconfig['path']), handleDownload)
 
-        except ftplib.all_errors, e:
+        except ftplib.all_errors as e:
             self.debug(str(e))
             try:
                 ftp.close()
@@ -693,7 +693,7 @@ class Ro2Parser(Parser):
                    "Content-type": "application/x-www-form-urlencoded",
                    "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.7",
                    "Referer": consoledata_url}
-        request_console = urllib2.Request(consoledata_url, data, headers)
+        request_console = urllib.request.Request(consoledata_url, data, headers)
         adminconsole_read = self.opener.open(request_console)
         adminconsole_read.read()
 
@@ -731,7 +731,7 @@ class Ro2Parser(Parser):
             cl = c_client_list[c]
             uid = cl['guid']
             if len(uid) != 18:
-                self.warning(u"weird UID : [%s]" % uid)
+                self.warning("weird UID : [%s]" % uid)
             
             # try to get the client by guid
             client = self.clients.getByGUID(uid)
@@ -761,7 +761,7 @@ class Ro2Parser(Parser):
         if required call the client.disconnect() method to remove a client from self.clients.
         """
         client_cid_list = []
-        for cl in connected_clients.values():
+        for cl in list(connected_clients.values()):
             client_cid_list.append(cl['playerid'])
 
         for client in self.clients.getList():
@@ -1035,7 +1035,7 @@ class Ro2Parser(Parser):
         pings = {}
         clients = self.clients.getList()
         if filter_client_ids:
-             clients = filter(lambda client: client.cid in filter_client_ids, clients)
+             clients = [client for client in clients if client.cid in filter_client_ids]
 
         for c in clients:
             try:

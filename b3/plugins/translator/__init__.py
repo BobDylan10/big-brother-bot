@@ -28,17 +28,18 @@ __version__ = '3.2'
 import b3
 import b3.plugin
 import b3.events
+import imp
 
 # translate utility that utilize google translator, support python2 & python3
 # Note that the order or arguments in the URL matters.
 
 try:
-    from urllib import urlencode
+    from urllib.parse import urlencode
 except ImportError:
     from urllib.parse import urlencode
 
 try:
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
 except ImportError:
     import urllib.request as urllib2
 
@@ -52,7 +53,7 @@ import json
 import re
 import sys
 import time
-reload(sys)
+imp.reload(sys)
 sys.setdefaultencoding('utf-8')
 
 try:
@@ -105,7 +106,7 @@ class TranslatorPlugin(b3.plugin.Plugin):
         """
         def validate_source(x):
             """helper used to validate the source language"""
-            acceptable = self.languages.keys()
+            acceptable = list(self.languages.keys())
             acceptable.append('auto')
             if x not in acceptable and x != 'auto':
                 raise ValueError('value must be one of [%s]' % ', '.join(acceptable))
@@ -113,7 +114,7 @@ class TranslatorPlugin(b3.plugin.Plugin):
 
         def validate_target(x):
             """helper used to validate the target language"""
-            acceptable = self.languages.keys()
+            acceptable = list(self.languages.keys())
             if x not in acceptable and x != 'auto':
                 raise ValueError('value must be one of [%s]' % ', '.join(acceptable))
             return x
@@ -279,10 +280,10 @@ class TranslatorPlugin(b3.plugin.Plugin):
         params.append(urlencode({'q': text}))
         url += '&'.join(params)
 
-        request = urllib2.Request(url)
+        request = urllib.request.Request(url)
         browser = "Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"
         request.add_header('User-Agent', browser)
-        response = urllib2.urlopen(request)
+        response = urllib.request.urlopen(request)
         rtn = json.loads(response.read().decode('utf8'))
         self.verbose('translation done and received, sanitizing...')
 
@@ -307,10 +308,10 @@ class TranslatorPlugin(b3.plugin.Plugin):
         params.append('tl=' + lang)
         params.append(urlencode({'q': text}))
         url += '&'.join(params)
-        request = urllib2.Request(url)
+        request = urllib.request.Request(url)
         browser = "Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"
         request.add_header('User-Agent', browser)
-        response = urllib2.urlopen(request)
+        response = urllib.request.urlopen(request)
         return response.read()
 
     def send_translation(self, client, message, cmd=None):
@@ -460,7 +461,7 @@ class TranslatorPlugin(b3.plugin.Plugin):
         Display the list of available language codes
         """
         codes = []
-        for k, v in self.languages.items():
+        for k, v in list(self.languages.items()):
             codes.append('^2%s^7:%s' % (k, v))
 
         cmd.sayLoudOrPM(client, '^7Languages: %s' % ', '.join(codes))

@@ -426,7 +426,7 @@ usage = 'squaremap.py somedirectory'
 def main():
     """Mainloop for the application"""
     if not sys.argv[1:]:
-        print usage
+        print(usage)
     else:
         app = TestApp(0)
         app.MainLoop()

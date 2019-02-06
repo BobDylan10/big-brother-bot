@@ -31,10 +31,10 @@ import b3.plugin
 import os.path
 import gzip
 import socket
-import StringIO
+import io
 import time
 import threading
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 user_agent = "B3 Cod7Http plugin/%s" % __version__
 
@@ -107,14 +107,14 @@ class Cod7HttpPlugin(b3.plugin.Plugin):
             # get timeout value set by gameservers.com
             try:
                 
-                req = urllib2.Request(self._timeout_url)
+                req = urllib.request.Request(self._timeout_url)
                 req.headers['User-Agent'] = user_agent
-                f = urllib2.urlopen(req)
+                f = urllib.request.urlopen(req)
                 self.timeout = int(f.readlines()[0])
                 f.close()
                 self.debug('using timeout value of %s seconds' % self.timeout)
                 
-            except (urllib2.HTTPError, urllib2.URLError, socket.timeout), error: 
+            except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout) as error: 
                 self.timeout = self._default_timeout
                 self.error('ERROR: %s' % error)
                 self.error('ERROR: Couldn\'t get timeout value. Using default %s seconds' % self.timeout)
@@ -213,11 +213,11 @@ class Cod7HttpPlugin(b3.plugin.Plugin):
                 'Accept-encoding' : 'gzip'
             }
 
-            request = urllib2.Request(self._url, None, headers)
+            request = urllib.request.Request(self._url, None, headers)
 
             # get remote log url response and headers
             try:
-                response = urllib2.urlopen(request)
+                response = urllib.request.urlopen(request)
                 headers = response.info()
 
                 # buffer/download remote log
@@ -229,10 +229,10 @@ class Cod7HttpPlugin(b3.plugin.Plugin):
                 try:
                     # close remote file
                     response.close()
-                except AttributeError, e:
+                except AttributeError as e:
                     self.error('ERROR: %s' % e)
 
-            except (urllib2.HTTPError, urllib2.URLError), e:
+            except (urllib.error.HTTPError, urllib.error.URLError) as e:
                 self.error('HTTP ERROR: %s' % e)
             except socket.timeout:
                 self.error('TIMEOUT ERROR: socket timed out!')
@@ -247,12 +247,12 @@ class Cod7HttpPlugin(b3.plugin.Plugin):
                 try:
                     #self.debug('Content-Encoding: %s' % headers.get('Content-Encoding'))
                     if headers.get('Content-Encoding') == 'gzip':
-                        compressedstream = StringIO.StringIO(remote_log_data)
+                        compressedstream = io.StringIO(remote_log_data)
                         gzipper = gzip.GzipFile(fileobj=compressedstream)
                         remotelog = gzipper.read()
                     else:
                         remotelog = remote_log_data
-                except IOError, e:
+                except IOError as e:
                     remotelog = ''
                     self.error('IOERROR: %s' % e)
 
@@ -274,7 +274,7 @@ class Cod7HttpPlugin(b3.plugin.Plugin):
                             # remove any blank lines
                             while newlog[-4:-2] == '\r\n':
                                 newlog = newlog[:-2]
-                        except ValueError, error:
+                        except ValueError as error:
                             self.error ('ValueError: %s' % error)
                             newlog = ''
 

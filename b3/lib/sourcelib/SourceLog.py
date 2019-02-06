@@ -138,7 +138,7 @@ class SourceLogParser(object):
         if match.group('type') == 'RL':
             remote = True
 
-        timestamp = map(int, match.group('year', 'month', 'day', 'hour', 'minute', 'second'))
+        timestamp = list(map(int, match.group('year', 'month', 'day', 'hour', 'minute', 'second')))
 
         # parse properties (key "value"), optional
         properties = {}

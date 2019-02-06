@@ -59,7 +59,7 @@ __version__ = '2.8.1'
 
 import time
 import threading
-import Queue
+import queue
 import b3.clients
 import b3.events
 
@@ -93,7 +93,7 @@ BUILD_NUMBER_R17 = 560541
 class Bfbc2Parser(AbstractParser):
 
     gameName = 'bfbc2'
-    saybigqueue = Queue.Queue()
+    saybigqueue = queue.Queue()
     saybigqueuelistener = None
 
     _gameServerVars = (
@@ -150,7 +150,7 @@ class Bfbc2Parser(AbstractParser):
         """
         self.info('connecting all players...')
         plist = self.getPlayerList()
-        for cid, p in plist.iteritems():
+        for cid, p in plist.items():
             client = self.clients.getByCID(cid)
             if not client:
                 name = p['name']
@@ -550,7 +550,7 @@ def frostbiteClientMessageBigMethod(self, msg):
     if msg and len(msg.strip())>0:
         # do we have a queue?
         if not hasattr(self, 'messagebigqueue'):
-            self.messagebigqueue = Queue.Queue()
+            self.messagebigqueue = queue.Queue()
         # fill the queue
         text = self.console.stripColors(self.console.msgPrefix + ' [pm] ' + msg)
         for line in self.console.getWrap(text):

@@ -23,7 +23,7 @@
 # ################################################################### #
 
 import logging
-import StringIO
+import io
 from mock import call, patch, Mock
 
 from mockito import mock, verify

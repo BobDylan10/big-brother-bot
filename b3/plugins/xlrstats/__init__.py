@@ -34,14 +34,14 @@ import datetime
 import time
 import os
 import re
-import thread
+import _thread
 import threading
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from b3.functions import escape
 from b3.functions import getCmd
 from b3.functions import right_cut
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 KILLER = "killer"
 VICTIM = "victim"
@@ -333,7 +333,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
         xlr_tables = {x: getattr(self, x) for x in dir(self) if x.endswith('_table')}
         current_tables = self.console.storage.getTables()
 
-        for k, v in xlr_tables.items():
+        for k, v in list(xlr_tables.items()):
             if v not in current_tables:
                 sql_name = right_cut(k, '_table') + '.sql'
                 sql_path = os.path.join(sql_main, sql_name)
@@ -342,7 +342,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
                         with open(sql_path, 'r') as sql_file:
                             query = self.console.storage.getQueriesFromFile(sql_file)[0]
                         self.console.storage.query(query % v)
-                    except Exception, e:
+                    except Exception as e:
                         self.error("could not create schema for database table '%s': %s", v, e)
                     else:
                         self.info('created database table: %s', v)
@@ -364,7 +364,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
             }
         }
 
-        for k, v in update_schema[self.console.storage.protocol].items():
+        for k, v in list(update_schema[self.console.storage.protocol].items()):
             sql_path = os.path.join(sql_main, k)
             if os.path.isfile(sql_path):
                 with open(sql_path, 'r') as sql_file:
@@ -389,9 +389,9 @@ class XlrstatsPlugin(b3.plugin.Plugin):
                     raise ValueError("invalid table name for %s: %r" % (setting_option, table_name))
                 setattr(self, property_to_set, table_name)
                 self._defaultTableNames = False
-            except NoOptionError, err:
+            except NoOptionError as err:
                 self.debug(err)
-            except Exception, err:
+            except Exception as err:
                 self.error(err)
             self.info('using value "%s" for tables::%s' % (property_to_set, setting_option))
 
@@ -483,7 +483,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
         else:
             req = str(self.webfront_url.rstrip('/')) + '/' + str(self.webfront_config_nr) + '/pluginreq/index'
         try:
-            f = urllib2.urlopen(req)
+            f = urllib.request.urlopen(req)
             res = f.readline().split(',')
             # Our webfront will present us 3 values ie.: 200,20,30 -> minKills,minRounds,maxDays
             if len(res) == 3:
@@ -789,7 +789,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
             target._attackers = {}
             ainfo = target._attackers
 
-        for k, v in ainfo.iteritems():
+        for k, v in ainfo.items():
             if k == client.cid:
                 # don't award the killer for the assist aswell
                 continue
@@ -1443,7 +1443,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
     def _addTableColumn(self, c1, t1, specs):
         try:
             self.query("""SELECT %s FROM %s limit 1;""" % (c1, t1))
-        except Exception, e:
+        except Exception as e:
             if e[0] == 1054:
                 self.console.debug('column does not yet exist: %s' % e)
                 self.query("""ALTER TABLE %s ADD %s %s ;""" % (t1, c1, specs))
@@ -1478,7 +1478,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
     def optimizeTables(self, t=None):
         if not t:
             t = self.showTables()
-        if isinstance(t, basestring):
+        if isinstance(t, str):
             _tables = str(t)
         else:
             _tables = ', '.join(t)
@@ -1486,14 +1486,14 @@ class XlrstatsPlugin(b3.plugin.Plugin):
         try:
             self.query('OPTIMIZE TABLE %s' % _tables)
             self.debug('optimize success')
-        except Exception, msg:
+        except Exception as msg:
             self.error('optimizing table(s) failed: %s: trying to repair...', msg)
             self.repairTables(t)
 
     def repairTables(self, t=None):
         if not t:
             t = self.showTables()
-        if isinstance(t, basestring):
+        if isinstance(t, str):
             _tables = str(t)
         else:
             _tables = ', '.join(t)
@@ -1501,7 +1501,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
         try:
             self.query('REPAIR TABLE %s' % _tables)
             self.debug('repair success')
-        except Exception, msg:
+        except Exception as msg:
             self.error('repairing table(s) failed: %s' % msg)
 
     def calculateKillBonus(self):
@@ -1675,7 +1675,7 @@ class XlrstatsPlugin(b3.plugin.Plugin):
         """
         [<#>] - list the top # players of the last 14 days.
         """
-        thread.start_new_thread(self.doTopList, (data, client, cmd, ext))
+        _thread.start_new_thread(self.doTopList, (data, client, cmd, ext))
 
     def doTopList(self, data, client, cmd=None, ext=False):
         """
@@ -1943,8 +1943,8 @@ class XlrstatshistoryPlugin(b3.plugin.Plugin):
         tzName = self.console.config.get('b3', 'time_zone').upper()
         tzOffest = b3.timezones.timezones[tzName]
         hoursGMT = (self._hours - tzOffest)%24
-        self.debug(u'%02d:%02d %s => %02d:%02d UTC' % (self._hours, self._minutes, tzName, hoursGMT, self._minutes))
-        self.info(u'everyday at %2d:%2d %s, history info older than %s months and %s weeks will be deleted' % (
+        self.debug('%02d:%02d %s => %02d:%02d UTC' % (self._hours, self._minutes, tzName, hoursGMT, self._minutes))
+        self.info('everyday at %2d:%2d %s, history info older than %s months and %s weeks will be deleted' % (
                   self._hours, self._minutes, tzName, self._max_months, self._max_weeks))
         self._cronTab = b3.cron.PluginCronTab(self, self.purge, 0, self._minutes, hoursGMT, '*', '*', '*')
         self.console.cron + self._cronTab
@@ -1971,7 +1971,7 @@ class XlrstatshistoryPlugin(b3.plugin.Plugin):
             self.console.cron + self._cronTabMonth
             self._cronTabWeek = b3.cron.PluginCronTab(self, self.snapshot_week, 0, 0, 0, '*', '*', 1)  # day 1 is monday
             self.console.cron + self._cronTabWeek
-        except Exception, msg:
+        except Exception as msg:
             self.error('unable to install history crontabs: %s', msg)
 
         # purge the tables on startup
@@ -1995,7 +1995,7 @@ class XlrstatshistoryPlugin(b3.plugin.Plugin):
         try:
             self.query(sql)
             self.verbose('monthly XLRstats snapshot created')
-        except Exception, msg:
+        except Exception as msg:
             self.error('creating history snapshot failed: %s' % msg)
 
     def snapshot_week(self):
@@ -2010,7 +2010,7 @@ class XlrstatshistoryPlugin(b3.plugin.Plugin):
         try:
             self.query(sql)
             self.verbose('weekly XLRstats snapshot created')
-        except Exception, msg:
+        except Exception as msg:
             self.error('creating history snapshot failed: %s', msg)
 
     def purge(self):
@@ -2019,11 +2019,11 @@ class XlrstatshistoryPlugin(b3.plugin.Plugin):
         """
         # purge the months table
         if not self._max_months or self._max_months == 0:
-            self.warning(u'max_months is invalid [%s]' % self._max_months)
+            self.warning('max_months is invalid [%s]' % self._max_months)
             return False
-        self.info(u'purge of history entries older than %s months ...' % self._max_months)
+        self.info('purge of history entries older than %s months ...' % self._max_months)
         maxMonths = self.console.time() - self._max_months*24*60*60*30
-        self.verbose(u'calculated maxMonths: %s' % maxMonths)
+        self.verbose('calculated maxMonths: %s' % maxMonths)
         _month = datetime.datetime.fromtimestamp(int(maxMonths)).strftime('%m')
         _year = datetime.datetime.fromtimestamp(int(maxMonths)).strftime('%Y')
         if int(_month) < self._max_months:
@@ -2031,15 +2031,15 @@ class XlrstatshistoryPlugin(b3.plugin.Plugin):
         else:
             _yearPrev = int(_year)
         q = """DELETE FROM %s WHERE (month < %s AND year <= %s) OR year < %s""" % (self.history_monthly_table, _month, _year, _yearPrev)
-        self.debug(u'QUERY: %s ' % q)
+        self.debug('QUERY: %s ' % q)
         self.console.storage.query(q)
         # purge the weeks table
         if not self._max_weeks or self._max_weeks == 0:
-            self.warning(u'max_weeks is invalid [%s]' % self._max_weeks)
+            self.warning('max_weeks is invalid [%s]' % self._max_weeks)
             return False
-        self.info(u'purge of history entries older than %s weeks ...' % self._max_weeks)
+        self.info('purge of history entries older than %s weeks ...' % self._max_weeks)
         maxWeeks = self.console.time() - self._max_weeks*24*60*60*7
-        self.verbose(u'calculated maxWeeks: %s' % maxWeeks)
+        self.verbose('calculated maxWeeks: %s' % maxWeeks)
         _week = datetime.datetime.fromtimestamp(int(maxWeeks)).strftime('%W')
         _year = datetime.datetime.fromtimestamp(int(maxWeeks)).strftime('%Y')
         if int(_week) < self._max_weeks:
@@ -2047,7 +2047,7 @@ class XlrstatshistoryPlugin(b3.plugin.Plugin):
         else:
             _yearPrev = int(_year)
         q = """DELETE FROM %s WHERE (week < %s AND year <= %s) OR year < %s""" % (self.history_weekly_table, _week, _year, _yearPrev)
-        self.debug(u'QUERY: %s ' % q)
+        self.debug('QUERY: %s ' % q)
         self.console.storage.query(q)
 
 ########################################################################################################################
@@ -2093,8 +2093,8 @@ class CtimePlugin(b3.plugin.Plugin):
         tzName = self.console.config.get('b3', 'time_zone').upper()
         tzOffest = b3.timezones.timezones[tzName]
         hoursGMT = (self._hours - tzOffest)%24
-        self.debug(u'%02d:%02d %s => %02d:%02d UTC' % (self._hours, self._minutes, tzName, hoursGMT, self._minutes))
-        self.info(u'everyday at %2d:%2d %s, connection info older than %s days will be deleted' % (self._hours,
+        self.debug('%02d:%02d %s => %02d:%02d UTC' % (self._hours, self._minutes, tzName, hoursGMT, self._minutes))
+        self.info('everyday at %2d:%2d %s, connection info older than %s days will be deleted' % (self._hours,
                   self._minutes, tzName, self._max_age_in_days))
         self._cronTab = b3.cron.PluginCronTab(self, self.purge, 0, self._minutes, hoursGMT, '*', '*', '*')
         self.console.cron + self._cronTab
@@ -2139,20 +2139,20 @@ class CtimePlugin(b3.plugin.Plugin):
         Purge the ctime database table.
         """
         if not self._max_age_in_days or self._max_age_in_days == 0:
-            self.warning(u'max_age is invalid [%s]', self._max_age_in_days)
+            self.warning('max_age is invalid [%s]', self._max_age_in_days)
             return False
 
-        self.info(u'purge of connection info older than %s days ...', self._max_age_in_days)
+        self.info('purge of connection info older than %s days ...', self._max_age_in_days)
         q = """DELETE FROM %s WHERE came < %i""" % (self.ctime_table, (self.console.time() - (self._max_age_in_days * 24 * 60 * 60)))
-        self.debug(u'CTIME QUERY: %s ' % q)
+        self.debug('CTIME QUERY: %s ' % q)
         self.console.storage.query(q)
 
     def update_time_stats_connected(self, client):
         if client.cid in self._clients:
-            self.debug(u'CTIME CONNECTED: client exist! : %s', client.cid)
+            self.debug('CTIME CONNECTED: client exist! : %s', client.cid)
             tmpts = self._clients[client.cid]
             if tmpts.client.guid == client.guid:
-                self.debug(u'CTIME RECONNECTED: player %s connected again, but playing since: %s', client.exactName, tmpts.came)
+                self.debug('CTIME RECONNECTED: player %s connected again, but playing since: %s', client.exactName, tmpts.came)
                 return
             else:
                 del self._clients[client.cid]
@@ -2161,7 +2161,7 @@ class CtimePlugin(b3.plugin.Plugin):
         ts.client = client
         ts.came = datetime.datetime.now()
         self._clients[client.cid] = ts
-        self.debug(u'CTIME CONNECTED: player %s started playing at: %s', client.exactName, ts.came)
+        self.debug('CTIME CONNECTED: player %s started playing at: %s', client.exactName, ts.came)
 
     @staticmethod
     def formatTD(td):
@@ -2171,7 +2171,7 @@ class CtimePlugin(b3.plugin.Plugin):
         return '%s:%s:%s' % (hours, minutes, seconds)
 
     def update_time_stats_exit(self, clientid):
-        self.debug(u'CTIME LEFT:')
+        self.debug('CTIME LEFT:')
         if clientid in self._clients:
             ts = self._clients[clientid]
             # Fail: Sometimes PB in cod4 returns 31 character guids, we need to dump them.
@@ -2182,8 +2182,8 @@ class CtimePlugin(b3.plugin.Plugin):
             ts.left = datetime.datetime.now()
             diff = (int(time.mktime(ts.left.timetuple())) - int(time.mktime(ts.came.timetuple())))
 
-            self.debug(u'CTIME LEFT: player: %s played this time: %s sec', ts.client.exactName, diff)
-            self.debug(u'CTIME LEFT: player: %s played this time: %s', ts.client.exactName, self.formatTD(diff))
+            self.debug('CTIME LEFT: player: %s played this time: %s sec', ts.client.exactName, diff)
+            self.debug('CTIME LEFT: player: %s played this time: %s', ts.client.exactName, self.formatTD(diff))
             #INSERT INTO `ctime` (`guid`, `came`, `left`) VALUES ("6fcc4f6d9d8eb8d8457fd72d38bb1ed2", 1198187868, 1226081506)
             q = """INSERT INTO %s (guid, came, gone, nick) VALUES (\"%s\", \"%s\", \"%s\", \"%s\")""" % (self.ctime_table,
                 ts.client.guid, int(time.mktime(ts.came.timetuple())), int(time.mktime(ts.left.timetuple())), ts.client.name)
@@ -2195,7 +2195,7 @@ class CtimePlugin(b3.plugin.Plugin):
             del self._clients[clientid]
 
         else:
-            self.debug(u'CTIME LEFT: player %s var not set!', clientid)
+            self.debug('CTIME LEFT: player %s var not set!', clientid)
 
 ########################################################################################################################
 #                                                                                                                      #
@@ -2608,7 +2608,7 @@ class PlayerBattles(StatObject):
 
 
 if __name__ == '__main__':
-    print '\nThis is version ' + __version__ + ' by ' + __author__ + ' for BigBrotherBot.\n'
+    print('\nThis is version ' + __version__ + ' by ' + __author__ + ' for BigBrotherBot.\n')
 
 """
 Crontab:

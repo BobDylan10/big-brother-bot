@@ -2,7 +2,7 @@
 language: python
 
 python:
-  - 2.7
+  - 3.5
 
 env:
   matrix:
@@ -19,9 +19,8 @@ env:
     - POSTGRESQL_TEST_PASSWORD=''
     - POSTGRESQL_TEST_DB=b3_test
 
-addons:
-  # select postgresql version
-  postgresql: "9.3"
+services:
+  - postgresql
 
 cache:
   # cache pip installs across jobs
@@ -42,12 +41,3 @@ script:
 after_success:
   # report tests coverage if we are running tests
   - if [ "${TEST}" != "build" ]; then pip install coveralls && coveralls; fi
-
-notifications:
-  # send notifications to gitter
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/489374443a557d989111
-    on_success: always  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: never     # default: never

@@ -32,7 +32,7 @@ class Test_Censor_badword(Detection_TestCase):
     def test_word(self):
 
         def my_info(text):
-            print("INFO\t%s" % text)
+            print(("INFO\t%s" % text))
         #self.p.info = my_info
 
         self.p._badNames = []
@@ -49,7 +49,7 @@ class Test_Censor_badword(Detection_TestCase):
     def test_regexp(self):
 
         def my_info(text):
-            print("INFO\t%s" % text)
+            print(("INFO\t%s" % text))
         #self.p.info = my_info
 
         self.p._badWords = []

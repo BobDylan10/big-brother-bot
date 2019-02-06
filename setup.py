@@ -293,7 +293,7 @@ else:
                             '/dB3_BUILD_PATH=' + self.build_exe,
                         ]
                         subprocess.call(cmd)
-                    except Exception, e:
+                    except Exception as e:
                         log.error('could not build %s: %s' % (script_file, e))
 
     cmdclass['build_exe'] = my_build_exe

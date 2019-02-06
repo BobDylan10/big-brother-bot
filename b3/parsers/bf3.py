@@ -126,7 +126,7 @@ GAME_MODES_NAMES = {
     "CaptureTheFlag0": "Capture the Flag",
 }
 
-GAMEMODES_IDS_BY_NAME = {name.lower(): x for x, name in GAME_MODES_NAMES.items()}
+GAMEMODES_IDS_BY_NAME = {name.lower(): x for x, name in list(GAME_MODES_NAMES.items())}
 
 MAP_NAME_BY_ID = {
     'MP_001': 'Grand Bazaar',
@@ -160,7 +160,7 @@ MAP_NAME_BY_ID = {
     "XP5_004": "Sabalan Pipeline",
 }
 
-MAP_ID_BY_NAME = {name.lower(): x for x, name in MAP_NAME_BY_ID.items()}
+MAP_ID_BY_NAME = {name.lower(): x for x, name in list(MAP_NAME_BY_ID.items())}
 
 GAME_MODES_BY_MAP_ID = {
     "MP_001": (
@@ -513,7 +513,7 @@ class Bf3Parser(AbstractParser):
         AbstractParser.pluginsStarted(self)
         self.info('Connecting all players...')
         plist = self.getPlayerList()
-        for cid, p in plist.iteritems():
+        for cid, p in plist.items():
             client = self.clients.getByCID(cid)
             if not client:
                 self.debug('Client %s found on the server' % cid)
@@ -606,7 +606,7 @@ class Bf3Parser(AbstractParser):
                 pings[cid] = int(words[0])
             except ValueError:
                 pass
-            except Exception, err:
+            except Exception as err:
                 self.error("Could not get ping info for player %s: %s" % (cid, err), exc_info=err)
         return pings
 
@@ -710,7 +710,7 @@ class Bf3Parser(AbstractParser):
         Return a list of supported levels for the current game mod.
         """
         # TODO : remove this method once the method on from AbstractParser is working
-        return MAP_NAME_BY_ID.keys()
+        return list(MAP_NAME_BY_ID.keys())
 
     def getSupportedGameModesByMapId(self, map_id):
         """
@@ -877,7 +877,7 @@ class Bf3Parser(AbstractParser):
         # since BF3 R9
         new_info = 'gameIpAndPort', 'punkBusterVersion', 'joinQueueEnabled', 'region', 'closestPingSite', 'country'
         start_index = 7 + numOfTeams + 8
-        for i, n in zip(range(start_index, start_index + len(new_info)), new_info):
+        for i, n in zip(list(range(start_index, start_index + len(new_info))), new_info):
             try:
                 response[n] = data[i]
             except IndexError:
@@ -906,12 +906,12 @@ class Bf3Parser(AbstractParser):
                     return False
             except IndexError:
                 pass
-            except CommandFailedError, err:
-                if err.message[0] == 'InvalidPlayerName':
+            except CommandFailedError as err:
+                if str(err) == 'InvalidPlayerName':
                     pass
                 else:
                     raise Exception(err)
-            except Exception, err:
+            except Exception as err:
                 self.console.error("Could not get player state for player %s: %s" % (_player_name, err), exc_info=err)
 
         def getPlayerState(self):

@@ -31,7 +31,7 @@ import b3.cron
 import b3.functions
 import b3.plugin
 import os
-import thread
+import _thread
 
 from b3.functions import clamp
 
@@ -105,7 +105,7 @@ class NickregPlugin(b3.plugin.Plugin):
         """
         Handle EVT_CLIENT_NAME_CHANGE.
         """
-        thread.start_new_thread(self.check_client_for_nick_steal, (event.client,))
+        _thread.start_new_thread(self.check_client_for_nick_steal, (event.client,))
 
     ####################################################################################################################
     #                                                                                                                  #

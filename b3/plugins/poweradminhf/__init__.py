@@ -172,7 +172,7 @@ class PoweradminhfPlugin(b3.plugin.Plugin):
                 client.message('do not make teams unbalanced')
                 try:
                     self.console.write('admin forceteamswitch "%s"' % client.name)
-                except Exception, err:
+                except Exception as err:
                     self.warning('error, server replied %s' % err)
 
     def onClientVoteStart(self, event):
@@ -264,7 +264,7 @@ class PoweradminhfPlugin(b3.plugin.Plugin):
                 playerTeamTimes[c.cid] = c.var(self, 'teamtime', self.console.time()).value
 
         self.debug('playerTeamTimes: %s', playerTeamTimes)
-        sortedPlayersTeamTimes = sorted(playerTeamTimes.iteritems(), key=lambda (k,v):(v,k), reverse=True)
+        sortedPlayersTeamTimes = sorted(iter(playerTeamTimes.items()), key=lambda k_v:(k_v[1],k_v[0]), reverse=True)
         self.debug('sortedPlayersTeamTimes: %s', sortedPlayersTeamTimes)
 
         for c, teamtime in sortedPlayersTeamTimes[:howManyMustSwitch]:

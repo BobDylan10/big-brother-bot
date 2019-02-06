@@ -22,7 +22,7 @@
 #                                                                     #
 # ################################################################### #
 
-import StringIO
+import io
 import feedparser
 
 from b3.fake import FakeClient
@@ -84,7 +84,7 @@ class Test_keywords(AdvTestCase):
         self.p._feed = "http://some.feed/rss"
 
         when(self.p._msg).getnext().thenReturn("@feed")
-        with patch.object(feedparser, '_open_resource', return_value=StringIO.StringIO(RSS_FEED_CONTENT)):
+        with patch.object(feedparser, '_open_resource', return_value=io.StringIO(RSS_FEED_CONTENT)):
             with patch.object(self.console, "say") as say_mock:
                 self.p.adv()
-                say_mock.assert_has_calls([call(u'News: f00 bar item title')])
+                say_mock.assert_has_calls([call('News: f00 bar item title')])

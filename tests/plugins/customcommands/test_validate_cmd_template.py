@@ -38,7 +38,7 @@ class Test_validate_cmd_template(TestCase):
     def test_nominal(self):
         try:
             self.p._validate_cmd_template("cookie")
-        except (AssertionError, ValueError), err:
+        except (AssertionError, ValueError) as err:
             self.fail("expecting no error, got %r" % err)
 
     def test_None(self):
