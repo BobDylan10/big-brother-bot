@@ -260,7 +260,7 @@ class Test_warn_reasons_default_config(Admin_functional_test):
             assertWarn("rule8", 4320, '^3Rule #8: No profanity or offensive language (in any language)')
             assertWarn("rule9", 180, '^3Rule #9: Do ^1NOT ^3fire at teammates or within 10 seconds of spawning')
             assertWarn("rule10", 4320, '^3Rule #10: Offense players must play for the objective and support their team')
-            assertWarn("stack", 1440, '^3Rule #2: No clan stacking, members must split evenly between the teams')
+            assertWarn("stack", 1440, '^7No clan stacking, members must split evenly between the teams, go spectator and wait if you have to')
             assertWarn("lang", 4320, '^3Rule #8: No profanity or offensive language (in any language)')
             assertWarn("language", 4320, '^3Rule #8: No profanity or offensive language (in any language)')
             assertWarn("cuss", 4320, '^3Rule #8: No profanity or offensive language (in any language)')
