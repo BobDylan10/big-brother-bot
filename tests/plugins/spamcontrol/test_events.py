@@ -29,7 +29,7 @@ from b3.fake import FakeClient
 from b3.plugins.admin import AdminPlugin
 from tests.plugins.spamcontrol import SpamcontrolTestCase
 
-
+@timed(5)
 class Test_plugin(SpamcontrolTestCase):
 
     def setUp(self):

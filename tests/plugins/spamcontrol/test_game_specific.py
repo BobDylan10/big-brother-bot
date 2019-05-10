@@ -32,6 +32,7 @@ from b3.fake import FakeClient
 from b3.plugins.spamcontrol import SpamcontrolPlugin
 from tests.plugins.spamcontrol import SpamcontrolTestCase
 
+@timed(5)
 class Test_game_specific_spam(SpamcontrolTestCase):
 
     def setUp(self):
