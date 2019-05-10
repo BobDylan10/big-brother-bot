@@ -388,7 +388,7 @@ class StatsPlugin(b3.plugin.Plugin):
 			
         if self.console.gameName == "iourt43":
 
-            message = '^3Stats ^7[ %s ^7] K ^2%s ^7D ^3%s ^7A ^5%s ^7TK ^1%s ^7Dmg ^5%s ^7Skill ^3%1.02f ^7XP ^6%s' % \
+            message = '^3Stats ^7[ %s ^7] K ^2%s ^7D ^3%s ^7A ^5%s ^7TK ^1%s ^7Dmg ^5%s ^7Skill ^3%1.02f ^7XP ^6%.1f' % \
                       (sclient.exactName, sclient.var(self, 'kills', 0).value, sclient.var(self, 'deaths', 0).value,
                        sclient.var(self, 'assists', 0).value ,sclient.var(self, 'teamKills', 0).value, sclient.var(self, 'damageHit', 0).value,
                        round(sclient.var(self, 'points', self.startPoints).value, 2),
@@ -396,7 +396,7 @@ class StatsPlugin(b3.plugin.Plugin):
 					   
         else:
 
-            message = '^3Stats ^7[ %s ^7] K ^2%s ^7D ^3%s ^7TK ^1%s ^7Dmg ^5%s ^7Skill ^3%1.02f ^7XP ^6%s' % \
+            message = '^3Stats ^7[ %s ^7] K ^2%s ^7D ^3%s ^7TK ^1%s ^7Dmg ^5%s ^7Skill ^3%1.02f ^7XP ^6%.1f' % \
                       (sclient.exactName, sclient.var(self, 'kills', 0).value, sclient.var(self, 'deaths', 0).value,
                        sclient.var(self, 'teamKills', 0).value, sclient.var(self, 'damageHit', 0).value,
                        round(sclient.var(self, 'points', self.startPoints).value, 2),
@@ -446,7 +446,7 @@ class StatsPlugin(b3.plugin.Plugin):
                 if i >= 6:
                     break
 
-                results.append('^3#%s^7 %s ^7[^3%s^7]' % (i, name, score))
+                results.append('^3#%s^7 %s ^7[^3%.1f^7]' % (i, name, score))
                 
             if client:        
                 client.message('^3Top Stats:^7 %s' % ', '.join(results))
@@ -477,7 +477,7 @@ class StatsPlugin(b3.plugin.Plugin):
                 if i >= 6:
                     break
 
-                results.append('^3#%s^7 %s ^7[^3%s^7]' % (i, name, score))
+                results.append('^3#%s^7 %s ^7[^3%.1f^7]' % (i, name, score))
 
             if client:
                 client.message('^3Top Experienced Players:^7 %s' % ', '.join(results))
