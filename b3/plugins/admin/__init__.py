@@ -711,7 +711,8 @@ class AdminPlugin(b3.plugin.Plugin):
                 except (KeyboardInterrupt, SystemExit):
                     pass
                 except:
-                    event.client.message('^7There was an error processing your command')
+                    info = sys.exc_info()
+                    event.client.message('^7There was an error processing your command : %s' , str(traceback.format_exception(info[0], info[1], info[2])))
                     raise
                 else:
                     self.console.queueEvent(self.console.getEvent('EVT_ADMIN_COMMAND',
