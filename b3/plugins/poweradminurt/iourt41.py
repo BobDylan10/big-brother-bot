@@ -727,7 +727,7 @@ class Poweradminurt41Plugin(b3.plugin.Plugin):
 
         # distribute nonforced players
         random.shuffle(nonforced)
-        n = ((len(nonforced) + len(blue) + len(red)) / 2) - len(blue)
+        n = ((len(nonforced) + len(blue) + len(red)) // 2) - len(blue)
         blue.extend(nonforced[:n])
         red.extend(nonforced[n:])
         return blue, red
