@@ -86,6 +86,8 @@ class PluginTestCase(Iourt41TestCase):
         self.conf = CfgConfigParser()
         self.conf.loadFromString(self.__class__.CONF)
         self.p = UrtserversidedemoPlugin(self.console, self.conf)
+        when(self.console).getPlugin('haxbusterurt').thenReturn(None)
+        when(self.console).getPlugin('follow').thenReturn(None)
         when(self.console).write('cmdlist startserverdemo').thenReturn("""\
 startserverdemo
 1 commands
