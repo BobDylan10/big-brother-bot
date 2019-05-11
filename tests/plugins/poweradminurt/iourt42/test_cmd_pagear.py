@@ -153,11 +153,10 @@ weapon_codes = (
 
 
 def all_gear_but(*args):
-    return "".join(sorted(G_ALL.translate(None, "".join(args))))
-
+    return "".join(sorted(G_ALL.translate({ord(c): None for c in "".join(args)})))
 
 def only_gear(*args):
-    return "".join(sorted(G_ALL.translate(None, all_gear_but(*args))))
+    return "".join(sorted(G_ALL.translate({ord(c): None for c in all_gear_but(*args)})))
 
 
 class Test_cmd_pagear(Iourt42TestCase):
