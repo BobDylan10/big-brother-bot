@@ -80,6 +80,7 @@ class CallvoteTestCase(unittest2.TestCase):
 
         # make sure the admin plugin obtained by other plugins is our admin plugin
         when(self.console).getPlugin('admin').thenReturn(self.adminPlugin)
+        when(self.console).getPlugin('poweradminurt').thenReturn(self.console.getPlugin('poweradminurt'))
 
         with logging_disabled():
             from b3.fake import FakeClient

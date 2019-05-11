@@ -84,6 +84,7 @@ class JumperTestCase(unittest2.TestCase):
 
         # make sure the admin plugin obtained by other plugins is our admin plugin
         when(self.console).getPlugin('admin').thenReturn(self.adminPlugin)
+        when(self.console).getPlugin('poweradminurt').thenReturn(self.console.getPlugin('poweradminurt'))
 
         self.conf = CfgConfigParser()
         self.conf.loadFromString(dedent(r"""
