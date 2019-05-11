@@ -297,7 +297,7 @@ class CfgConfigParser(B3ConfigParserMixin, configparser.ConfigParser):
         Object constructor.
         :param allow_no_value: Whether or not to allow empty values in configuration sections
         """
-        configparser.ConfigParser.__init__(self, allow_no_value=allow_no_value)
+        configparser.ConfigParser.__init__(self, allow_no_value=allow_no_value, inline_comment_prefixes=(';',))
 
     def add_comment(self, section, comment):
         """
