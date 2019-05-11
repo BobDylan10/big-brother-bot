@@ -41,10 +41,10 @@ class Test_killingspree_messages(SpreeTestCase):
 
             [killingspree_messages]
             # The # character splits the 'start' spree from the 'end' spree.
-            5: %player% is on a killing spree (5 kills in a row) # %player% stopped the spree of %victim%
+            5: %%player%% is on a killing spree (5 kills in a row) # %%player%% stopped the spree of %%victim%%
 
             [loosingspree_messages]
-            7: Keep it up %player%, it will come eventually # You're back in business %player%
+            7: Keep it up %%player%%, it will come eventually # You're back in business %%player%%
         """))
         self.assertListEqual([], self.p.warning.mock_calls)
 
@@ -56,7 +56,7 @@ class Test_killingspree_messages(SpreeTestCase):
             [killingspree_messages]
 
             [loosingspree_messages]
-            7: Keep it up %player%, it will come eventually # You're back in business %player%
+            7: Keep it up %%player%%, it will come eventually # You're back in business %%player%%
         """))
         self.assertListEqual([], self.p.warning.mock_calls)
 
@@ -70,7 +70,7 @@ class Test_killingspree_messages(SpreeTestCase):
             5: foo
 
             [loosingspree_messages]
-            7: Keep it up %player%, it will come eventually # You're back in business %player%
+            7: Keep it up %%player%%, it will come eventually # You're back in business %%player%%
         """))
         self.assertListEqual([call("ignoring killingspree message 'foo' due to missing '#'")],
                              self.p.warning.mock_calls)
@@ -91,7 +91,7 @@ class Test_loosingspree_messages(SpreeTestCase):
 
             [loosingspree_messages]
             # The # character splits the 'start' spree from the 'end' spree.
-            7: Keep it up %player%, it will come eventually # You're back in business %player%
+            7: Keep it up %%player%%, it will come eventually # You're back in business %%player%%
         """))
         self.assertListEqual([], self.p.warning.mock_calls)
 

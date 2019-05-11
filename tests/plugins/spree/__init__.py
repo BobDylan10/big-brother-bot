@@ -75,11 +75,11 @@ class SpreeTestCase(unittest2.TestCase):
                 reset_spree: yes
 
                 [killingspree_messages]
-                5: %player% is on a killing spree (5 kills in a row) # %player% stopped the spree of %victim%
-                10: %player% is on fire! (10 kills in a row) # %player% iced %victim%
+                5: %%player%% is on a killing spree (5 kills in a row) # %%player%% stopped the spree of %%victim%%
+                10: %%player%% is on fire! (10 kills in a row) # %%player%% iced %%victim%%
 
                 [loosingspree_messages]
-                12: Keep it up %player%, it will come eventually # You're back in business %player%
+                12: Keep it up %%player%%, it will come eventually # You're back in business %%player%%
 
                 [commands]
                 spree: user
