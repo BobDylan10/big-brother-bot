@@ -53,6 +53,7 @@ class PluginmanagerTestCase(B3TestCase):
 
         self.p = PluginmanagerPlugin(self.console, self.conf)
         when(self.console).getPlugin("pluginmanager").thenReturn(self.adminPlugin)
+        when(self.console).getPlugin("fake").thenReturn(self.console.getPlugin("fake"))
         self.p.onLoadConfig()
         self.p.onStartup()
 
