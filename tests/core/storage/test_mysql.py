@@ -24,7 +24,7 @@
 
 import os
 
-import nose
+import nose2
 import unittest2 as unittest
 
 from b3.functions import splitDSN

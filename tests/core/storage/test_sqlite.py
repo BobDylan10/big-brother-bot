@@ -22,7 +22,7 @@
 #                                                                     #
 # ################################################################### #
 
-import nose
+import nose2
 
 from b3.functions import splitDSN
 from b3.storage.sqlite import SqliteStorage
