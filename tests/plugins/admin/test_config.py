@@ -191,7 +191,7 @@ class Test_conf_regme_confirmation(Config_reading_TestCase):
         self.assertEqual('^7Thanks for your registration. You are now a member of the group f00',
                          self.p.getMessage('regme_confirmation', 'f00'))
         self.assertIn(call("could not find messages/regme_confirmation in config file, using default: ^7Thanks for your "
-                           "registration. You are now a member of the group %s"), self.warning_mock.mock_calls)
+                           "registration. You are now a member of the group %%s"), self.warning_mock.mock_calls)
         self.assertNoErrorMessage()
 
     def test_nominal(self):
