@@ -447,7 +447,7 @@ def hash_password(password):
     """
     Calculate the MD5 digest of a given string.
     """
-    return md5(password).hexdigest()
+    return md5(password.encode('utf-8')).hexdigest()
 
 
 def hash_file(filepath):
