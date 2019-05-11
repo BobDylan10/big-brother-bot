@@ -38,7 +38,7 @@ class BanlistTestCase(TestCase):
         self.patcher_isfile = patch("os.path.isfile")
         self.patcher_isfile.start()
 
-        self.patcher_open = patch("__builtin__.open")
+        self.patcher_open = patch("builtins.open")
         self.mock_open = self.patcher_open.start()
         manager = self.mock_open.return_value.__enter__.return_value
         manager.read.side_effect = lambda: self.file_content
