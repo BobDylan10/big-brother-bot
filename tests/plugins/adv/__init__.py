@@ -80,6 +80,7 @@ class AdvTestCase(B3TestCase):
         self.adminPluginConf.load(ADMIN_CONFIG_FILE)
         self.adminPlugin = AdminPlugin(self.console, self.adminPluginConf)
         when(self.console).getPlugin("admin").thenReturn(self.adminPlugin)
+        when(self.console).getPlugin("xlrstats").thenReturn(self.console.getPlugin("xlrstats"))
 
         self.adminPlugin.onLoadConfig()
         self.adminPlugin.onStartup()
