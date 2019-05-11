@@ -31,7 +31,6 @@ import time
 import threading
 
 from b3.functions import getCmd
-from b3.config import ConfigParser
 from b3.plugin import Plugin
 from configparser import NoOptionError
 
@@ -235,7 +234,7 @@ class MakeroomPlugin(Plugin):
             else:
                 try:
                     info_message = self.getMessage('info_message', self.console.getMessageVariables(client=client))
-                except ConfigParser.NoOptionError:
+                except NoOptionError:
                     info_message = "Making room for clan member, please come back again"
                 self.console.say(info_message)
                 threading.Timer(self._delay, self._free_a_slot, (client, )).start()
@@ -315,11 +314,11 @@ class MakeroomPlugin(Plugin):
         """
         try:
             kick_message = self.getMessage('kick_message', self.console.getMessageVariables(client=non_member))
-        except ConfigParser.NoOptionError:
+        except NoOptionError:
             kick_message = "kicking %s to free a slot" % non_member.name
         self.console.say(kick_message)
         try:
             kick_reason = self.getMessage('kick_reason', self.console.getMessageVariables(client=non_member))
-        except ConfigParser.NoOptionError:
+        except NoOptionError:
             kick_reason = "to free a slot"
         non_member.kick(reason=kick_reason, keyword="makeroom", silent=True, admin=admin)
