@@ -76,7 +76,7 @@ class Tk_functional_test(B3TestCase):
             forgive_warning: ^1ALERT^7: $name^7 auto-kick if not forgiven. Type ^3!forgive $cid ^7to forgive. [^3damage: $points^7]
             no_forgive: ^7no one to forgive
             no_punish: ^7no one to punish
-            players: ^7Forgive who? %s
+            players: ^7Forgive who? %%s
             forgive_info: ^7$name^7 has ^3$points^7 TK points
             grudge_info: ^7$name^7 is ^1grudged ^3$points^7 TK points
             forgive_clear: ^7$name^7 cleared of ^3$points^7 TK points
