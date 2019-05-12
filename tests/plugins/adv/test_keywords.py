@@ -30,7 +30,6 @@ from mock import patch, call, Mock
 from mockito import when, any as ANY
 from tests.plugins.adv import AdvTestCase, RSS_FEED_CONTENT
 
-@timed(5)
 class Test_keywords(AdvTestCase):
 
     def setUp(self):
