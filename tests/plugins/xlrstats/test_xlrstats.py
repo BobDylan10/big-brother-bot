@@ -79,6 +79,11 @@ class XlrstatsTestCase(B3TestCase):
             self.p = XlrstatsPlugin(self.console, self.conf)
             when(self.console).getPlugin("xlrstats").thenReturn(self.p)
 
+            def return_empty(cid):
+                return{}
+
+            self.console.queryClientFrozenSandAccount = return_empty
+
             # create a client object to represent the game server
             with patch("b3.clients.Clients.authorizeClients"):  # we patch authorizeClients or it will spawn a thread
                 # with a 5 second timer
