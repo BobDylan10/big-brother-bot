@@ -34,7 +34,7 @@ class ConfigFileNotFound(Exception):
         Exception.__init__(self, message)
         
     def __str__(self):
-        return repr(str(self))
+        return repr(self)
 
 
 class ConfigFileNotValid(Exception):
@@ -45,7 +45,7 @@ class ConfigFileNotValid(Exception):
         Exception.__init__(self, message)
         
     def __str__(self):
-        return repr(str(self))
+        return repr(self)
 
 
 class MissingRequirement(Exception):
