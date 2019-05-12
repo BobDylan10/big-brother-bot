@@ -84,6 +84,7 @@ class Test_misc_cmd(Admin_TestCase):
 
     def test_maps(self):
         mock_client = Mock(spec=Client, name="client")
+        mock_client.maxLevel = 100
         mock_cmd = Mock(spec=Command)
 
         # None
@@ -844,7 +845,7 @@ class Test_cmd_baninfo(Admin_functional_test):
 [commands]
 baninfo: mod
 [messages]
-baninfo_no_bans: %(name)s is not banned
+baninfo_no_bans: %%(name)s is not banned
 """)
         self.joe.connects(0)
         self.mike.connects(1)
@@ -859,7 +860,7 @@ baninfo_no_bans: %(name)s is not banned
 permban: fulladmin
 baninfo: mod
 [messages]
-baninfo: %(name)s is banned
+baninfo: %%(name)s is banned
 """)
         self.joe.connects(0)
         self.mike.connects(1)
@@ -879,8 +880,8 @@ class Test_cmd_putgroup(Admin_functional_test):
 [commands]
 putgroup: admin
 [messages]
-group_unknown: Unkonwn group: %(group_name)s
-group_beyond_reach: You can't assign players to group %(group_name)s
+group_unknown: Unkonwn group: %%(group_name)s
+group_beyond_reach: You can't assign players to group %%(group_name)s
 """)
         self.joe.connects(0)
         self.mike.connects(1)
@@ -1224,7 +1225,7 @@ def _start_new_thread(callable, args_list, kwargs_dict):
     callable(*args_list, **kwargs_dict)
 
 @patch.object(time, "sleep")
-@patch.object(thread, "start_new_thread", wraps=_start_new_thread)
+@patch.object(_thread, "start_new_thread", wraps=_start_new_thread)
 class Test_cmd_rules(Admin_functional_test):
     def setUp(self):
         Admin_functional_test.setUp(self)
@@ -1379,7 +1380,7 @@ no_admins:
 [commands]
 admins: mod
 [messages]
-admins: online admins: %s
+admins: online admins: %%s
 """)
         self.joe.connects(0)
         # WHEN
@@ -1481,7 +1482,7 @@ class Test_cmd_register(Admin_functional_test):
 [commands]
 register: guest
 [messages]
-regme_annouce: %s put in group %s
+regme_annouce: %%s put in group %%s
 """)
         # WHEN
         self.player.says('!register')
@@ -1498,8 +1499,8 @@ register: guest
 [settings]
 announce_registration: yes
 [messages]
-regme_confirmation: You are now a member of the group %s
-regme_annouce: %s is now a member of group %s
+regme_confirmation: You are now a member of the group %%s
+regme_annouce: %%s is now a member of group %%s
 """)
         # WHEN
         self.player.says('!register')
@@ -1515,8 +1516,8 @@ register: guest
 [settings]
 announce_registration: no
 [messages]
-regme_confirmation: You are now a member of the group %s
-regme_annouce: %s is now a member of group %s
+regme_confirmation: You are now a member of the group %%s
+regme_annouce: %%s is now a member of group %%s
 """)
         # WHEN
         self.player.says('!register')
@@ -1598,11 +1599,11 @@ class Test_cmd_warn_and_clear(Admin_functional_test):
 warn: user
 clear: user
 [messages]
-warn_too_fast: Only one warning every %(num_second)s seconds can be given
-warn_self: %s, you cannot give yourself a warning
-warn_denied: %s, %s is a higher level admin, you can't warn him
-cleared_warnings: %(admin)s has cleared %(player)s of all warnings
-cleared_warnings_for_all: %(admin)s has cleared everyone's warnings and tk points
+warn_too_fast: Only one warning every %%(num_second)s seconds can be given
+warn_self: %%s, you cannot give yourself a warning
+warn_denied: %%s, %%s is a higher level admin, you can't warn him
+cleared_warnings: %%(admin)s has cleared %(player)s of all warnings
+cleared_warnings_for_all: %%(admin)s has cleared everyone's warnings and tk points
 [warn]
 tempban_num: 3
 duration_divider: 30
