@@ -759,6 +759,8 @@ class CsgoParser(Parser):
             return
         if isinstance(line, bytes) and line.startswith(b"mp\x08 \x08\x08 \x08"):
             line = str(line[8:])
+        if isinstance(line,bytes):
+            line = str(line)
         m = re.match(RE_HL_LOG_LINE, line)
         if m:
             data = m.group('data')
