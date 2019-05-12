@@ -54,7 +54,6 @@ import re
 import sys
 import time
 imp.reload(sys)
-sys.setdefaultencoding('utf-8')
 
 try:
     # import the getCmd function
