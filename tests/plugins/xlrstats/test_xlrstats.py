@@ -365,6 +365,7 @@ class Test_storage(XlrstatsTestCase):
         # GIVEN
         client = mock()
         client.id = 43
+        client.maxLevel = 40
         
         # getting empty stats
         s = self.p.get_PlayerStats(client)
