@@ -82,7 +82,7 @@ panuke-nuke: 20
         def _start_new_thread(function, args):
             function(*args)
 
-        with patch.object(thread, 'start_new_thread', wraps=_start_new_thread):
+        with patch.object(_thread, 'start_new_thread', wraps=_start_new_thread):
             self.joe.connects('3')
             self.moderator.message_history = []
             self.moderator.says("!nuke joe 3")
