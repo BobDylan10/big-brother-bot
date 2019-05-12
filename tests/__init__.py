@@ -99,6 +99,8 @@ class B3TestCase(unittest.TestCase):
 
     def tearDown(self):
         flush_console_streams()
+    
+    def doCleanups(self):
         testcase_lock.release()
 
     @contextmanager
