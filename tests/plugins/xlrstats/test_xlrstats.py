@@ -49,7 +49,6 @@ DEFAULT_ADMIN_CONFIG_FILE = os.path.normpath(os.path.join(os.path.dirname(b3_mod
 LOGGER = logging.getLogger('output')
 LOGGER.setLevel(logging.DEBUG)
 
-@timed(5)
 class XlrstatsTestCase(B3TestCase):
 
     def setUp(self):
