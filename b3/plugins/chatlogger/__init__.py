@@ -26,9 +26,10 @@ import logging
 
 from b3.cron import PluginCronTab
 from b3.plugin import Plugin
-from b3.config import ConfigParser
 from b3.timezones import timezones
 from logging.handlers import TimedRotatingFileHandler
+
+from configparser import NoOptionError
 
 __version__ = '1.5'
 __author__ = 'Courgette, xlr8or, BlackMamba, OliverWieland'
@@ -66,7 +67,7 @@ class ChatloggerPlugin(Plugin):
         try:
             self._save2db = self.config.getboolean('general', 'save_to_database')
             self.debug('save chat to database : %s', 'enabled' if self._save2db else 'disabled')
-        except ConfigParser.NoOptionError:
+        except NoOptionError:
             self._save2db = True
             self.info("using default value '%s' for save_to_database", self._save2db)
         except ValueError as e:
@@ -76,7 +77,7 @@ class ChatloggerPlugin(Plugin):
         try:
             self._save2file = self.config.getboolean('general', 'save_to_file')
             self.debug('save chat to file : %s', 'enabled' if self._save2file else 'disabled')
-        except ConfigParser.NoOptionError:
+        except NoOptionError:
             self._save2file = False
             self.info("using default value '%s' for save_to_file", self._save2file)
         except ValueError as e:
@@ -109,7 +110,7 @@ class ChatloggerPlugin(Plugin):
                 if self._file_rotation_rate.upper() not in ('H', 'D', 'W0', 'W1', 'W2', 'W3', 'W4', 'W5', 'W6'):
                     raise ValueError('invalid rate specified: %s' % self._file_rotation_rate)
                 self.info("using value '%s' for the file rotation rate", self._file_rotation_rate)
-            except ConfigParser.NoOptionError:
+            except NoOptionError:
                 self._file_rotation_rate = 'D'
                 self.info("using default value '%s' for the file rotation rate", self._file_rotation_rate)
             except ValueError as e:
