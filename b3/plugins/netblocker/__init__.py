@@ -31,7 +31,6 @@ __author__ = 'xlr8or'
 import b3
 import b3.events
 import b3.plugin
-import b3.plugins.netblocker.netblock as netblock
 
 class NetblockerPlugin(b3.plugin.Plugin):
 
@@ -58,6 +57,7 @@ class NetblockerPlugin(b3.plugin.Plugin):
             self.registerEvent('EVT_PUNKBUSTER_NEW_CONNECTION', self.onPlayerConnect)
         else:
             self.registerEvent('EVT_CLIENT_AUTH', self.onPlayerConnect)
+        import b3.plugins.netblocker.netblock as netblock
 
         self.debug('plugin started')
 
