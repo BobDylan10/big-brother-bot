@@ -197,7 +197,7 @@ class Test_conf_regme_confirmation(Config_reading_TestCase):
     def test_nominal(self):
         # GIVEN
         self.conf.loadFromString(r"""[messages]
-regme_confirmation: Nice, you are now a member of the group %s
+regme_confirmation: Nice, you are now a member of the group %%s
 """)
         # WHEN
         self.p.onLoadConfig()
