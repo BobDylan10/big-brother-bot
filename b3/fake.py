@@ -40,6 +40,7 @@ import io
 import sys
 import time
 import traceback
+import importlib
 
 from b3.clients import Clients
 from b3.cvar import Cvar
@@ -78,6 +79,7 @@ class FakeConsole(b3.parser.Parser):
 
         self.storage = SqliteStorage("sqlite://:memory:", splitDSN("sqlite://:memory:"), self)
         self.storage.connect()
+        importlib.reload(b3.clients)
         self.clients = b3.clients.Clients(self)
         self.game = b3.game.Game(self, "fakeGame")
         self.game.mapName = 'ut4_turnpike'
