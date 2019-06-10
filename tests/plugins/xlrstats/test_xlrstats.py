@@ -308,7 +308,7 @@ class Test_kill(XlrstatsTestCase):
         self.p1.clearMessageHistory()
         self.p1.says("!xlrstats")
         # THEN
-        self.assertEqual(['XLR Stats: P1 : K 1 D 0 TK 0 Ratio 0.00 Skill 1024.00'], self.p1.message_history)
+        self.assertEqual(['XLR Stats: P1 : K 1 D 0 TK 0 Ratio 0.00 Skill 1012.00'], self.p1.message_history)
 
     def test_p1_teamkills_p2(self):
         # GIVEN
@@ -330,7 +330,7 @@ class Test_kill(XlrstatsTestCase):
         self.p1.clearMessageHistory()
         self.p1.says("!xlrstats")
         # THEN
-        self.assertEqual(['XLR Stats: P1 : K 2 D 0 TK 0 Ratio 0.00 Skill 1035.45'], self.p1.message_history)
+        self.assertEqual(['XLR Stats: P1 : K 2 D 0 TK 0 Ratio 0.00 Skill 1023.72'], self.p1.message_history)
 
     def test_p1_kills_p2_then_p2_kills_p1(self):
         # GIVEN
@@ -341,7 +341,7 @@ class Test_kill(XlrstatsTestCase):
         self.p1.clearMessageHistory()
         self.p1.says("!xlrstats")
         # THEN
-        self.assertEqual(['XLR Stats: P1 : K 1 D 1 TK 0 Ratio 1.00 Skill 1015.63'], self.p1.message_history)
+        self.assertEqual(['XLR Stats: P1 : K 1 D 1 TK 0 Ratio 1.00 Skill 1003.82'], self.p1.message_history)
 
 
     def test_p1_kills_bot(self):
